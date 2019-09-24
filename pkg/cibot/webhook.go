@@ -53,6 +53,7 @@ func (s *Webhook) Run() {
 		&oauth2.Token{AccessToken: string(oauthSecret)},
 	)
 	tc := oauth2.NewClient(ctx, ts)
+	glog.Infof("oauth client: %v", tc)
 
 	// return 200 for health check
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {})
@@ -67,6 +68,6 @@ func (s *Webhook) Run() {
 	//starting server
 	address := s.Address + ":" + strconv.FormatInt(s.Port, 10)
 	if err := http.ListenAndServe(address, nil); err != nil {
-		glog.Errorf(err)
+		glog.Error(err)
 	}
 }
