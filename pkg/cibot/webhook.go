@@ -2,7 +2,6 @@ package cibot
 
 import (
 	"context"
-	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -10,6 +9,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/spf13/pflag"
 	"golang.org/x/oauth2"
+	"gopkg.in/yaml.v2"
 )
 
 type Webhook struct {
@@ -41,7 +41,7 @@ func (s *Webhook) Run() {
 
 	// unmarshal config file
 	var config Config
-	err = json.Unmarshal(configContent, &config)
+	err = yaml.Unmarshal(configContent, &config)
 	if err != nil {
 		glog.Fatalf("fail to unmarshal: %v", err)
 	}
