@@ -1,0 +1,4 @@
+owner: "openeuler-ci-bot"
+repository: "https://gitee.com/openeuler/website"
+giteeToken: ""
+webhookSecret: ""
