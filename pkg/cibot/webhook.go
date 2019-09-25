@@ -70,7 +70,7 @@ func (s *Webhook) Run() {
 		Context:     ctx,
 		GiteeClient: giteeClient,
 	}
-	http.HandleFunc("/hook", webHookHandler.ServeHTTP)
+	http.HandleFunc("/webhook", webHookHandler.ServeHTTP)
 
 	//starting server
 	address := s.Address + ":" + strconv.FormatInt(s.Port, 10)
