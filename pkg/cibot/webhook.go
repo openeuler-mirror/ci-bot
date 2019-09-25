@@ -22,14 +22,14 @@ type Webhook struct {
 func NewWebHook() *Webhook {
 	return &Webhook{
 		Address:    "0.0.0.0",
-		Port:       10000,
+		Port:       8888,
 		ConfigFile: "config.yaml",
 	}
 }
 
 func (s *Webhook) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&s.Address, "address", s.Address, "ip address to serve, 0.0.0.0 by default.")
-	fs.Int64Var(&s.Port, "port", s.Port, "port to listen on, 10000 by default.")
+	fs.Int64Var(&s.Port, "port", s.Port, "port to listen on, 8888 by default.")
 	fs.StringVar(&s.ConfigFile, "config", s.ConfigFile, "config file.")
 }
 
