@@ -4,7 +4,6 @@
 
 This repository is used to address the code of openEuler ci bot.
 
-
 ## Build
 
 Before you get started, make sure to have [Go](https://golang.org/) already installed in your local machine.
@@ -26,4 +25,3 @@ $ ./ci-bot
 ## License
 
 See the [LICENSE](LICENSE) file for details.
-
