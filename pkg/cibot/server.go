@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"gitee.com/openEuler/go-gitee/gitee"
+	"gitee.com/openeuler/go-gitee/gitee"
 )
 
 type Config struct {

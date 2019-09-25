@@ -1,6 +1,4 @@
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-gitee.com/openeuler/ci-bot v0.0.0-20190925031633-a086233088ac h1:JojcxqGTgVQp5t9yrSglW+W6g4SzI3grq8wQWofnDsY=
-gitee.com/openeuler/ci-bot v0.0.0-20190925031633-a086233088ac/go.mod h1:TZcqkw1WUnmBZQOB6CEflpxFG/L3leXd772pusdvBxk=
 gitee.com/openeuler/go-gitee v0.0.0-20190925030845-0fcc9eecc5ef h1:ysS5m8rOyp8gzg3HHUP7ffNIAMQeDpBn59Hh/Cxci8s=
 gitee.com/openeuler/go-gitee v0.0.0-20190925030845-0fcc9eecc5ef/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
 github.com/antihax/optional v0.0.0-20180407024304-ca021399b1a6 h1:uZuxRZCz65cG1o6K/xUqImNcYKtmk9ylqaH0itMSvzA=
