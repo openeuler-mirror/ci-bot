@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/spf13/pflag"
 
-	"gitee.com/openEuler/ci-bot/pkg/cibot"
+	"gitee.com/openeuler/ci-bot/pkg/cibot"
 )
 
 func main() {

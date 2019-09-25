@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"gitee.com/openEuler/go-gitee/gitee"
 	"github.com/golang/glog"
 	"github.com/spf13/pflag"
 	"golang.org/x/oauth2"
@@ -52,16 +53,22 @@ func (s *Webhook) Run() {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: string(oauthSecret)},
 	)
-	tc := oauth2.NewClient(ctx, ts)
-	glog.Infof("oauth client: %v", tc)
+
+	// configuration
+	giteeConf := gitee.NewConfiguration()
+	giteeConf.HTTPClient = oauth2.NewClient(ctx, ts)
+
+	// git client
+	giteeClient := gitee.NewAPIClient(giteeConf)
 
 	// return 200 for health check
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {})
 
 	// setting handler
 	webHookHandler := Server{
-		Config:  config,
-		Context: ctx,
+		Config:      config,
+		Context:     ctx,
+		GiteeClient: client,
 	}
 	http.HandleFunc("/hook", webHookHandler.ServeHTTP)
 

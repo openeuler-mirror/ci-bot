@@ -3,6 +3,8 @@ package cibot
 import (
 	"context"
 	"net/http"
+
+	"gitee.com/openEuler/go-gitee/gitee"
 )
 
 type Config struct {
@@ -13,8 +15,9 @@ type Config struct {
 }
 
 type Server struct {
-	Config  Config
-	Context context.Context
+	Config      Config
+	Context     context.Context
+	GiteeClient *gitee.APIClient
 }
 
 // ServeHTTP validates an incoming webhook and invoke its handler.
