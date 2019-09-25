@@ -11,11 +11,13 @@ package gitee
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	neturl "net/url"
 	"strings"
-	"fmt"
+
 	"github.com/antihax/optional"
 )
 
@@ -26,7 +28,7 @@ var (
 
 type WebhooksApiService service
 
-/* 
+/*
 WebhooksApiService 删除一个仓库WebHook
 删除一个仓库WebHook
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -39,7 +41,7 @@ WebhooksApiService 删除一个仓库WebHook
 
 */
 
-type DeleteV5ReposOwnerRepoHooksIdOpts struct { 
+type DeleteV5ReposOwnerRepoHooksIdOpts struct {
 	AccessToken optional.String
 }
 
@@ -49,7 +51,6 @@ func (a *WebhooksApiService) DeleteV5ReposOwnerRepoHooksId(ctx context.Context, 
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -98,20 +99,19 @@ func (a *WebhooksApiService) DeleteV5ReposOwnerRepoHooksId(ctx context.Context, 
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 WebhooksApiService 列出仓库的WebHooks
 列出仓库的WebHooks
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -125,18 +125,18 @@ WebhooksApiService 列出仓库的WebHooks
 @return []Hook
 */
 
-type GetV5ReposOwnerRepoHooksOpts struct { 
+type GetV5ReposOwnerRepoHooksOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *WebhooksApiService) GetV5ReposOwnerRepoHooks(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoHooksOpts) ([]Hook, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Hook
 	)
 
@@ -193,36 +193,36 @@ func (a *WebhooksApiService) GetV5ReposOwnerRepoHooks(ctx context.Context, owner
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Hook
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 WebhooksApiService 获取仓库单个WebHook
 获取仓库单个WebHook
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -235,16 +235,16 @@ WebhooksApiService 获取仓库单个WebHook
 @return Hook
 */
 
-type GetV5ReposOwnerRepoHooksIdOpts struct { 
+type GetV5ReposOwnerRepoHooksIdOpts struct {
 	AccessToken optional.String
 }
 
 func (a *WebhooksApiService) GetV5ReposOwnerRepoHooksId(ctx context.Context, owner string, repo string, id int32, localVarOptionals *GetV5ReposOwnerRepoHooksIdOpts) (Hook, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Hook
 	)
 
@@ -296,36 +296,36 @@ func (a *WebhooksApiService) GetV5ReposOwnerRepoHooksId(ctx context.Context, own
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Hook
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 WebhooksApiService 更新一个仓库WebHook
 更新一个仓库WebHook
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -345,22 +345,22 @@ WebhooksApiService 更新一个仓库WebHook
 @return Hook
 */
 
-type PatchV5ReposOwnerRepoHooksIdOpts struct { 
-	AccessToken optional.String
-	Password optional.String
-	PushEvents optional.Bool
-	TagPushEvents optional.Bool
-	IssuesEvents optional.Bool
-	NoteEvents optional.Bool
+type PatchV5ReposOwnerRepoHooksIdOpts struct {
+	AccessToken         optional.String
+	Password            optional.String
+	PushEvents          optional.Bool
+	TagPushEvents       optional.Bool
+	IssuesEvents        optional.Bool
+	NoteEvents          optional.Bool
 	MergeRequestsEvents optional.Bool
 }
 
 func (a *WebhooksApiService) PatchV5ReposOwnerRepoHooksId(ctx context.Context, owner string, repo string, id int32, url string, localVarOptionals *PatchV5ReposOwnerRepoHooksIdOpts) (Hook, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Patch")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Patch")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Hook
 	)
 
@@ -371,8 +371,8 @@ func (a *WebhooksApiService) PatchV5ReposOwnerRepoHooksId(ctx context.Context, o
 	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
 
 	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
+	localVarQueryParams := neturl.Values{}
+	localVarFormParams := neturl.Values{}
 
 	// to determine the Content-Type header
 	localVarHttpContentTypes := []string{"application/json", "multipart/form-data"}
@@ -431,36 +431,36 @@ func (a *WebhooksApiService) PatchV5ReposOwnerRepoHooksId(ctx context.Context, o
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Hook
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 WebhooksApiService 创建一个仓库WebHook
 创建一个仓库WebHook
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -479,22 +479,22 @@ WebhooksApiService 创建一个仓库WebHook
 @return Hook
 */
 
-type PostV5ReposOwnerRepoHooksOpts struct { 
-	AccessToken optional.String
-	Password optional.String
-	PushEvents optional.Bool
-	TagPushEvents optional.Bool
-	IssuesEvents optional.Bool
-	NoteEvents optional.Bool
+type PostV5ReposOwnerRepoHooksOpts struct {
+	AccessToken         optional.String
+	Password            optional.String
+	PushEvents          optional.Bool
+	TagPushEvents       optional.Bool
+	IssuesEvents        optional.Bool
+	NoteEvents          optional.Bool
 	MergeRequestsEvents optional.Bool
 }
 
 func (a *WebhooksApiService) PostV5ReposOwnerRepoHooks(ctx context.Context, owner string, repo string, url string, localVarOptionals *PostV5ReposOwnerRepoHooksOpts) (Hook, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Hook
 	)
 
@@ -504,8 +504,8 @@ func (a *WebhooksApiService) PostV5ReposOwnerRepoHooks(ctx context.Context, owne
 	localVarPath = strings.Replace(localVarPath, "{"+"repo"+"}", fmt.Sprintf("%v", repo), -1)
 
 	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
+	localVarQueryParams := neturl.Values{}
+	localVarFormParams := neturl.Values{}
 
 	// to determine the Content-Type header
 	localVarHttpContentTypes := []string{"application/json", "multipart/form-data"}
@@ -564,36 +564,36 @@ func (a *WebhooksApiService) PostV5ReposOwnerRepoHooks(ctx context.Context, owne
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Hook
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 WebhooksApiService 测试WebHook是否发送成功
 测试WebHook是否发送成功
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -606,7 +606,7 @@ WebhooksApiService 测试WebHook是否发送成功
 
 */
 
-type PostV5ReposOwnerRepoHooksIdTestsOpts struct { 
+type PostV5ReposOwnerRepoHooksIdTestsOpts struct {
 	AccessToken optional.String
 }
 
@@ -616,7 +616,6 @@ func (a *WebhooksApiService) PostV5ReposOwnerRepoHooksIdTests(ctx context.Contex
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -665,13 +664,12 @@ func (a *WebhooksApiService) PostV5ReposOwnerRepoHooksIdTests(ctx context.Contex
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 

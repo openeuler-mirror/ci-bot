@@ -68,7 +68,7 @@ func (s *Webhook) Run() {
 	webHookHandler := Server{
 		Config:      config,
 		Context:     ctx,
-		GiteeClient: client,
+		GiteeClient: giteeClient,
 	}
 	http.HandleFunc("/hook", webHookHandler.ServeHTTP)
 
