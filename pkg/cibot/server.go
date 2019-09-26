@@ -2,6 +2,7 @@ package cibot
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"gitee.com/openeuler/go-gitee/gitee"
@@ -24,20 +25,27 @@ type Server struct {
 // ServeHTTP validates an incoming webhook and invoke its handler.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	glog.Info("received a webhook event")
-	// Validate the webhook secret
+	// validate the webhook secret
 	payload, err := gitee.ValidatePayload(r, []byte(s.Config.WebhookSecret))
 	if err != nil {
-		glog.Errorf("Invalid payload: %v", err)
+		glog.Errorf("invalid payload: %v", err)
+		fmt.Fprint(w, err.Error())
 		return
 	}
-	// Parse into Event
-	event, err := gitee.ParseWebHook(gitee.WebHookType(r), payload)
-	if err != nil {
-		glog.Errorf("Failed to parse webhook event")
-		return
-	}
-	glog.Infof("payload: %v event: %v", payload, event)
+	glog.Infof("payload: %v", string(payload))
 
+	// parse into Event
+	messagetype := gitee.WebHookType(r)
+	glog.Infof("message type: %v", messagetype)
+	event, err := gitee.ParseWebHook(messagetype, payload)
+	if err != nil {
+		glog.Errorf("failed to parse webhook event: %v", err)
+		fmt.Fprint(w, err.Error())
+		return
+	}
+
+	// response avoids gitee timeout 5s
+	fmt.Fprint(w, "handle webhook event successfully")
 	var client http.Client
 	client.Do(r)
 
