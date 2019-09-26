@@ -11,7 +11,7 @@ package gitee
 
 // 取消用户测试 Pull Request
 type PullRequest struct {
-	Id                string     `json:"id,omitempty"`
+	Id                int32      `json:"id,omitempty"`
 	Url               string     `json:"url,omitempty"`
 	HtmlUrl           string     `json:"html_url,omitempty"`
 	DiffUrl           string     `json:"diff_url,omitempty"`
@@ -22,7 +22,7 @@ type PullRequest struct {
 	ReviewCommentUrl  string     `json:"review_comment_url,omitempty"`
 	CommentsUrl       string     `json:"comments_url,omitempty"`
 	StatusesUrl       string     `json:"statuses_url,omitempty"`
-	Number            string     `json:"number,omitempty"`
+	Number            int32      `json:"number,omitempty"`
 	State             string     `json:"state,omitempty"`
 	Title             string     `json:"title,omitempty"`
 	Body              string     `json:"body,omitempty"`
@@ -36,9 +36,9 @@ type PullRequest struct {
 	UpdatedAt         string     `json:"updated_at,omitempty"`
 	ClosedAt          string     `json:"closed_at,omitempty"`
 	MergedAt          string     `json:"merged_at,omitempty"`
-	Mergeable         string     `json:"mergeable,omitempty"`
-	Head              string     `json:"head,omitempty"`
-	Base              string     `json:"base,omitempty"`
+	Mergeable         bool       `json:"mergeable,omitempty"`
+	Head              *BasicInfo `json:"head,omitempty"`
+	Base              *BasicInfo `json:"base,omitempty"`
 	Links             string     `json:"_links,omitempty"`
-	User              string     `json:"user,omitempty"`
+	User              *UserBasic `json:"user,omitempty"`
 }

@@ -27,7 +27,7 @@ type User struct {
 	EventsUrl         string `json:"events_url,omitempty"`
 	ReceivedEventsUrl string `json:"received_events_url,omitempty"`
 	Type_             string `json:"type,omitempty"`
-	SiteAdmin         string `json:"site_admin,omitempty"`
+	SiteAdmin         bool   `json:"site_admin,omitempty"`
 	Blog              string `json:"blog,omitempty"`
 	Weibo             string `json:"weibo,omitempty"`
 	Bio               string `json:"bio,omitempty"`
