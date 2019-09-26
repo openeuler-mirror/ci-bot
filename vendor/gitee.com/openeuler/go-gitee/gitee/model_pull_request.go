@@ -30,7 +30,7 @@ type PullRequest struct {
 	Assignees         []string   `json:"assignees,omitempty"`
 	Testers           []string   `json:"testers,omitempty"`
 	Milestone         *Milestone `json:"milestone,omitempty"`
-	Labels            *Label     `json:"labels,omitempty"`
+	Labels            []Label    `json:"labels,omitempty"`
 	Locked            string     `json:"locked,omitempty"`
 	CreatedAt         string     `json:"created_at,omitempty"`
 	UpdatedAt         string     `json:"updated_at,omitempty"`
