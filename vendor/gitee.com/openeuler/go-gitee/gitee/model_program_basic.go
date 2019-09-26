@@ -10,9 +10,9 @@
 package gitee
 
 type ProgramBasic struct {
-	Id string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
+	Id          string `json:"id,omitempty"`
+	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
-	Assignee string `json:"assignee,omitempty"`
-	Author string `json:"author,omitempty"`
+	Assignee    string `json:"assignee,omitempty"`
+	Author      string `json:"author,omitempty"`
 }

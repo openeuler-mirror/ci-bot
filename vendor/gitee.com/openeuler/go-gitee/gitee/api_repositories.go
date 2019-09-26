@@ -11,11 +11,12 @@ package gitee
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-	"fmt"
+
 	"github.com/antihax/optional"
 )
 
@@ -26,7 +27,7 @@ var (
 
 type RepositoriesApiService service
 
-/* 
+/*
 RepositoriesApiService 删除一个仓库
 删除一个仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -38,7 +39,7 @@ RepositoriesApiService 删除一个仓库
 
 */
 
-type DeleteV5ReposOwnerRepoOpts struct { 
+type DeleteV5ReposOwnerRepoOpts struct {
 	AccessToken optional.String
 }
 
@@ -48,7 +49,6 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepo(ctx context.Context, own
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -96,20 +96,19 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepo(ctx context.Context, own
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 取消保护分支的设置
 取消保护分支的设置
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -122,7 +121,7 @@ RepositoriesApiService 取消保护分支的设置
 
 */
 
-type DeleteV5ReposOwnerRepoBranchesBranchProtectionOpts struct { 
+type DeleteV5ReposOwnerRepoBranchesBranchProtectionOpts struct {
 	AccessToken optional.String
 }
 
@@ -132,7 +131,6 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoBranchesBranchProtection(
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -181,20 +179,19 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoBranchesBranchProtection(
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 移除仓库成员
 移除仓库成员
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -207,7 +204,7 @@ RepositoriesApiService 移除仓库成员
 
 */
 
-type DeleteV5ReposOwnerRepoCollaboratorsUsernameOpts struct { 
+type DeleteV5ReposOwnerRepoCollaboratorsUsernameOpts struct {
 	AccessToken optional.String
 }
 
@@ -217,7 +214,6 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoCollaboratorsUsername(ctx
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -266,20 +262,19 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoCollaboratorsUsername(ctx
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 删除Commit评论
 删除Commit评论
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -292,7 +287,7 @@ RepositoriesApiService 删除Commit评论
 
 */
 
-type DeleteV5ReposOwnerRepoCommentsIdOpts struct { 
+type DeleteV5ReposOwnerRepoCommentsIdOpts struct {
 	AccessToken optional.String
 }
 
@@ -302,7 +297,6 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoCommentsId(ctx context.Co
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -351,20 +345,19 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoCommentsId(ctx context.Co
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 删除文件
 删除文件
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -384,21 +377,21 @@ RepositoriesApiService 删除文件
 @return CommitContent
 */
 
-type DeleteV5ReposOwnerRepoContentsPathOpts struct { 
-	AccessToken optional.String
-	Branch optional.String
-	CommitterName optional.String
+type DeleteV5ReposOwnerRepoContentsPathOpts struct {
+	AccessToken    optional.String
+	Branch         optional.String
+	CommitterName  optional.String
 	CommitterEmail optional.String
-	AuthorName optional.String
-	AuthorEmail optional.String
+	AuthorName     optional.String
+	AuthorEmail    optional.String
 }
 
 func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoContentsPath(ctx context.Context, owner string, repo string, path string, sha string, message string, localVarOptionals *DeleteV5ReposOwnerRepoContentsPathOpts) (CommitContent, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Delete")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Delete")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue CommitContent
 	)
 
@@ -467,36 +460,36 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoContentsPath(ctx context.
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v CommitContent
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 停用仓库公钥
 停用仓库公钥
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -509,7 +502,7 @@ RepositoriesApiService 停用仓库公钥
 
 */
 
-type DeleteV5ReposOwnerRepoKeysEnableIdOpts struct { 
+type DeleteV5ReposOwnerRepoKeysEnableIdOpts struct {
 	AccessToken optional.String
 }
 
@@ -519,7 +512,6 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoKeysEnableId(ctx context.
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -568,20 +560,19 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoKeysEnableId(ctx context.
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 删除一个仓库公钥
 删除一个仓库公钥
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -594,7 +585,7 @@ RepositoriesApiService 删除一个仓库公钥
 
 */
 
-type DeleteV5ReposOwnerRepoKeysIdOpts struct { 
+type DeleteV5ReposOwnerRepoKeysIdOpts struct {
 	AccessToken optional.String
 }
 
@@ -604,7 +595,6 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoKeysId(ctx context.Contex
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -653,20 +643,19 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoKeysId(ctx context.Contex
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 删除仓库Release
 删除仓库Release
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -679,7 +668,7 @@ RepositoriesApiService 删除仓库Release
 
 */
 
-type DeleteV5ReposOwnerRepoReleasesIdOpts struct { 
+type DeleteV5ReposOwnerRepoReleasesIdOpts struct {
 	AccessToken optional.String
 }
 
@@ -689,7 +678,6 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoReleasesId(ctx context.Co
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -738,20 +726,19 @@ func (a *RepositoriesApiService) DeleteV5ReposOwnerRepoReleasesId(ctx context.Co
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取企业的所有仓库
 获取企业的所有仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -766,20 +753,20 @@ RepositoriesApiService 获取企业的所有仓库
 @return Project
 */
 
-type GetV5EnterprisesEnterpriseReposOpts struct { 
+type GetV5EnterprisesEnterpriseReposOpts struct {
 	AccessToken optional.String
-	Type_ optional.String
-	Direct optional.Bool
-	Page optional.Int32
-	PerPage optional.Int32
+	Type_       optional.String
+	Direct      optional.Bool
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5EnterprisesEnterpriseRepos(ctx context.Context, enterprise string, localVarOptionals *GetV5EnterprisesEnterpriseReposOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -841,36 +828,36 @@ func (a *RepositoriesApiService) GetV5EnterprisesEnterpriseRepos(ctx context.Con
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取一个组织的仓库
 获取一个组织的仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -884,19 +871,19 @@ RepositoriesApiService 获取一个组织的仓库
 @return Project
 */
 
-type GetV5OrgsOrgReposOpts struct { 
+type GetV5OrgsOrgReposOpts struct {
 	AccessToken optional.String
-	Type_ optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Type_       optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5OrgsOrgRepos(ctx context.Context, org string, localVarOptionals *GetV5OrgsOrgReposOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -955,36 +942,36 @@ func (a *RepositoriesApiService) GetV5OrgsOrgRepos(ctx context.Context, org stri
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取用户的某个仓库
 获取用户的某个仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -996,16 +983,16 @@ RepositoriesApiService 获取用户的某个仓库
 @return Project
 */
 
-type GetV5ReposOwnerRepoOpts struct { 
+type GetV5ReposOwnerRepoOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepo(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -1056,36 +1043,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepo(ctx context.Context, owner 
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取所有分支
 获取所有分支
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1097,16 +1084,16 @@ RepositoriesApiService 获取所有分支
 @return []Branch
 */
 
-type GetV5ReposOwnerRepoBranchesOpts struct { 
+type GetV5ReposOwnerRepoBranchesOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoBranches(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoBranchesOpts) ([]Branch, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Branch
 	)
 
@@ -1157,36 +1144,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoBranches(ctx context.Context
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Branch
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取单个分支
 获取单个分支
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1199,16 +1186,16 @@ RepositoriesApiService 获取单个分支
 @return CompleteBranch
 */
 
-type GetV5ReposOwnerRepoBranchesBranchOpts struct { 
+type GetV5ReposOwnerRepoBranchesBranchOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoBranchesBranch(ctx context.Context, owner string, repo string, branch string, localVarOptionals *GetV5ReposOwnerRepoBranchesBranchOpts) (CompleteBranch, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue CompleteBranch
 	)
 
@@ -1260,36 +1247,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoBranchesBranch(ctx context.C
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v CompleteBranch
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库的所有成员
 获取仓库的所有成员
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1301,16 +1288,16 @@ RepositoriesApiService 获取仓库的所有成员
 @return ProjectMember
 */
 
-type GetV5ReposOwnerRepoCollaboratorsOpts struct { 
+type GetV5ReposOwnerRepoCollaboratorsOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaborators(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoCollaboratorsOpts) (ProjectMember, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue ProjectMember
 	)
 
@@ -1361,36 +1348,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaborators(ctx context.Co
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v ProjectMember
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 判断用户是否为仓库成员
 判断用户是否为仓库成员
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1403,7 +1390,7 @@ RepositoriesApiService 判断用户是否为仓库成员
 
 */
 
-type GetV5ReposOwnerRepoCollaboratorsUsernameOpts struct { 
+type GetV5ReposOwnerRepoCollaboratorsUsernameOpts struct {
 	AccessToken optional.String
 }
 
@@ -1413,7 +1400,6 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaboratorsUsername(ctx co
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -1462,20 +1448,19 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaboratorsUsername(ctx co
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 查看仓库成员的权限
 查看仓库成员的权限
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1488,16 +1473,16 @@ RepositoriesApiService 查看仓库成员的权限
 @return ProjectMemberPermission
 */
 
-type GetV5ReposOwnerRepoCollaboratorsUsernamePermissionOpts struct { 
+type GetV5ReposOwnerRepoCollaboratorsUsernamePermissionOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaboratorsUsernamePermission(ctx context.Context, owner string, repo string, username string, localVarOptionals *GetV5ReposOwnerRepoCollaboratorsUsernamePermissionOpts) (ProjectMemberPermission, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue ProjectMemberPermission
 	)
 
@@ -1549,36 +1534,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaboratorsUsernamePermiss
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v ProjectMemberPermission
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库的Commit评论
 获取仓库的Commit评论
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1592,18 +1577,18 @@ RepositoriesApiService 获取仓库的Commit评论
 @return Note
 */
 
-type GetV5ReposOwnerRepoCommentsOpts struct { 
+type GetV5ReposOwnerRepoCommentsOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoComments(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoCommentsOpts) (Note, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Note
 	)
 
@@ -1660,36 +1645,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoComments(ctx context.Context
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Note
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库的某条Commit评论
 获取仓库的某条Commit评论
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1702,16 +1687,16 @@ RepositoriesApiService 获取仓库的某条Commit评论
 @return Note
 */
 
-type GetV5ReposOwnerRepoCommentsIdOpts struct { 
+type GetV5ReposOwnerRepoCommentsIdOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoCommentsId(ctx context.Context, owner string, repo string, id int32, localVarOptionals *GetV5ReposOwnerRepoCommentsIdOpts) (Note, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Note
 	)
 
@@ -1763,36 +1748,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCommentsId(ctx context.Conte
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Note
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 仓库的所有提交
 仓库的所有提交
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1811,23 +1796,23 @@ RepositoriesApiService 仓库的所有提交
 @return []RepoCommit
 */
 
-type GetV5ReposOwnerRepoCommitsOpts struct { 
+type GetV5ReposOwnerRepoCommitsOpts struct {
 	AccessToken optional.String
-	Sha optional.String
-	Path optional.String
-	Author optional.String
-	Since optional.String
-	Until optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Sha         optional.String
+	Path        optional.String
+	Author      optional.String
+	Since       optional.String
+	Until       optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoCommits(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoCommitsOpts) ([]RepoCommit, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []RepoCommit
 	)
 
@@ -1899,36 +1884,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCommits(ctx context.Context,
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []RepoCommit
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取单个Commit的评论
 获取单个Commit的评论
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1943,18 +1928,18 @@ RepositoriesApiService 获取单个Commit的评论
 @return Note
 */
 
-type GetV5ReposOwnerRepoCommitsRefCommentsOpts struct { 
+type GetV5ReposOwnerRepoCommitsRefCommentsOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoCommitsRefComments(ctx context.Context, owner string, repo string, ref string, localVarOptionals *GetV5ReposOwnerRepoCommitsRefCommentsOpts) (Note, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Note
 	)
 
@@ -2012,36 +1997,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCommitsRefComments(ctx conte
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Note
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 仓库的某个提交
 仓库的某个提交
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2054,16 +2039,16 @@ RepositoriesApiService 仓库的某个提交
 @return RepoCommit
 */
 
-type GetV5ReposOwnerRepoCommitsShaOpts struct { 
+type GetV5ReposOwnerRepoCommitsShaOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoCommitsSha(ctx context.Context, owner string, repo string, sha string, localVarOptionals *GetV5ReposOwnerRepoCommitsShaOpts) (RepoCommit, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue RepoCommit
 	)
 
@@ -2115,36 +2100,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCommitsSha(ctx context.Conte
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v RepoCommit
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 两个Commits之间对比的版本差异
 两个Commits之间对比的版本差异
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2158,16 +2143,16 @@ RepositoriesApiService 两个Commits之间对比的版本差异
 @return Compare
 */
 
-type GetV5ReposOwnerRepoCompareBaseHeadOpts struct { 
+type GetV5ReposOwnerRepoCompareBaseHeadOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoCompareBaseHead(ctx context.Context, owner string, repo string, base string, head string, localVarOptionals *GetV5ReposOwnerRepoCompareBaseHeadOpts) (Compare, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Compare
 	)
 
@@ -2220,36 +2205,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCompareBaseHead(ctx context.
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Compare
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库具体路径下的内容
 获取仓库具体路径下的内容
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2263,17 +2248,17 @@ RepositoriesApiService 获取仓库具体路径下的内容
 @return []Content
 */
 
-type GetV5ReposOwnerRepoContentsPathOpts struct { 
+type GetV5ReposOwnerRepoContentsPathOpts struct {
 	AccessToken optional.String
-	Ref optional.String
+	Ref         optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoContentsPath(ctx context.Context, owner string, repo string, path string, localVarOptionals *GetV5ReposOwnerRepoContentsPathOpts) ([]Content, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Content
 	)
 
@@ -2328,36 +2313,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoContentsPath(ctx context.Con
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Content
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库贡献者
 获取仓库贡献者
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2369,16 +2354,16 @@ RepositoriesApiService 获取仓库贡献者
 @return Contributor
 */
 
-type GetV5ReposOwnerRepoContributorsOpts struct { 
+type GetV5ReposOwnerRepoContributorsOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoContributors(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoContributorsOpts) (Contributor, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Contributor
 	)
 
@@ -2429,36 +2414,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoContributors(ctx context.Con
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Contributor
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 查看仓库的Forks
 查看仓库的Forks
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2473,19 +2458,19 @@ RepositoriesApiService 查看仓库的Forks
 @return Project
 */
 
-type GetV5ReposOwnerRepoForksOpts struct { 
+type GetV5ReposOwnerRepoForksOpts struct {
 	AccessToken optional.String
-	Sort optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Sort        optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoForks(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoForksOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -2545,36 +2530,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoForks(ctx context.Context, o
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库已部署的公钥
 获取仓库已部署的公钥
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2588,18 +2573,18 @@ RepositoriesApiService 获取仓库已部署的公钥
 @return []SshKey
 */
 
-type GetV5ReposOwnerRepoKeysOpts struct { 
+type GetV5ReposOwnerRepoKeysOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoKeys(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoKeysOpts) ([]SshKey, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []SshKey
 	)
 
@@ -2656,36 +2641,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoKeys(ctx context.Context, ow
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []SshKey
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库可部署的公钥
 获取仓库可部署的公钥
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2699,18 +2684,18 @@ RepositoriesApiService 获取仓库可部署的公钥
 @return []SshKeyBasic
 */
 
-type GetV5ReposOwnerRepoKeysAvailableOpts struct { 
+type GetV5ReposOwnerRepoKeysAvailableOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoKeysAvailable(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoKeysAvailableOpts) ([]SshKeyBasic, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []SshKeyBasic
 	)
 
@@ -2767,36 +2752,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoKeysAvailable(ctx context.Co
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []SshKeyBasic
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库的单个公钥
 获取仓库的单个公钥
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2809,16 +2794,16 @@ RepositoriesApiService 获取仓库的单个公钥
 @return SshKey
 */
 
-type GetV5ReposOwnerRepoKeysIdOpts struct { 
+type GetV5ReposOwnerRepoKeysIdOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoKeysId(ctx context.Context, owner string, repo string, id int32, localVarOptionals *GetV5ReposOwnerRepoKeysIdOpts) (SshKey, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue SshKey
 	)
 
@@ -2870,36 +2855,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoKeysId(ctx context.Context, 
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v SshKey
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取Pages信息
 获取Pages信息
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2911,7 +2896,7 @@ RepositoriesApiService 获取Pages信息
 
 */
 
-type GetV5ReposOwnerRepoPagesOpts struct { 
+type GetV5ReposOwnerRepoPagesOpts struct {
 	AccessToken optional.String
 }
 
@@ -2921,7 +2906,6 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoPages(ctx context.Context, o
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -2969,20 +2953,19 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoPages(ctx context.Context, o
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库README
 获取仓库README
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -2995,17 +2978,17 @@ RepositoriesApiService 获取仓库README
 @return Content
 */
 
-type GetV5ReposOwnerRepoReadmeOpts struct { 
+type GetV5ReposOwnerRepoReadmeOpts struct {
 	AccessToken optional.String
-	Ref optional.String
+	Ref         optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoReadme(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoReadmeOpts) (Content, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Content
 	)
 
@@ -3059,36 +3042,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoReadme(ctx context.Context, 
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Content
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库的所有Releases
 获取仓库的所有Releases
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3102,18 +3085,18 @@ RepositoriesApiService 获取仓库的所有Releases
 @return []Release
 */
 
-type GetV5ReposOwnerRepoReleasesOpts struct { 
+type GetV5ReposOwnerRepoReleasesOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoReleases(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoReleasesOpts) ([]Release, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Release
 	)
 
@@ -3170,36 +3153,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoReleases(ctx context.Context
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Release
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库的单个Releases
 获取仓库的单个Releases
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3212,16 +3195,16 @@ RepositoriesApiService 获取仓库的单个Releases
 @return Release
 */
 
-type GetV5ReposOwnerRepoReleasesIdOpts struct { 
+type GetV5ReposOwnerRepoReleasesIdOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoReleasesId(ctx context.Context, owner string, repo string, id int32, localVarOptionals *GetV5ReposOwnerRepoReleasesIdOpts) (Release, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Release
 	)
 
@@ -3273,36 +3256,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoReleasesId(ctx context.Conte
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Release
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取仓库的最后更新的Release
 获取仓库的最后更新的Release
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3314,16 +3297,16 @@ RepositoriesApiService 获取仓库的最后更新的Release
 @return Release
 */
 
-type GetV5ReposOwnerRepoReleasesLatestOpts struct { 
+type GetV5ReposOwnerRepoReleasesLatestOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoReleasesLatest(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoReleasesLatestOpts) (Release, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Release
 	)
 
@@ -3374,36 +3357,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoReleasesLatest(ctx context.C
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Release
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 根据Tag名称获取仓库的Release
 根据Tag名称获取仓库的Release
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3416,16 +3399,16 @@ RepositoriesApiService 根据Tag名称获取仓库的Release
 @return Release
 */
 
-type GetV5ReposOwnerRepoReleasesTagsTagOpts struct { 
+type GetV5ReposOwnerRepoReleasesTagsTagOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoReleasesTagsTag(ctx context.Context, owner string, repo string, tag string, localVarOptionals *GetV5ReposOwnerRepoReleasesTagsTagOpts) (Release, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Release
 	)
 
@@ -3477,36 +3460,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoReleasesTagsTag(ctx context.
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Release
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 列出仓库所有的tags
 列出仓库所有的tags
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3518,16 +3501,16 @@ RepositoriesApiService 列出仓库所有的tags
 @return Tag
 */
 
-type GetV5ReposOwnerRepoTagsOpts struct { 
+type GetV5ReposOwnerRepoTagsOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoTags(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoTagsOpts) (Tag, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Tag
 	)
 
@@ -3578,36 +3561,36 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoTags(ctx context.Context, ow
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Tag
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 列出授权用户的所有仓库
 列出授权用户的所有仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3624,23 +3607,23 @@ RepositoriesApiService 列出授权用户的所有仓库
 @return Project
 */
 
-type GetV5UserReposOpts struct { 
+type GetV5UserReposOpts struct {
 	AccessToken optional.String
-	Visibility optional.String
+	Visibility  optional.String
 	Affiliation optional.String
-	Type_ optional.String
-	Sort optional.String
-	Direction optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Type_       optional.String
+	Sort        optional.String
+	Direction   optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5UserRepos(ctx context.Context, localVarOptionals *GetV5UserReposOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -3710,36 +3693,36 @@ func (a *RepositoriesApiService) GetV5UserRepos(ctx context.Context, localVarOpt
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 获取某个用户的公开仓库
 获取某个用户的公开仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3755,21 +3738,21 @@ RepositoriesApiService 获取某个用户的公开仓库
 @return Project
 */
 
-type GetV5UsersUsernameReposOpts struct { 
+type GetV5UsersUsernameReposOpts struct {
 	AccessToken optional.String
-	Type_ optional.String
-	Sort optional.String
-	Direction optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Type_       optional.String
+	Sort        optional.String
+	Direction   optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5UsersUsernameRepos(ctx context.Context, username string, localVarOptionals *GetV5UsersUsernameReposOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -3834,36 +3817,36 @@ func (a *RepositoriesApiService) GetV5UsersUsernameRepos(ctx context.Context, us
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 更新仓库设置
 更新仓库设置
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -3882,22 +3865,22 @@ RepositoriesApiService 更新仓库设置
 @return Project
 */
 
-type PatchV5ReposOwnerRepoOpts struct { 
-	AccessToken optional.String
-	Description optional.String
-	Homepage optional.String
-	HasIssues optional.Bool
-	HasWiki optional.Bool
-	Private optional.Bool
+type PatchV5ReposOwnerRepoOpts struct {
+	AccessToken   optional.String
+	Description   optional.String
+	Homepage      optional.String
+	HasIssues     optional.Bool
+	HasWiki       optional.Bool
+	Private       optional.Bool
 	DefaultBranch optional.String
 }
 
 func (a *RepositoriesApiService) PatchV5ReposOwnerRepo(ctx context.Context, owner string, repo string, name string, localVarOptionals *PatchV5ReposOwnerRepoOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Patch")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Patch")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -3967,36 +3950,36 @@ func (a *RepositoriesApiService) PatchV5ReposOwnerRepo(ctx context.Context, owne
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 更新Commit评论
 更新Commit评论
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4010,16 +3993,16 @@ RepositoriesApiService 更新Commit评论
 @return Note
 */
 
-type PatchV5ReposOwnerRepoCommentsIdOpts struct { 
+type PatchV5ReposOwnerRepoCommentsIdOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) PatchV5ReposOwnerRepoCommentsId(ctx context.Context, owner string, repo string, id int32, body string, localVarOptionals *PatchV5ReposOwnerRepoCommentsIdOpts) (Note, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Patch")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Patch")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Note
 	)
 
@@ -4072,36 +4055,36 @@ func (a *RepositoriesApiService) PatchV5ReposOwnerRepoCommentsId(ctx context.Con
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Note
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 更新仓库Release
 更新仓库Release
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4118,17 +4101,17 @@ RepositoriesApiService 更新仓库Release
 @return Release
 */
 
-type PatchV5ReposOwnerRepoReleasesIdOpts struct { 
+type PatchV5ReposOwnerRepoReleasesIdOpts struct {
 	AccessToken optional.String
-	Prerelease optional.Bool
+	Prerelease  optional.Bool
 }
 
 func (a *RepositoriesApiService) PatchV5ReposOwnerRepoReleasesId(ctx context.Context, owner string, repo string, tagName string, name string, body string, id int32, localVarOptionals *PatchV5ReposOwnerRepoReleasesIdOpts) (Release, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Patch")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Patch")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Release
 	)
 
@@ -4186,36 +4169,36 @@ func (a *RepositoriesApiService) PatchV5ReposOwnerRepoReleasesId(ctx context.Con
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Release
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 创建企业仓库
 创建企业仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4238,27 +4221,27 @@ RepositoriesApiService 创建企业仓库
 @return Project
 */
 
-type PostV5EnterprisesEnterpriseReposOpts struct { 
-	AccessToken optional.String
-	Description optional.String
-	Homepage optional.String
-	HasIssues optional.Bool
-	HasWiki optional.Bool
-	AutoInit optional.Bool
+type PostV5EnterprisesEnterpriseReposOpts struct {
+	AccessToken       optional.String
+	Description       optional.String
+	Homepage          optional.String
+	HasIssues         optional.Bool
+	HasWiki           optional.Bool
+	AutoInit          optional.Bool
 	GitignoreTemplate optional.String
-	LicenseTemplate optional.String
-	Private optional.Int32
-	Outsourced optional.Bool
-	ProjectCreator optional.String
-	Members optional.String
+	LicenseTemplate   optional.String
+	Private           optional.Int32
+	Outsourced        optional.Bool
+	ProjectCreator    optional.String
+	Members           optional.String
 }
 
 func (a *RepositoriesApiService) PostV5EnterprisesEnterpriseRepos(ctx context.Context, name string, enterprise string, localVarOptionals *PostV5EnterprisesEnterpriseReposOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -4342,36 +4325,36 @@ func (a *RepositoriesApiService) PostV5EnterprisesEnterpriseRepos(ctx context.Co
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 创建组织仓库
 创建组织仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4392,25 +4375,25 @@ RepositoriesApiService 创建组织仓库
 @return Project
 */
 
-type PostV5OrgsOrgReposOpts struct { 
-	AccessToken optional.String
-	Description optional.String
-	Homepage optional.String
-	HasIssues optional.Bool
-	HasWiki optional.Bool
-	Public optional.Int32
-	Private optional.Bool
-	AutoInit optional.Bool
+type PostV5OrgsOrgReposOpts struct {
+	AccessToken       optional.String
+	Description       optional.String
+	Homepage          optional.String
+	HasIssues         optional.Bool
+	HasWiki           optional.Bool
+	Public            optional.Int32
+	Private           optional.Bool
+	AutoInit          optional.Bool
 	GitignoreTemplate optional.String
-	LicenseTemplate optional.String
+	LicenseTemplate   optional.String
 }
 
 func (a *RepositoriesApiService) PostV5OrgsOrgRepos(ctx context.Context, name string, org string, localVarOptionals *PostV5OrgsOrgReposOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -4488,36 +4471,36 @@ func (a *RepositoriesApiService) PostV5OrgsOrgRepos(ctx context.Context, name st
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 创建分支
 创建分支
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4531,16 +4514,16 @@ RepositoriesApiService 创建分支
 @return CompleteBranch
 */
 
-type PostV5ReposOwnerRepoBranchesOpts struct { 
+type PostV5ReposOwnerRepoBranchesOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) PostV5ReposOwnerRepoBranches(ctx context.Context, owner string, repo string, refs string, branchName string, localVarOptionals *PostV5ReposOwnerRepoBranchesOpts) (CompleteBranch, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue CompleteBranch
 	)
 
@@ -4593,36 +4576,36 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoBranches(ctx context.Contex
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v CompleteBranch
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 创建Commit评论
 创建Commit评论
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4638,18 +4621,18 @@ RepositoriesApiService 创建Commit评论
 @return Note
 */
 
-type PostV5ReposOwnerRepoCommitsShaCommentsOpts struct { 
+type PostV5ReposOwnerRepoCommitsShaCommentsOpts struct {
 	AccessToken optional.String
-	Path optional.String
-	Position optional.Int32
+	Path        optional.String
+	Position    optional.Int32
 }
 
 func (a *RepositoriesApiService) PostV5ReposOwnerRepoCommitsShaComments(ctx context.Context, owner string, repo string, sha string, body string, localVarOptionals *PostV5ReposOwnerRepoCommitsShaCommentsOpts) (Note, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Note
 	)
 
@@ -4708,36 +4691,36 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoCommitsShaComments(ctx cont
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Note
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 新建文件
 新建文件
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4757,21 +4740,21 @@ RepositoriesApiService 新建文件
 @return CommitContent
 */
 
-type PostV5ReposOwnerRepoContentsPathOpts struct { 
-	AccessToken optional.String
-	Branch optional.String
-	CommitterName optional.String
+type PostV5ReposOwnerRepoContentsPathOpts struct {
+	AccessToken    optional.String
+	Branch         optional.String
+	CommitterName  optional.String
 	CommitterEmail optional.String
-	AuthorName optional.String
-	AuthorEmail optional.String
+	AuthorName     optional.String
+	AuthorEmail    optional.String
 }
 
 func (a *RepositoriesApiService) PostV5ReposOwnerRepoContentsPath(ctx context.Context, owner string, repo string, path string, content string, message string, localVarOptionals *PostV5ReposOwnerRepoContentsPathOpts) (CommitContent, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue CommitContent
 	)
 
@@ -4840,36 +4823,36 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoContentsPath(ctx context.Co
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v CommitContent
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService Fork一个仓库
 Fork一个仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4882,17 +4865,17 @@ Fork一个仓库
 @return Project
 */
 
-type PostV5ReposOwnerRepoForksOpts struct { 
-	AccessToken optional.String
+type PostV5ReposOwnerRepoForksOpts struct {
+	AccessToken  optional.String
 	Organization optional.String
 }
 
 func (a *RepositoriesApiService) PostV5ReposOwnerRepoForks(ctx context.Context, owner string, repo string, localVarOptionals *PostV5ReposOwnerRepoForksOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -4946,36 +4929,36 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoForks(ctx context.Context, 
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 为仓库添加公钥
 为仓库添加公钥
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -4989,16 +4972,16 @@ RepositoriesApiService 为仓库添加公钥
 @return SshKey
 */
 
-type PostV5ReposOwnerRepoKeysOpts struct { 
+type PostV5ReposOwnerRepoKeysOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) PostV5ReposOwnerRepoKeys(ctx context.Context, owner string, repo string, key string, title string, localVarOptionals *PostV5ReposOwnerRepoKeysOpts) (SshKey, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue SshKey
 	)
 
@@ -5051,36 +5034,36 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoKeys(ctx context.Context, o
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v SshKey
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 请求建立Pages
 请求建立Pages
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5092,7 +5075,7 @@ RepositoriesApiService 请求建立Pages
 
 */
 
-type PostV5ReposOwnerRepoPagesBuildsOpts struct { 
+type PostV5ReposOwnerRepoPagesBuildsOpts struct {
 	AccessToken optional.String
 }
 
@@ -5102,7 +5085,6 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoPagesBuilds(ctx context.Con
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -5150,20 +5132,19 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoPagesBuilds(ctx context.Con
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 创建仓库Release
 创建仓库Release
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5180,17 +5161,17 @@ RepositoriesApiService 创建仓库Release
 @return Release
 */
 
-type PostV5ReposOwnerRepoReleasesOpts struct { 
+type PostV5ReposOwnerRepoReleasesOpts struct {
 	AccessToken optional.String
-	Prerelease optional.Bool
+	Prerelease  optional.Bool
 }
 
 func (a *RepositoriesApiService) PostV5ReposOwnerRepoReleases(ctx context.Context, owner string, repo string, tagName string, name string, body string, targetCommitish string, localVarOptionals *PostV5ReposOwnerRepoReleasesOpts) (Release, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Release
 	)
 
@@ -5248,36 +5229,36 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoReleases(ctx context.Contex
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Release
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 创建一个仓库
 创建一个仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5296,24 +5277,24 @@ RepositoriesApiService 创建一个仓库
 @return Project
 */
 
-type PostV5UserReposOpts struct { 
-	AccessToken optional.String
-	Description optional.String
-	Homepage optional.String
-	HasIssues optional.Bool
-	HasWiki optional.Bool
-	AutoInit optional.Bool
+type PostV5UserReposOpts struct {
+	AccessToken       optional.String
+	Description       optional.String
+	Homepage          optional.String
+	HasIssues         optional.Bool
+	HasWiki           optional.Bool
+	AutoInit          optional.Bool
 	GitignoreTemplate optional.String
-	LicenseTemplate optional.String
-	Private optional.Bool
+	LicenseTemplate   optional.String
+	Private           optional.Bool
 }
 
 func (a *RepositoriesApiService) PostV5UserRepos(ctx context.Context, name string, localVarOptionals *PostV5UserReposOpts) (Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Project
 	)
 
@@ -5387,36 +5368,36 @@ func (a *RepositoriesApiService) PostV5UserRepos(ctx context.Context, name strin
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 设置分支保护
 设置分支保护
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5429,16 +5410,16 @@ RepositoriesApiService 设置分支保护
 @return CompleteBranch
 */
 
-type PutV5ReposOwnerRepoBranchesBranchProtectionOpts struct { 
+type PutV5ReposOwnerRepoBranchesBranchProtectionOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) PutV5ReposOwnerRepoBranchesBranchProtection(ctx context.Context, owner string, repo string, branch string, localVarOptionals *PutV5ReposOwnerRepoBranchesBranchProtectionOpts) (CompleteBranch, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Put")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Put")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue CompleteBranch
 	)
 
@@ -5490,36 +5471,36 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoBranchesBranchProtection(ctx
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v CompleteBranch
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 清空一个仓库
 清空一个仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5531,7 +5512,7 @@ RepositoriesApiService 清空一个仓库
 
 */
 
-type PutV5ReposOwnerRepoClearOpts struct { 
+type PutV5ReposOwnerRepoClearOpts struct {
 	AccessToken optional.String
 }
 
@@ -5541,7 +5522,6 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoClear(ctx context.Context, o
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -5589,20 +5569,19 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoClear(ctx context.Context, o
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 添加仓库成员
 添加仓库成员
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5616,16 +5595,16 @@ RepositoriesApiService 添加仓库成员
 @return ProjectMember
 */
 
-type PutV5ReposOwnerRepoCollaboratorsUsernameOpts struct { 
+type PutV5ReposOwnerRepoCollaboratorsUsernameOpts struct {
 	AccessToken optional.String
 }
 
 func (a *RepositoriesApiService) PutV5ReposOwnerRepoCollaboratorsUsername(ctx context.Context, owner string, repo string, username string, permission string, localVarOptionals *PutV5ReposOwnerRepoCollaboratorsUsernameOpts) (ProjectMember, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Put")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Put")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue ProjectMember
 	)
 
@@ -5678,36 +5657,36 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoCollaboratorsUsername(ctx co
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v ProjectMember
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 更新文件
 更新文件
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5728,21 +5707,21 @@ RepositoriesApiService 更新文件
 @return CommitContent
 */
 
-type PutV5ReposOwnerRepoContentsPathOpts struct { 
-	AccessToken optional.String
-	Branch optional.String
-	CommitterName optional.String
+type PutV5ReposOwnerRepoContentsPathOpts struct {
+	AccessToken    optional.String
+	Branch         optional.String
+	CommitterName  optional.String
 	CommitterEmail optional.String
-	AuthorName optional.String
-	AuthorEmail optional.String
+	AuthorName     optional.String
+	AuthorEmail    optional.String
 }
 
 func (a *RepositoriesApiService) PutV5ReposOwnerRepoContentsPath(ctx context.Context, owner string, repo string, path string, content string, sha string, message string, localVarOptionals *PutV5ReposOwnerRepoContentsPathOpts) (CommitContent, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Put")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Put")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue CommitContent
 	)
 
@@ -5812,36 +5791,36 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoContentsPath(ctx context.Con
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v CommitContent
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 RepositoriesApiService 启用仓库公钥
 启用仓库公钥
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -5854,7 +5833,7 @@ RepositoriesApiService 启用仓库公钥
 
 */
 
-type PutV5ReposOwnerRepoKeysEnableIdOpts struct { 
+type PutV5ReposOwnerRepoKeysEnableIdOpts struct {
 	AccessToken optional.String
 }
 
@@ -5864,7 +5843,6 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoKeysEnableId(ctx context.Con
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -5913,13 +5891,12 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoKeysEnableId(ctx context.Con
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 

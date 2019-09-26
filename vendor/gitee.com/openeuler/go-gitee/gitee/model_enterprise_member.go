@@ -11,11 +11,11 @@ package gitee
 
 // 修改企业成员权限或备注
 type EnterpriseMember struct {
-	Url string `json:"url,omitempty"`
-	Active string `json:"active,omitempty"`
-	Remark string `json:"remark,omitempty"`
-	Role string `json:"role,omitempty"`
-	Outsourced string `json:"outsourced,omitempty"`
+	Url        string           `json:"url,omitempty"`
+	Active     string           `json:"active,omitempty"`
+	Remark     string           `json:"remark,omitempty"`
+	Role       string           `json:"role,omitempty"`
+	Outsourced string           `json:"outsourced,omitempty"`
 	Enterprise *EnterpriseBasic `json:"enterprise,omitempty"`
-	User string `json:"user,omitempty"`
+	User       string           `json:"user,omitempty"`
 }

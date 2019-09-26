@@ -13,10 +13,10 @@ package gitee
 type UserMessage struct {
 	Id int32 `json:"id,omitempty"`
 	// 发送者
-	Sender *UserBasic `json:"sender,omitempty"`
-	Unread string `json:"unread,omitempty"`
-	Content string `json:"content,omitempty"`
-	UpdatedAt string `json:"updated_at,omitempty"`
-	Url string `json:"url,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
+	Sender    *UserBasic `json:"sender,omitempty"`
+	Unread    string     `json:"unread,omitempty"`
+	Content   string     `json:"content,omitempty"`
+	UpdatedAt string     `json:"updated_at,omitempty"`
+	Url       string     `json:"url,omitempty"`
+	HtmlUrl   string     `json:"html_url,omitempty"`
 }

@@ -11,11 +11,11 @@ package gitee
 
 // 增加或更新授权用户所管理组织的成员
 type GroupMember struct {
-	Url string `json:"url,omitempty"`
-	Active string `json:"active,omitempty"`
-	Remark string `json:"remark,omitempty"`
-	Role string `json:"role,omitempty"`
+	Url             string `json:"url,omitempty"`
+	Active          string `json:"active,omitempty"`
+	Remark          string `json:"remark,omitempty"`
+	Role            string `json:"role,omitempty"`
 	OrganizationUrl string `json:"organization_url,omitempty"`
-	Organization *Group `json:"organization,omitempty"`
-	User string `json:"user,omitempty"`
+	Organization    *Group `json:"organization,omitempty"`
+	User            string `json:"user,omitempty"`
 }

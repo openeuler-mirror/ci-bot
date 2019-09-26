@@ -11,7 +11,7 @@ package gitee
 
 // 获取仓库贡献者
 type Contributor struct {
-	Email string `json:"email,omitempty"`
-	Name string `json:"name,omitempty"`
+	Email         string `json:"email,omitempty"`
+	Name          string `json:"name,omitempty"`
 	Contributions string `json:"contributions,omitempty"`
 }

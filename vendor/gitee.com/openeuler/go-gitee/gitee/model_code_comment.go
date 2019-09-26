@@ -11,8 +11,8 @@ package gitee
 
 // 修改代码片段的评论
 type CodeComment struct {
-	Id string `json:"id,omitempty"`
-	Body string `json:"body,omitempty"`
+	Id        string `json:"id,omitempty"`
+	Body      string `json:"body,omitempty"`
 	CreatedAt string `json:"created_at,omitempty"`
 	UpdatedAt string `json:"updated_at,omitempty"`
 }

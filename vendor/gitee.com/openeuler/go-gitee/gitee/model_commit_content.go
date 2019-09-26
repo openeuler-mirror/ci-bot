@@ -12,5 +12,5 @@ package gitee
 // 删除文件
 type CommitContent struct {
 	Content *ContentBasic `json:"content,omitempty"`
-	Commit *Commit `json:"commit,omitempty"`
+	Commit  *Commit       `json:"commit,omitempty"`
 }

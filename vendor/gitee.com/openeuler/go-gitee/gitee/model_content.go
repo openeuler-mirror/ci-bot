@@ -11,15 +11,15 @@ package gitee
 
 // 获取仓库具体路径下的内容
 type Content struct {
-	Type_ string `json:"type,omitempty"`
-	Encoding string `json:"encoding,omitempty"`
-	Size string `json:"size,omitempty"`
-	Name string `json:"name,omitempty"`
-	Path string `json:"path,omitempty"`
-	Content string `json:"content,omitempty"`
-	Sha string `json:"sha,omitempty"`
-	Url string `json:"url,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
+	Type_       string `json:"type,omitempty"`
+	Encoding    string `json:"encoding,omitempty"`
+	Size        string `json:"size,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Path        string `json:"path,omitempty"`
+	Content     string `json:"content,omitempty"`
+	Sha         string `json:"sha,omitempty"`
+	Url         string `json:"url,omitempty"`
+	HtmlUrl     string `json:"html_url,omitempty"`
 	DownloadUrl string `json:"download_url,omitempty"`
-	Links string `json:"_links,omitempty"`
+	Links       string `json:"_links,omitempty"`
 }

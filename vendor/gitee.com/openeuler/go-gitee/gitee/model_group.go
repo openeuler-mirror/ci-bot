@@ -11,12 +11,12 @@ package gitee
 
 // 获取一个组织
 type Group struct {
-	Id int32 `json:"id,omitempty"`
-	Login string `json:"login,omitempty"`
-	Url string `json:"url,omitempty"`
-	AvatarUrl string `json:"avatar_url,omitempty"`
-	ReposUrl string `json:"repos_url,omitempty"`
-	EventsUrl string `json:"events_url,omitempty"`
-	MembersUrl string `json:"members_url,omitempty"`
+	Id          int32  `json:"id,omitempty"`
+	Login       string `json:"login,omitempty"`
+	Url         string `json:"url,omitempty"`
+	AvatarUrl   string `json:"avatar_url,omitempty"`
+	ReposUrl    string `json:"repos_url,omitempty"`
+	EventsUrl   string `json:"events_url,omitempty"`
+	MembersUrl  string `json:"members_url,omitempty"`
 	Description string `json:"description,omitempty"`
 }

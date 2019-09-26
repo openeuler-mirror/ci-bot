@@ -10,19 +10,19 @@
 package gitee
 
 type ProjectBasic struct {
-	Id int32 `json:"id,omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	HumanName string `json:"human_name,omitempty"`
-	Url string `json:"url,omitempty"`
-	Namespace *interface{} `json:"namespace,omitempty"`
-	Path string `json:"path,omitempty"`
-	Name string `json:"name,omitempty"`
-	Owner string `json:"owner,omitempty"`
-	Description string `json:"description,omitempty"`
-	Private string `json:"private,omitempty"`
-	Public string `json:"public,omitempty"`
-	Internal string `json:"internal,omitempty"`
-	Fork string `json:"fork,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
-	SshUrl string `json:"ssh_url,omitempty"`
+	Id          int32        `json:"id,omitempty"`
+	FullName    string       `json:"full_name,omitempty"`
+	HumanName   string       `json:"human_name,omitempty"`
+	Url         string       `json:"url,omitempty"`
+	Namespace   *interface{} `json:"namespace,omitempty"`
+	Path        string       `json:"path,omitempty"`
+	Name        string       `json:"name,omitempty"`
+	Owner       string       `json:"owner,omitempty"`
+	Description string       `json:"description,omitempty"`
+	Private     string       `json:"private,omitempty"`
+	Public      string       `json:"public,omitempty"`
+	Internal    string       `json:"internal,omitempty"`
+	Fork        string       `json:"fork,omitempty"`
+	HtmlUrl     string       `json:"html_url,omitempty"`
+	SshUrl      string       `json:"ssh_url,omitempty"`
 }

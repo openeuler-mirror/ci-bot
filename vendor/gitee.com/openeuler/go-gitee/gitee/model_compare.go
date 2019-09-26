@@ -11,8 +11,8 @@ package gitee
 
 // 两个Commits之间对比的版本差异
 type Compare struct {
-	BaseCommit string `json:"base_commit,omitempty"`
+	BaseCommit      string `json:"base_commit,omitempty"`
 	MergeBaseCommit string `json:"merge_base_commit,omitempty"`
-	Commits string `json:"commits,omitempty"`
-	Files string `json:"files,omitempty"`
+	Commits         string `json:"commits,omitempty"`
+	Files           string `json:"files,omitempty"`
 }

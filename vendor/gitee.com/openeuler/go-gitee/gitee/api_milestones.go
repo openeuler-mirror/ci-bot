@@ -11,11 +11,12 @@ package gitee
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-	"fmt"
+
 	"github.com/antihax/optional"
 )
 
@@ -26,7 +27,7 @@ var (
 
 type MilestonesApiService service
 
-/* 
+/*
 MilestonesApiService 删除仓库单个里程碑
 删除仓库单个里程碑
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -39,7 +40,7 @@ MilestonesApiService 删除仓库单个里程碑
 
 */
 
-type DeleteV5ReposOwnerRepoMilestonesNumberOpts struct { 
+type DeleteV5ReposOwnerRepoMilestonesNumberOpts struct {
 	AccessToken optional.String
 }
 
@@ -49,7 +50,6 @@ func (a *MilestonesApiService) DeleteV5ReposOwnerRepoMilestonesNumber(ctx contex
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -98,20 +98,19 @@ func (a *MilestonesApiService) DeleteV5ReposOwnerRepoMilestonesNumber(ctx contex
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MilestonesApiService 获取仓库所有里程碑
 获取仓库所有里程碑
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -128,21 +127,21 @@ MilestonesApiService 获取仓库所有里程碑
 @return []Milestone
 */
 
-type GetV5ReposOwnerRepoMilestonesOpts struct { 
+type GetV5ReposOwnerRepoMilestonesOpts struct {
 	AccessToken optional.String
-	State optional.String
-	Sort optional.String
-	Direction optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	State       optional.String
+	Sort        optional.String
+	Direction   optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *MilestonesApiService) GetV5ReposOwnerRepoMilestones(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoMilestonesOpts) ([]Milestone, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Milestone
 	)
 
@@ -208,36 +207,36 @@ func (a *MilestonesApiService) GetV5ReposOwnerRepoMilestones(ctx context.Context
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Milestone
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 MilestonesApiService 获取仓库单个里程碑
 获取仓库单个里程碑
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -250,16 +249,16 @@ MilestonesApiService 获取仓库单个里程碑
 @return Milestone
 */
 
-type GetV5ReposOwnerRepoMilestonesNumberOpts struct { 
+type GetV5ReposOwnerRepoMilestonesNumberOpts struct {
 	AccessToken optional.String
 }
 
 func (a *MilestonesApiService) GetV5ReposOwnerRepoMilestonesNumber(ctx context.Context, owner string, repo string, number int32, localVarOptionals *GetV5ReposOwnerRepoMilestonesNumberOpts) (Milestone, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Milestone
 	)
 
@@ -311,36 +310,36 @@ func (a *MilestonesApiService) GetV5ReposOwnerRepoMilestonesNumber(ctx context.C
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Milestone
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 MilestonesApiService 更新仓库里程碑
 更新仓库里程碑
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -357,18 +356,18 @@ MilestonesApiService 更新仓库里程碑
 @return Milestone
 */
 
-type PatchV5ReposOwnerRepoMilestonesNumberOpts struct { 
+type PatchV5ReposOwnerRepoMilestonesNumberOpts struct {
 	AccessToken optional.String
-	State optional.String
+	State       optional.String
 	Description optional.String
 }
 
 func (a *MilestonesApiService) PatchV5ReposOwnerRepoMilestonesNumber(ctx context.Context, owner string, repo string, number int32, title string, dueOn string, localVarOptionals *PatchV5ReposOwnerRepoMilestonesNumberOpts) (Milestone, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Patch")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Patch")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Milestone
 	)
 
@@ -428,36 +427,36 @@ func (a *MilestonesApiService) PatchV5ReposOwnerRepoMilestonesNumber(ctx context
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Milestone
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 MilestonesApiService 创建仓库里程碑
 创建仓库里程碑
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -473,18 +472,18 @@ MilestonesApiService 创建仓库里程碑
 @return Milestone
 */
 
-type PostV5ReposOwnerRepoMilestonesOpts struct { 
+type PostV5ReposOwnerRepoMilestonesOpts struct {
 	AccessToken optional.String
-	State optional.String
+	State       optional.String
 	Description optional.String
 }
 
 func (a *MilestonesApiService) PostV5ReposOwnerRepoMilestones(ctx context.Context, owner string, repo string, title string, dueOn string, localVarOptionals *PostV5ReposOwnerRepoMilestonesOpts) (Milestone, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Milestone
 	)
 
@@ -543,29 +542,29 @@ func (a *MilestonesApiService) PostV5ReposOwnerRepoMilestones(ctx context.Contex
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Milestone
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 

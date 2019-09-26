@@ -15,16 +15,16 @@ import (
 
 // 更新仓库里程碑
 type Milestone struct {
-	Url string `json:"url,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
-	Number int32 `json:"number,omitempty"`
-	RepositoryId int32 `json:"repository_id,omitempty"`
-	State string `json:"state,omitempty"`
-	Title string `json:"title,omitempty"`
-	Description string `json:"description,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	OpenIssues int32 `json:"open_issues,omitempty"`
-	ClosedIssues int32 `json:"closed_issues,omitempty"`
-	DueOn time.Time `json:"due_on,omitempty"`
+	Url          string    `json:"url,omitempty"`
+	HtmlUrl      string    `json:"html_url,omitempty"`
+	Number       int32     `json:"number,omitempty"`
+	RepositoryId int32     `json:"repository_id,omitempty"`
+	State        string    `json:"state,omitempty"`
+	Title        string    `json:"title,omitempty"`
+	Description  string    `json:"description,omitempty"`
+	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	CreatedAt    time.Time `json:"created_at,omitempty"`
+	OpenIssues   int32     `json:"open_issues,omitempty"`
+	ClosedIssues int32     `json:"closed_issues,omitempty"`
+	DueOn        time.Time `json:"due_on,omitempty"`
 }

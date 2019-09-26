@@ -11,13 +11,13 @@ package gitee
 
 // 仓库的某个提交
 type RepoCommit struct {
-	Url string `json:"url,omitempty"`
-	Sha string `json:"sha,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
+	Url         string `json:"url,omitempty"`
+	Sha         string `json:"sha,omitempty"`
+	HtmlUrl     string `json:"html_url,omitempty"`
 	CommentsUrl string `json:"comments_url,omitempty"`
-	Commit string `json:"commit,omitempty"`
-	Author string `json:"author,omitempty"`
-	Committer string `json:"committer,omitempty"`
-	Parents string `json:"parents,omitempty"`
-	Stats string `json:"stats,omitempty"`
+	Commit      string `json:"commit,omitempty"`
+	Author      string `json:"author,omitempty"`
+	Committer   string `json:"committer,omitempty"`
+	Parents     string `json:"parents,omitempty"`
+	Stats       string `json:"stats,omitempty"`
 }

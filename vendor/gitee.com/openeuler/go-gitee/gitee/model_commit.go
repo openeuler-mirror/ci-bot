@@ -10,10 +10,10 @@
 package gitee
 
 type Commit struct {
-	Sha string `json:"sha,omitempty"`
-	Author string `json:"author,omitempty"`
+	Sha       string `json:"sha,omitempty"`
+	Author    string `json:"author,omitempty"`
 	Committer string `json:"committer,omitempty"`
-	Message string `json:"message,omitempty"`
-	Tree string `json:"tree,omitempty"`
-	Parents string `json:"parents,omitempty"`
+	Message   string `json:"message,omitempty"`
+	Tree      string `json:"tree,omitempty"`
+	Parents   string `json:"parents,omitempty"`
 }

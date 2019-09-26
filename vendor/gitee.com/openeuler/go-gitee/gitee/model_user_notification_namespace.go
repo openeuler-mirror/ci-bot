@@ -10,7 +10,7 @@
 package gitee
 
 type UserNotificationNamespace struct {
-	Name string `json:"name,omitempty"`
+	Name    string `json:"name,omitempty"`
 	HtmlUrl string `json:"html_url,omitempty"`
-	Type_ string `json:"type,omitempty"`
+	Type_   string `json:"type,omitempty"`
 }

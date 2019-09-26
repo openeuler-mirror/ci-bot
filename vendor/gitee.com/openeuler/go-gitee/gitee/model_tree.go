@@ -11,8 +11,8 @@ package gitee
 
 // 获取目录Tree
 type Tree struct {
-	Sha string `json:"sha,omitempty"`
-	Url string `json:"url,omitempty"`
-	Tree string `json:"tree,omitempty"`
+	Sha       string `json:"sha,omitempty"`
+	Url       string `json:"url,omitempty"`
+	Tree      string `json:"tree,omitempty"`
 	Truncated string `json:"truncated,omitempty"`
 }

@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
 	"github.com/antihax/optional"
 )
 
@@ -25,7 +26,7 @@ var (
 
 type SearchApiService service
 
-/* 
+/*
 SearchApiService 搜索代码片段
 搜索代码片段
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -42,22 +43,22 @@ SearchApiService 搜索代码片段
 @return []Code
 */
 
-type GetV5SearchGistsOpts struct { 
+type GetV5SearchGistsOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
-	Language optional.String
-	Owner optional.String
-	Sort optional.String
-	Order optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
+	Language    optional.String
+	Owner       optional.String
+	Sort        optional.String
+	Order       optional.String
 }
 
 func (a *SearchApiService) GetV5SearchGists(ctx context.Context, q string, localVarOptionals *GetV5SearchGistsOpts) ([]Code, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Code
 	)
 
@@ -125,36 +126,36 @@ func (a *SearchApiService) GetV5SearchGists(ctx context.Context, q string, local
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Code
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 SearchApiService 搜索 Issues
 搜索 Issues
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -175,26 +176,26 @@ SearchApiService 搜索 Issues
 @return []Issue
 */
 
-type GetV5SearchIssuesOpts struct { 
+type GetV5SearchIssuesOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
-	Repo optional.String
-	Language optional.String
-	Label optional.String
-	State optional.String
-	Author optional.String
-	Assignee optional.String
-	Sort optional.String
-	Order optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
+	Repo        optional.String
+	Language    optional.String
+	Label       optional.String
+	State       optional.String
+	Author      optional.String
+	Assignee    optional.String
+	Sort        optional.String
+	Order       optional.String
 }
 
 func (a *SearchApiService) GetV5SearchIssues(ctx context.Context, q string, localVarOptionals *GetV5SearchIssuesOpts) ([]Issue, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Issue
 	)
 
@@ -274,36 +275,36 @@ func (a *SearchApiService) GetV5SearchIssues(ctx context.Context, q string, loca
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Issue
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 SearchApiService 搜索仓库
 搜索仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -321,23 +322,23 @@ SearchApiService 搜索仓库
 @return []Project
 */
 
-type GetV5SearchRepositoriesOpts struct { 
+type GetV5SearchRepositoriesOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
-	Owner optional.String
-	Fork optional.Bool
-	Language optional.String
-	Sort optional.String
-	Order optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
+	Owner       optional.String
+	Fork        optional.Bool
+	Language    optional.String
+	Sort        optional.String
+	Order       optional.String
 }
 
 func (a *SearchApiService) GetV5SearchRepositories(ctx context.Context, q string, localVarOptionals *GetV5SearchRepositoriesOpts) ([]Project, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Project
 	)
 
@@ -408,36 +409,36 @@ func (a *SearchApiService) GetV5SearchRepositories(ctx context.Context, q string
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Project
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 SearchApiService 搜索用户
 搜索用户
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -452,20 +453,20 @@ SearchApiService 搜索用户
 @return []User
 */
 
-type GetV5SearchUsersOpts struct { 
+type GetV5SearchUsersOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
-	Sort optional.String
-	Order optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
+	Sort        optional.String
+	Order       optional.String
 }
 
 func (a *SearchApiService) GetV5SearchUsers(ctx context.Context, q string, localVarOptionals *GetV5SearchUsersOpts) ([]User, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []User
 	)
 
@@ -527,29 +528,29 @@ func (a *SearchApiService) GetV5SearchUsers(ctx context.Context, q string, local
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []User
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 

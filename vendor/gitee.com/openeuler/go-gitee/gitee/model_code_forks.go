@@ -11,9 +11,9 @@ package gitee
 
 // 获取 Fork 了指定代码片段的列表
 type CodeForks struct {
-	User string `json:"user,omitempty"`
-	Url string `json:"url,omitempty"`
-	Id string `json:"id,omitempty"`
+	User      string `json:"user,omitempty"`
+	Url       string `json:"url,omitempty"`
+	Id        string `json:"id,omitempty"`
 	CreatedAt string `json:"created_at,omitempty"`
 	UpdatedAt string `json:"updated_at,omitempty"`
 }

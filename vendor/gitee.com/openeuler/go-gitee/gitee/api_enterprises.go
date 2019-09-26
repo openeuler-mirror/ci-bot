@@ -11,11 +11,12 @@ package gitee
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-	"fmt"
+
 	"github.com/antihax/optional"
 )
 
@@ -26,7 +27,7 @@ var (
 
 type EnterprisesApiService service
 
-/* 
+/*
 EnterprisesApiService 移除企业成员
 移除企业成员
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -38,7 +39,7 @@ EnterprisesApiService 移除企业成员
 
 */
 
-type DeleteV5EnterprisesEnterpriseMembersUsernameOpts struct { 
+type DeleteV5EnterprisesEnterpriseMembersUsernameOpts struct {
 	AccessToken optional.String
 }
 
@@ -48,7 +49,6 @@ func (a *EnterprisesApiService) DeleteV5EnterprisesEnterpriseMembersUsername(ctx
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -96,20 +96,19 @@ func (a *EnterprisesApiService) DeleteV5EnterprisesEnterpriseMembersUsername(ctx
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 删除周报某个评论
 删除周报某个评论
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -122,7 +121,7 @@ EnterprisesApiService 删除周报某个评论
 
 */
 
-type DeleteV5EnterprisesEnterpriseWeekReportsReportIdCommentsIdOpts struct { 
+type DeleteV5EnterprisesEnterpriseWeekReportsReportIdCommentsIdOpts struct {
 	AccessToken optional.String
 }
 
@@ -132,7 +131,6 @@ func (a *EnterprisesApiService) DeleteV5EnterprisesEnterpriseWeekReportsReportId
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -181,20 +179,19 @@ func (a *EnterprisesApiService) DeleteV5EnterprisesEnterpriseWeekReportsReportId
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 获取一个企业
 获取一个企业
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -205,16 +202,16 @@ EnterprisesApiService 获取一个企业
 @return EnterpriseBasic
 */
 
-type GetV5EnterprisesEnterpriseOpts struct { 
+type GetV5EnterprisesEnterpriseOpts struct {
 	AccessToken optional.String
 }
 
 func (a *EnterprisesApiService) GetV5EnterprisesEnterprise(ctx context.Context, enterprise string, localVarOptionals *GetV5EnterprisesEnterpriseOpts) (EnterpriseBasic, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue EnterpriseBasic
 	)
 
@@ -264,36 +261,36 @@ func (a *EnterprisesApiService) GetV5EnterprisesEnterprise(ctx context.Context, 
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v EnterpriseBasic
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 列出企业的所有成员
 列出企业的所有成员
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -305,17 +302,17 @@ EnterprisesApiService 列出企业的所有成员
 @return []EnterpriseMember
 */
 
-type GetV5EnterprisesEnterpriseMembersOpts struct { 
+type GetV5EnterprisesEnterpriseMembersOpts struct {
 	AccessToken optional.String
-	Role optional.String
+	Role        optional.String
 }
 
 func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseMembers(ctx context.Context, enterprise string, localVarOptionals *GetV5EnterprisesEnterpriseMembersOpts) ([]EnterpriseMember, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []EnterpriseMember
 	)
 
@@ -368,36 +365,36 @@ func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseMembers(ctx context.Co
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []EnterpriseMember
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 获取企业的一个成员
 获取企业的一个成员
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -409,16 +406,16 @@ EnterprisesApiService 获取企业的一个成员
 @return EnterpriseMember
 */
 
-type GetV5EnterprisesEnterpriseMembersUsernameOpts struct { 
+type GetV5EnterprisesEnterpriseMembersUsernameOpts struct {
 	AccessToken optional.String
 }
 
 func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseMembersUsername(ctx context.Context, enterprise string, username string, localVarOptionals *GetV5EnterprisesEnterpriseMembersUsernameOpts) (EnterpriseMember, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue EnterpriseMember
 	)
 
@@ -469,36 +466,36 @@ func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseMembersUsername(ctx co
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v EnterpriseMember
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 个人周报列表
 个人周报列表
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -512,18 +509,18 @@ EnterprisesApiService 个人周报列表
 @return []WeekReport
 */
 
-type GetV5EnterprisesEnterpriseUsersUsernameWeekReportsOpts struct { 
+type GetV5EnterprisesEnterpriseUsersUsernameWeekReportsOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseUsersUsernameWeekReports(ctx context.Context, enterprise string, username string, localVarOptionals *GetV5EnterprisesEnterpriseUsersUsernameWeekReportsOpts) ([]WeekReport, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []WeekReport
 	)
 
@@ -580,36 +577,36 @@ func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseUsersUsernameWeekRepor
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []WeekReport
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 企业成员周报列表
 企业成员周报列表
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -626,22 +623,22 @@ EnterprisesApiService 企业成员周报列表
 @return []WeekReport
 */
 
-type GetV5EnterprisesEnterpriseWeekReportsOpts struct { 
+type GetV5EnterprisesEnterpriseWeekReportsOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
-	Username optional.String
-	Year optional.Int32
-	WeekIndex optional.Int32
-	Date optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
+	Username    optional.String
+	Year        optional.Int32
+	WeekIndex   optional.Int32
+	Date        optional.String
 }
 
 func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseWeekReports(ctx context.Context, enterprise string, localVarOptionals *GetV5EnterprisesEnterpriseWeekReportsOpts) ([]WeekReport, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []WeekReport
 	)
 
@@ -709,36 +706,36 @@ func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseWeekReports(ctx contex
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []WeekReport
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 周报详情
 周报详情
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -750,16 +747,16 @@ EnterprisesApiService 周报详情
 @return WeekReport
 */
 
-type GetV5EnterprisesEnterpriseWeekReportsIdOpts struct { 
+type GetV5EnterprisesEnterpriseWeekReportsIdOpts struct {
 	AccessToken optional.String
 }
 
 func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseWeekReportsId(ctx context.Context, enterprise string, id int32, localVarOptionals *GetV5EnterprisesEnterpriseWeekReportsIdOpts) (WeekReport, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue WeekReport
 	)
 
@@ -810,36 +807,36 @@ func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseWeekReportsId(ctx cont
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v WeekReport
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 某个周报评论列表
 某个周报评论列表
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -853,18 +850,18 @@ EnterprisesApiService 某个周报评论列表
 @return []Note
 */
 
-type GetV5EnterprisesEnterpriseWeekReportsIdCommentsOpts struct { 
+type GetV5EnterprisesEnterpriseWeekReportsIdCommentsOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseWeekReportsIdComments(ctx context.Context, enterprise string, id int32, localVarOptionals *GetV5EnterprisesEnterpriseWeekReportsIdCommentsOpts) ([]Note, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []Note
 	)
 
@@ -921,36 +918,36 @@ func (a *EnterprisesApiService) GetV5EnterprisesEnterpriseWeekReportsIdComments(
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []Note
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 列出授权用户所属的企业
 列出授权用户所属的企业
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -963,19 +960,19 @@ EnterprisesApiService 列出授权用户所属的企业
 @return []EnterpriseBasic
 */
 
-type GetV5UserEnterprisesOpts struct { 
+type GetV5UserEnterprisesOpts struct {
 	AccessToken optional.String
-	Page optional.Int32
-	PerPage optional.Int32
-	Admin optional.Bool
+	Page        optional.Int32
+	PerPage     optional.Int32
+	Admin       optional.Bool
 }
 
 func (a *EnterprisesApiService) GetV5UserEnterprises(ctx context.Context, localVarOptionals *GetV5UserEnterprisesOpts) ([]EnterpriseBasic, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []EnterpriseBasic
 	)
 
@@ -1033,36 +1030,36 @@ func (a *EnterprisesApiService) GetV5UserEnterprises(ctx context.Context, localV
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []EnterpriseBasic
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 编辑周报
 编辑周报
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1075,16 +1072,16 @@ EnterprisesApiService 编辑周报
 @return WeekReport
 */
 
-type PatchV5EnterprisesEnterpriseWeekReportIdOpts struct { 
+type PatchV5EnterprisesEnterpriseWeekReportIdOpts struct {
 	AccessToken optional.String
 }
 
 func (a *EnterprisesApiService) PatchV5EnterprisesEnterpriseWeekReportId(ctx context.Context, enterprise string, id int32, content string, localVarOptionals *PatchV5EnterprisesEnterpriseWeekReportIdOpts) (WeekReport, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Patch")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Patch")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue WeekReport
 	)
 
@@ -1136,36 +1133,36 @@ func (a *EnterprisesApiService) PatchV5EnterprisesEnterpriseWeekReportId(ctx con
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v WeekReport
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 添加或邀请企业成员
 添加或邀请企业成员
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1181,13 +1178,13 @@ EnterprisesApiService 添加或邀请企业成员
 
 */
 
-type PostV5EnterprisesEnterpriseMembersOpts struct { 
+type PostV5EnterprisesEnterpriseMembersOpts struct {
 	AccessToken optional.String
-	Username optional.String
-	Email optional.String
-	Outsourced optional.Bool
-	Role optional.String
-	Name optional.String
+	Username    optional.String
+	Email       optional.String
+	Outsourced  optional.Bool
+	Role        optional.String
+	Name        optional.String
 }
 
 func (a *EnterprisesApiService) PostV5EnterprisesEnterpriseMembers(ctx context.Context, enterprise string, localVarOptionals *PostV5EnterprisesEnterpriseMembersOpts) (*http.Response, error) {
@@ -1196,7 +1193,6 @@ func (a *EnterprisesApiService) PostV5EnterprisesEnterpriseMembers(ctx context.C
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -1258,20 +1254,19 @@ func (a *EnterprisesApiService) PostV5EnterprisesEnterpriseMembers(ctx context.C
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 新建周报
 新建周报
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1287,17 +1282,17 @@ EnterprisesApiService 新建周报
 @return WeekReport
 */
 
-type PostV5EnterprisesEnterpriseWeekReportOpts struct { 
+type PostV5EnterprisesEnterpriseWeekReportOpts struct {
 	AccessToken optional.String
-	Date optional.String
+	Date        optional.String
 }
 
 func (a *EnterprisesApiService) PostV5EnterprisesEnterpriseWeekReport(ctx context.Context, enterprise string, year int32, content string, weekIndex int32, username string, localVarOptionals *PostV5EnterprisesEnterpriseWeekReportOpts) (WeekReport, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue WeekReport
 	)
 
@@ -1354,36 +1349,36 @@ func (a *EnterprisesApiService) PostV5EnterprisesEnterpriseWeekReport(ctx contex
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v WeekReport
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 评论周报
 评论周报
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1396,16 +1391,16 @@ EnterprisesApiService 评论周报
 @return Note
 */
 
-type PostV5EnterprisesEnterpriseWeekReportsIdCommentOpts struct { 
+type PostV5EnterprisesEnterpriseWeekReportsIdCommentOpts struct {
 	AccessToken optional.String
 }
 
 func (a *EnterprisesApiService) PostV5EnterprisesEnterpriseWeekReportsIdComment(ctx context.Context, enterprise string, id int32, body string, localVarOptionals *PostV5EnterprisesEnterpriseWeekReportsIdCommentOpts) (Note, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Post")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue Note
 	)
 
@@ -1457,36 +1452,36 @@ func (a *EnterprisesApiService) PostV5EnterprisesEnterpriseWeekReportsIdComment(
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Note
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 EnterprisesApiService 修改企业成员权限或备注
 修改企业成员权限或备注
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1502,20 +1497,20 @@ EnterprisesApiService 修改企业成员权限或备注
 @return EnterpriseMember
 */
 
-type PutV5EnterprisesEnterpriseMembersUsernameOpts struct { 
+type PutV5EnterprisesEnterpriseMembersUsernameOpts struct {
 	AccessToken optional.String
-	Outsourced optional.Bool
-	Role optional.String
-	Active optional.Bool
-	Name optional.String
+	Outsourced  optional.Bool
+	Role        optional.String
+	Active      optional.Bool
+	Name        optional.String
 }
 
 func (a *EnterprisesApiService) PutV5EnterprisesEnterpriseMembersUsername(ctx context.Context, enterprise string, username string, localVarOptionals *PutV5EnterprisesEnterpriseMembersUsernameOpts) (EnterpriseMember, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Put")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Put")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue EnterpriseMember
 	)
 
@@ -1578,29 +1573,29 @@ func (a *EnterprisesApiService) PutV5EnterprisesEnterpriseMembersUsername(ctx co
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v EnterpriseMember
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 

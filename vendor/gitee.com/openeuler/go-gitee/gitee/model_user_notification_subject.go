@@ -10,8 +10,8 @@
 package gitee
 
 type UserNotificationSubject struct {
-	Title string `json:"title,omitempty"`
-	Url string `json:"url,omitempty"`
+	Title            string `json:"title,omitempty"`
+	Url              string `json:"url,omitempty"`
 	LatestCommentUrl string `json:"latest_comment_url,omitempty"`
-	Type_ string `json:"type,omitempty"`
+	Type_            string `json:"type,omitempty"`
 }

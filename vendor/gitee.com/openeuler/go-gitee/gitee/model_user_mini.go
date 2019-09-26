@@ -10,10 +10,10 @@
 package gitee
 
 type UserMini struct {
-	Id int32 `json:"id,omitempty"`
-	Login string `json:"login,omitempty"`
-	Name string `json:"name,omitempty"`
+	Id        int32  `json:"id,omitempty"`
+	Login     string `json:"login,omitempty"`
+	Name      string `json:"name,omitempty"`
 	AvatarUrl string `json:"avatar_url,omitempty"`
-	Url string `json:"url,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
+	Url       string `json:"url,omitempty"`
+	HtmlUrl   string `json:"html_url,omitempty"`
 }

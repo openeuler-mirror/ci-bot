@@ -11,10 +11,10 @@ package gitee
 
 // 获取授权用户的一个 Namespace
 type Namespace struct {
-	Id int32 `json:"id,omitempty"`
-	Type_ string `json:"type,omitempty"`
-	Name string `json:"name,omitempty"`
-	Path string `json:"path,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
-	Parent *NamespaceMini `json:"parent,omitempty"`
+	Id      int32          `json:"id,omitempty"`
+	Type_   string         `json:"type,omitempty"`
+	Name    string         `json:"name,omitempty"`
+	Path    string         `json:"path,omitempty"`
+	HtmlUrl string         `json:"html_url,omitempty"`
+	Parent  *NamespaceMini `json:"parent,omitempty"`
 }

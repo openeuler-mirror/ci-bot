@@ -11,9 +11,9 @@ package gitee
 
 // 获取企业某个标签
 type Label struct {
-	Id int32 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Color string `json:"color,omitempty"`
-	RepositoryId int32 `json:"repository_id,omitempty"`
-	Url string `json:"url,omitempty"`
+	Id           int32  `json:"id,omitempty"`
+	Name         string `json:"name,omitempty"`
+	Color        string `json:"color,omitempty"`
+	RepositoryId int32  `json:"repository_id,omitempty"`
+	Url          string `json:"url,omitempty"`
 }

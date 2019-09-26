@@ -15,13 +15,13 @@ import (
 
 // 更新仓库Release
 type Release struct {
-	Id int32 `json:"id,omitempty"`
-	TagName string `json:"tag_name,omitempty"`
-	TargetCommitish string `json:"target_commitish,omitempty"`
-	Prerelease string `json:"prerelease,omitempty"`
-	Name string `json:"name,omitempty"`
-	Body string `json:"body,omitempty"`
-	Author string `json:"author,omitempty"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	Assets string `json:"assets,omitempty"`
+	Id              int32     `json:"id,omitempty"`
+	TagName         string    `json:"tag_name,omitempty"`
+	TargetCommitish string    `json:"target_commitish,omitempty"`
+	Prerelease      string    `json:"prerelease,omitempty"`
+	Name            string    `json:"name,omitempty"`
+	Body            string    `json:"body,omitempty"`
+	Author          string    `json:"author,omitempty"`
+	CreatedAt       time.Time `json:"created_at,omitempty"`
+	Assets          string    `json:"assets,omitempty"`
 }

@@ -11,9 +11,9 @@ package gitee
 
 // 获取一个公钥
 type SshKey struct {
-	Id string `json:"id,omitempty"`
-	Key string `json:"key,omitempty"`
-	Url string `json:"url,omitempty"`
-	Title string `json:"title,omitempty"`
+	Id        string `json:"id,omitempty"`
+	Key       string `json:"key,omitempty"`
+	Url       string `json:"url,omitempty"`
+	Title     string `json:"title,omitempty"`
 	CreatedAt string `json:"created_at,omitempty"`
 }

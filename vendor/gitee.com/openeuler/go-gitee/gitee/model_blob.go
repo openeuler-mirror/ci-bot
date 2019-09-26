@@ -11,9 +11,9 @@ package gitee
 
 // 获取文件Blob
 type Blob struct {
-	Sha string `json:"sha,omitempty"`
-	Size string `json:"size,omitempty"`
-	Url string `json:"url,omitempty"`
-	Content string `json:"content,omitempty"`
+	Sha      string `json:"sha,omitempty"`
+	Size     string `json:"size,omitempty"`
+	Url      string `json:"url,omitempty"`
+	Content  string `json:"content,omitempty"`
 	Encoding string `json:"encoding,omitempty"`
 }

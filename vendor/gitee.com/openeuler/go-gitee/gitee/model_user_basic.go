@@ -11,21 +11,21 @@ package gitee
 
 // 列出一个组织的所有成员
 type UserBasic struct {
-	Id int32 `json:"id,omitempty"`
-	Login string `json:"login,omitempty"`
-	Name string `json:"name,omitempty"`
-	AvatarUrl string `json:"avatar_url,omitempty"`
-	Url string `json:"url,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
-	FollowersUrl string `json:"followers_url,omitempty"`
-	FollowingUrl string `json:"following_url,omitempty"`
-	GistsUrl string `json:"gists_url,omitempty"`
-	StarredUrl string `json:"starred_url,omitempty"`
-	SubscriptionsUrl string `json:"subscriptions_url,omitempty"`
-	OrganizationsUrl string `json:"organizations_url,omitempty"`
-	ReposUrl string `json:"repos_url,omitempty"`
-	EventsUrl string `json:"events_url,omitempty"`
+	Id                int32  `json:"id,omitempty"`
+	Login             string `json:"login,omitempty"`
+	Name              string `json:"name,omitempty"`
+	AvatarUrl         string `json:"avatar_url,omitempty"`
+	Url               string `json:"url,omitempty"`
+	HtmlUrl           string `json:"html_url,omitempty"`
+	FollowersUrl      string `json:"followers_url,omitempty"`
+	FollowingUrl      string `json:"following_url,omitempty"`
+	GistsUrl          string `json:"gists_url,omitempty"`
+	StarredUrl        string `json:"starred_url,omitempty"`
+	SubscriptionsUrl  string `json:"subscriptions_url,omitempty"`
+	OrganizationsUrl  string `json:"organizations_url,omitempty"`
+	ReposUrl          string `json:"repos_url,omitempty"`
+	EventsUrl         string `json:"events_url,omitempty"`
 	ReceivedEventsUrl string `json:"received_events_url,omitempty"`
-	Type_ string `json:"type,omitempty"`
-	SiteAdmin string `json:"site_admin,omitempty"`
+	Type_             string `json:"type,omitempty"`
+	SiteAdmin         string `json:"site_admin,omitempty"`
 }

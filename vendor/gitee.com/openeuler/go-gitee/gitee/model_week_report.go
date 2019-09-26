@@ -11,15 +11,15 @@ package gitee
 
 // 新建周报
 type WeekReport struct {
-	Id int32 `json:"id,omitempty"`
-	Content string `json:"content,omitempty"`
-	ContentHtml string `json:"content_html,omitempty"`
-	Year string `json:"year,omitempty"`
-	Month string `json:"month,omitempty"`
-	WeekIndex string `json:"week_index,omitempty"`
-	WeekBegin string `json:"week_begin,omitempty"`
-	WeekEnd string `json:"week_end,omitempty"`
-	CreatedAt string `json:"created_at,omitempty"`
-	UpdatedAt string `json:"updated_at,omitempty"`
-	User *UserMini `json:"user,omitempty"`
+	Id          int32     `json:"id,omitempty"`
+	Content     string    `json:"content,omitempty"`
+	ContentHtml string    `json:"content_html,omitempty"`
+	Year        string    `json:"year,omitempty"`
+	Month       string    `json:"month,omitempty"`
+	WeekIndex   string    `json:"week_index,omitempty"`
+	WeekBegin   string    `json:"week_begin,omitempty"`
+	WeekEnd     string    `json:"week_end,omitempty"`
+	CreatedAt   string    `json:"created_at,omitempty"`
+	UpdatedAt   string    `json:"updated_at,omitempty"`
+	User        *UserMini `json:"user,omitempty"`
 }

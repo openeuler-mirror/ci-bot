@@ -11,12 +11,12 @@ package gitee
 
 // 列出仓库的所有公开动态
 type Event struct {
-	Id int32 `json:"id,omitempty"`
-	Type_ string `json:"type,omitempty"`
-	Actor string `json:"actor,omitempty"`
-	Repo string `json:"repo,omitempty"`
-	Org string `json:"org,omitempty"`
-	Public string `json:"public,omitempty"`
+	Id        int32  `json:"id,omitempty"`
+	Type_     string `json:"type,omitempty"`
+	Actor     string `json:"actor,omitempty"`
+	Repo      string `json:"repo,omitempty"`
+	Org       string `json:"org,omitempty"`
+	Public    string `json:"public,omitempty"`
 	CreatedAt string `json:"created_at,omitempty"`
 	// 不同类型动态的内容
 	Payload *interface{} `json:"payload,omitempty"`

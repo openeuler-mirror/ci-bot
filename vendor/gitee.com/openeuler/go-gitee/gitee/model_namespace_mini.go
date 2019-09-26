@@ -10,9 +10,9 @@
 package gitee
 
 type NamespaceMini struct {
-	Id int32 `json:"id,omitempty"`
-	Type_ string `json:"type,omitempty"`
-	Name string `json:"name,omitempty"`
-	Path string `json:"path,omitempty"`
+	Id      int32  `json:"id,omitempty"`
+	Type_   string `json:"type,omitempty"`
+	Name    string `json:"name,omitempty"`
+	Path    string `json:"path,omitempty"`
 	HtmlUrl string `json:"html_url,omitempty"`
 }

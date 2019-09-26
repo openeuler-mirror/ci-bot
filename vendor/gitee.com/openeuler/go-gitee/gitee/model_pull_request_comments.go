@@ -11,18 +11,18 @@ package gitee
 
 // 编辑评论
 type PullRequestComments struct {
-	Url string `json:"url,omitempty"`
-	Id string `json:"id,omitempty"`
-	Path string `json:"path,omitempty"`
-	Position string `json:"position,omitempty"`
+	Url              string `json:"url,omitempty"`
+	Id               string `json:"id,omitempty"`
+	Path             string `json:"path,omitempty"`
+	Position         string `json:"position,omitempty"`
 	OriginalPosition string `json:"original_position,omitempty"`
-	CommitId string `json:"commit_id,omitempty"`
+	CommitId         string `json:"commit_id,omitempty"`
 	OriginalCommitId string `json:"original_commit_id,omitempty"`
-	User string `json:"user,omitempty"`
-	Body string `json:"body,omitempty"`
-	CreatedAt string `json:"created_at,omitempty"`
-	UpdatedAt string `json:"updated_at,omitempty"`
-	HtmlUrl string `json:"html_url,omitempty"`
-	PullRequestUrl string `json:"pull_request_url,omitempty"`
-	Links string `json:"_links,omitempty"`
+	User             string `json:"user,omitempty"`
+	Body             string `json:"body,omitempty"`
+	CreatedAt        string `json:"created_at,omitempty"`
+	UpdatedAt        string `json:"updated_at,omitempty"`
+	HtmlUrl          string `json:"html_url,omitempty"`
+	PullRequestUrl   string `json:"pull_request_url,omitempty"`
+	Links            string `json:"_links,omitempty"`
 }

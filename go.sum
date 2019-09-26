@@ -1,8 +1,8 @@
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-gitee.com/openeuler/go-gitee v0.0.0-20190925030845-0fcc9eecc5ef h1:ysS5m8rOyp8gzg3HHUP7ffNIAMQeDpBn59Hh/Cxci8s=
-gitee.com/openeuler/go-gitee v0.0.0-20190925030845-0fcc9eecc5ef/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
 gitee.com/openeuler/go-gitee v0.0.0-20190925072439-fb3315927b7f h1:CCNGMFsWRJp5rJ0T9ioeyG2R8gN+cdBTSHoBhP5qkLc=
 gitee.com/openeuler/go-gitee v0.0.0-20190925072439-fb3315927b7f/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
+gitee.com/openeuler/go-gitee v0.0.0-20190925100516-74ed8d9a7b6b h1:qOj6Ju79nys3YJew3ZnZWEs8lzCRt6hFp7bSz8e0qHc=
+gitee.com/openeuler/go-gitee v0.0.0-20190925100516-74ed8d9a7b6b/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
 github.com/antihax/optional v0.0.0-20180407024304-ca021399b1a6 h1:uZuxRZCz65cG1o6K/xUqImNcYKtmk9ylqaH0itMSvzA=
 github.com/antihax/optional v0.0.0-20180407024304-ca021399b1a6/go.mod h1:V8iCPQYkqmusNa815XgQio277wI47sdRh1dUOLdyC6Q=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b h1:VKtxabqXZkF25pY9ekfRL6a582T4P37/31XEstQ5p58=

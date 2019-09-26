@@ -11,9 +11,9 @@ package gitee
 
 // 创建分支
 type CompleteBranch struct {
-	Name string `json:"name,omitempty"`
-	Commit string `json:"commit,omitempty"`
-	Links string `json:"_links,omitempty"`
-	Protected string `json:"protected,omitempty"`
+	Name          string `json:"name,omitempty"`
+	Commit        string `json:"commit,omitempty"`
+	Links         string `json:"_links,omitempty"`
+	Protected     string `json:"protected,omitempty"`
 	ProtectionUrl string `json:"protection_url,omitempty"`
 }

@@ -11,11 +11,12 @@ package gitee
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-	"fmt"
+
 	"github.com/antihax/optional"
 )
 
@@ -26,7 +27,7 @@ var (
 
 type MiscellaneousApiService service
 
-/* 
+/*
 MiscellaneousApiService 列出可使用的 Emoji
 列出可使用的 Emoji
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -36,7 +37,7 @@ MiscellaneousApiService 列出可使用的 Emoji
 
 */
 
-type GetV5EmojisOpts struct { 
+type GetV5EmojisOpts struct {
 	AccessToken optional.String
 }
 
@@ -46,7 +47,6 @@ func (a *MiscellaneousApiService) GetV5Emojis(ctx context.Context, localVarOptio
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -92,20 +92,19 @@ func (a *MiscellaneousApiService) GetV5Emojis(ctx context.Context, localVarOptio
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MiscellaneousApiService 列出可使用的 .gitignore 模板
 列出可使用的 .gitignore 模板
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -115,7 +114,7 @@ MiscellaneousApiService 列出可使用的 .gitignore 模板
 
 */
 
-type GetV5GitignoreTemplatesOpts struct { 
+type GetV5GitignoreTemplatesOpts struct {
 	AccessToken optional.String
 }
 
@@ -125,7 +124,6 @@ func (a *MiscellaneousApiService) GetV5GitignoreTemplates(ctx context.Context, l
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -171,20 +169,19 @@ func (a *MiscellaneousApiService) GetV5GitignoreTemplates(ctx context.Context, l
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MiscellaneousApiService 获取一个 .gitignore 模板
 获取一个 .gitignore 模板
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -195,7 +192,7 @@ MiscellaneousApiService 获取一个 .gitignore 模板
 
 */
 
-type GetV5GitignoreTemplatesNameOpts struct { 
+type GetV5GitignoreTemplatesNameOpts struct {
 	AccessToken optional.String
 }
 
@@ -205,7 +202,6 @@ func (a *MiscellaneousApiService) GetV5GitignoreTemplatesName(ctx context.Contex
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -252,20 +248,19 @@ func (a *MiscellaneousApiService) GetV5GitignoreTemplatesName(ctx context.Contex
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MiscellaneousApiService 获取一个 .gitignore 模板原始文件
 获取一个 .gitignore 模板原始文件
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -276,7 +271,7 @@ MiscellaneousApiService 获取一个 .gitignore 模板原始文件
 
 */
 
-type GetV5GitignoreTemplatesNameRawOpts struct { 
+type GetV5GitignoreTemplatesNameRawOpts struct {
 	AccessToken optional.String
 }
 
@@ -286,7 +281,6 @@ func (a *MiscellaneousApiService) GetV5GitignoreTemplatesNameRaw(ctx context.Con
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -333,20 +327,19 @@ func (a *MiscellaneousApiService) GetV5GitignoreTemplatesNameRaw(ctx context.Con
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MiscellaneousApiService 列出可使用的开源许可协议
 列出可使用的开源许可协议
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -356,7 +349,7 @@ MiscellaneousApiService 列出可使用的开源许可协议
 
 */
 
-type GetV5LicensesOpts struct { 
+type GetV5LicensesOpts struct {
 	AccessToken optional.String
 }
 
@@ -366,7 +359,6 @@ func (a *MiscellaneousApiService) GetV5Licenses(ctx context.Context, localVarOpt
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -412,20 +404,19 @@ func (a *MiscellaneousApiService) GetV5Licenses(ctx context.Context, localVarOpt
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MiscellaneousApiService 获取一个开源许可协议
 获取一个开源许可协议
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -436,7 +427,7 @@ MiscellaneousApiService 获取一个开源许可协议
 
 */
 
-type GetV5LicensesLicenseOpts struct { 
+type GetV5LicensesLicenseOpts struct {
 	AccessToken optional.String
 }
 
@@ -446,7 +437,6 @@ func (a *MiscellaneousApiService) GetV5LicensesLicense(ctx context.Context, lice
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -493,20 +483,19 @@ func (a *MiscellaneousApiService) GetV5LicensesLicense(ctx context.Context, lice
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MiscellaneousApiService 获取一个开源许可协议原始文件
 获取一个开源许可协议原始文件
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -517,7 +506,7 @@ MiscellaneousApiService 获取一个开源许可协议原始文件
 
 */
 
-type GetV5LicensesLicenseRawOpts struct { 
+type GetV5LicensesLicenseRawOpts struct {
 	AccessToken optional.String
 }
 
@@ -527,7 +516,6 @@ func (a *MiscellaneousApiService) GetV5LicensesLicenseRaw(ctx context.Context, l
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -574,20 +562,19 @@ func (a *MiscellaneousApiService) GetV5LicensesLicenseRaw(ctx context.Context, l
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MiscellaneousApiService 获取一个仓库使用的开源许可协议
 获取一个仓库使用的开源许可协议
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -599,7 +586,7 @@ MiscellaneousApiService 获取一个仓库使用的开源许可协议
 
 */
 
-type GetV5ReposOwnerRepoLicenseOpts struct { 
+type GetV5ReposOwnerRepoLicenseOpts struct {
 	AccessToken optional.String
 }
 
@@ -609,7 +596,6 @@ func (a *MiscellaneousApiService) GetV5ReposOwnerRepoLicense(ctx context.Context
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -657,20 +643,19 @@ func (a *MiscellaneousApiService) GetV5ReposOwnerRepoLicense(ctx context.Context
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 
 	return localVarHttpResponse, nil
 }
 
-/* 
+/*
 MiscellaneousApiService 渲染 Markdown 文本
 渲染 Markdown 文本
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -681,7 +666,7 @@ MiscellaneousApiService 渲染 Markdown 文本
 
 */
 
-type PostV5MarkdownOpts struct { 
+type PostV5MarkdownOpts struct {
 	AccessToken optional.String
 }
 
@@ -691,7 +676,6 @@ func (a *MiscellaneousApiService) PostV5Markdown(ctx context.Context, text strin
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		
 	)
 
 	// create path and map variables
@@ -738,13 +722,12 @@ func (a *MiscellaneousApiService) PostV5Markdown(ctx context.Context, text strin
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		return localVarHttpResponse, newErr
 	}
 

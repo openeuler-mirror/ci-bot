@@ -11,6 +11,6 @@ package gitee
 
 // 列出仓库所有的tags
 type Tag struct {
-	Name string `json:"name,omitempty"`
+	Name   string `json:"name,omitempty"`
 	Commit string `json:"commit,omitempty"`
 }

@@ -11,11 +11,11 @@ package gitee
 
 // 获取企业某个Issue所有评论
 type Note struct {
-	Id string `json:"id,omitempty"`
-	Body string `json:"body,omitempty"`
-	BodyHtml string `json:"body_html,omitempty"`
-	User string `json:"user,omitempty"`
-	Source string `json:"source,omitempty"`
+	Id        string `json:"id,omitempty"`
+	Body      string `json:"body,omitempty"`
+	BodyHtml  string `json:"body_html,omitempty"`
+	User      string `json:"user,omitempty"`
+	Source    string `json:"source,omitempty"`
 	CreatedAt string `json:"created_at,omitempty"`
-	Target string `json:"target,omitempty"`
+	Target    string `json:"target,omitempty"`
 }
