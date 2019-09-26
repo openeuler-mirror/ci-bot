@@ -53,6 +53,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch event.(type) {
 	case *gitee.NoteEvent:
 		glog.Info("received a note event")
-		//go s.handleNoteEvent(payload)
+		go s.HandleNoteEvent(event.(*gitee.NoteEvent))
+	case *gitee.PushEvent:
+		glog.Info("received a push event")
+	case *gitee.IssueEvent:
+		glog.Info("received a issue event")
+	case *gitee.PullRequestEvent:
+		glog.Info("received a pull request event")
+	case *gitee.TagPushEvent:
+		glog.Info("received a tag push event")
 	}
 }
