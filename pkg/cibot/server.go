@@ -24,27 +24,27 @@ type Server struct {
 // ServeHTTP validates an incoming webhook and invoke its handler.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	glog.Info("received a webhook event")
-	/* Validata the webhook secret
+	// Validate the webhook secret
 	payload, err := gitee.ValidatePayload(r, []byte(s.Config.WebhookSecret))
 	if err != nil {
 		glog.Errorf("Invalid payload: %v", err)
 		return
-	}*/
-
-	/* Parse into Event
-	event, err := gitee.ParseWebHook(github.WebHookType(r), payload)
+	}
+	// Parse into Event
+	event, err := gitee.ParseWebHook(gitee.WebHookType(r), payload)
 	if err != nil {
-		glog.Errorf("Failed to parse webhook")
+		glog.Errorf("Failed to parse webhook event")
 		return
-	}*/
-	glog.Infof("header: %v body: %v", r.Header, r.Body)
+	}
+	glog.Infof("payload: %v event: %v", payload, event)
 
 	var client http.Client
 	client.Do(r)
 
-	/* handle events
+	// handle events
 	switch event.(type) {
-	case *gitee.IssueEvent:
-		go s.handleIssueEvent(payload)
-	}*/
+	case *gitee.NoteEvent:
+		glog.Info("received a note event")
+		//go s.handleNoteEvent(payload)
+	}
 }
