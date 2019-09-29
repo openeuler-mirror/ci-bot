@@ -12,9 +12,9 @@ const (
 
 var (
 	// RegAddLabel
-	RegAddLabel = regexp.MustCompile(`(?mi)^/(kind|priority)\s*(.*)$`)
+	RegAddLabel = regexp.MustCompile(`(?mi)^/(kind|priority|sig)\s*(.*)$`)
 	// RegRemoveLabel
-	RegRemoveLabel = regexp.MustCompile(`(?mi)^/remove-(kind|priority)\s*(.*)$`)
+	RegRemoveLabel = regexp.MustCompile(`(?mi)^/remove-(kind|priority|sig)\s*(.*)$`)
 )
 
 // UrlEncode replcae special chars in url
