@@ -343,7 +343,7 @@ func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
 	if event.Issue != nil {
 		number = event.Issue.Number
 	}
-	glog.Infof("remove label started. comment: %s owner: %s repo: %s number: %d",
+	glog.Infof("remove label started. comment: %s owner: %s repo: %s number: %s",
 		comment, owner, repo, number)
 
 	// /remove-kind label1
@@ -374,7 +374,8 @@ func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
 			for _, removedlabel := range listOfRemoveLabels {
 				localVarOptionals := &gitee.DeleteV5ReposOwnerRepoIssuesNumberLabelsNameOpts{}
 				localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
-				_, err := s.GiteeClient.LabelsApi.DeleteV5ReposOwnerRepoIssuesNumberLabelsName(s.Context, owner, repo, number, removedlabel, localVarOptionals)
+				_, err := s.GiteeClient.LabelsApi.DeleteV5ReposOwnerRepoIssuesNumberLabelsName(
+					s.Context, owner, repo, number, UrlEncode(removedlabel), localVarOptionals)
 				if err != nil {
 					glog.Errorf("unable to remove label: %s err: %v", removedlabel, err)
 					return err
