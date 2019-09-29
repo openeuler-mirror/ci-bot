@@ -12,12 +12,11 @@ package gitee
 import (
 	"context"
 	"fmt"
+	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -1420,27 +1419,11 @@ PullRequestsApiService 更新Pull Request信息
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param number 第几个PR，即本仓库PR的序数
- * @param optional nil or *PatchV5ReposOwnerRepoPullsNumberOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Title" (optional.String) -  可选。Pull Request 标题
-     * @param "Body" (optional.String) -  可选。Pull Request 内容
-     * @param "State" (optional.String) -  可选。Pull Request 状态
-     * @param "MilestoneNumber" (optional.Int32) -  可选。里程碑序号(id)
-     * @param "Labels" (optional.String) -  用逗号分开的标签，名称要求长度在 2-20 之间且非特殊字符。如: bug,performance
+ * @param body 可选。Pull Request 内容
 
 @return PullRequest
 */
-
-type PatchV5ReposOwnerRepoPullsNumberOpts struct {
-	AccessToken     optional.String
-	Title           optional.String
-	Body            optional.String
-	State           optional.String
-	MilestoneNumber optional.Int32
-	Labels          optional.String
-}
-
-func (a *PullRequestsApiService) PatchV5ReposOwnerRepoPullsNumber(ctx context.Context, owner string, repo string, number int32, localVarOptionals *PatchV5ReposOwnerRepoPullsNumberOpts) (PullRequest, *http.Response, error) {
+func (a *PullRequestsApiService) PatchV5ReposOwnerRepoPullsNumber(ctx context.Context, owner string, repo string, number int32, body PullRequestUpdateParam) (PullRequest, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Patch")
 		localVarPostBody    interface{}
@@ -1476,24 +1459,8 @@ func (a *PullRequestsApiService) PatchV5ReposOwnerRepoPullsNumber(ctx context.Co
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Title.IsSet() {
-		localVarFormParams.Add("title", parameterToString(localVarOptionals.Title.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
-		localVarFormParams.Add("body", parameterToString(localVarOptionals.Body.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.State.IsSet() {
-		localVarFormParams.Add("state", parameterToString(localVarOptionals.State.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.MilestoneNumber.IsSet() {
-		localVarFormParams.Add("milestone_number", parameterToString(localVarOptionals.MilestoneNumber.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Labels.IsSet() {
-		localVarFormParams.Add("labels", parameterToString(localVarOptionals.Labels.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err

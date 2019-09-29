@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"gitee.com/openeuler/go-gitee/gitee"
-	"github.com/antihax/optional"
 	"github.com/golang/glog"
 )
 
@@ -156,11 +155,17 @@ func (s *Server) AddLabel(event *gitee.NoteEvent) error {
 			for _, addedlabel := range listOfAddLabels {
 				strLabel += addedlabel + ","
 			}
-			localVarOptionals := &gitee.PatchV5ReposOwnerRepoPullsNumberOpts{}
-			localVarOptionals.Labels = optional.NewString(strLabel)
+			strLabel = strings.TrimRight(strLabel, ",")
+			// localVarOptionals := &gitee.PatchV5ReposOwnerRepoPullsNumberOpts{}
+			// localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
+			// localVarOptionals.Labels = optional.NewString(strLabel)
+			body := gitee.PullRequestUpdateParam{}
+			body.AccessToken = s.Config.GiteeToken
+			body.Labels = strLabel
+			glog.Infof("invoke api to add labels: %v", strLabel)
 
 			// patch labels
-			_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, localVarOptionals)
+			_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
 			if err != nil {
 				glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
 				return err
@@ -228,14 +233,20 @@ func (s *Server) RemoveLabel(event *gitee.NoteEvent) error {
 				strLabel += currentlabel.Name + ","
 			}
 			for _, removedlabel := range listOfRemoveLabels {
-				strings.Replace(strLabel, removedlabel+",", "", 1)
+				strLabel = strings.Replace(strLabel, removedlabel+",", "", 1)
 
 			}
-			localVarOptionals := &gitee.PatchV5ReposOwnerRepoPullsNumberOpts{}
-			localVarOptionals.Labels = optional.NewString(strLabel)
+			strLabel = strings.TrimRight(strLabel, ",")
+			// localVarOptionals := &gitee.PatchV5ReposOwnerRepoPullsNumberOpts{}
+			// localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
+			// localVarOptionals.Labels = optional.NewString(strLabel)
+			body := gitee.PullRequestUpdateParam{}
+			body.AccessToken = s.Config.GiteeToken
+			body.Labels = strLabel
+			glog.Infof("invoke api to remove labels: %v", strLabel)
 
 			// patch labels
-			_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, localVarOptionals)
+			_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
 			if err != nil {
 				glog.Errorf("unable to remove labels: %v err: %v", listOfRemoveLabels, err)
 				return err
@@ -243,7 +254,7 @@ func (s *Server) RemoveLabel(event *gitee.NoteEvent) error {
 				glog.Infof("remove labels successfully: %v", listOfRemoveLabels)
 			}
 		} else {
-			glog.Infof("No label to remove for this event")
+			glog.Infof("no label to remove for this event")
 		}
 	}
 

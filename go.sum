@@ -3,6 +3,8 @@ gitee.com/openeuler/go-gitee v0.0.0-20190926091504-69a0300b055c h1:6EwqtNYC84qtb
 gitee.com/openeuler/go-gitee v0.0.0-20190926091504-69a0300b055c/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
 gitee.com/openeuler/go-gitee v0.0.0-20190926120554-657932711060 h1:Az6Ju1t1tNV1znMd8u1qVdy9Ul0LTnYFZZwmkmcGCms=
 gitee.com/openeuler/go-gitee v0.0.0-20190926120554-657932711060/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
+gitee.com/openeuler/go-gitee v0.0.0-20190929062233-49b8d5a40fea h1:X7nzb53pn/07U9OdFH4uShT9/jSEoPGNIbV1p3RYhK8=
+gitee.com/openeuler/go-gitee v0.0.0-20190929062233-49b8d5a40fea/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
 github.com/antihax/optional v0.0.0-20180407024304-ca021399b1a6 h1:uZuxRZCz65cG1o6K/xUqImNcYKtmk9ylqaH0itMSvzA=
 github.com/antihax/optional v0.0.0-20180407024304-ca021399b1a6/go.mod h1:V8iCPQYkqmusNa815XgQio277wI47sdRh1dUOLdyC6Q=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b h1:VKtxabqXZkF25pY9ekfRL6a582T4P37/31XEstQ5p58=
