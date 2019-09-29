@@ -12,12 +12,11 @@ package gitee
 import (
 	"context"
 	"fmt"
+	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -1823,33 +1822,11 @@ IssuesApiService 更新Issue
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param number Issue 编号(区分大小写，无需添加 # 号)
- * @param optional nil or *PatchV5ReposOwnerIssuesNumberOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Repo" (optional.String) -  仓库路径(path)
-     * @param "Title" (optional.String) -  Issue标题
-     * @param "State" (optional.String) -  Issue 状态，open（开启的）、progressing（进行中）、closed（关闭的）
-     * @param "Body" (optional.String) -  Issue描述
-     * @param "Assignee" (optional.String) -  Issue负责人的username
-     * @param "Milestone" (optional.Int32) -  里程碑序号
-     * @param "Labels" (optional.String) -  用逗号分开的标签，名称要求长度在 2-20 之间且非特殊字符。如: bug,performance
-     * @param "Program" (optional.String) -  项目ID
+ * @param body 可选。Issue 内容
 
 @return Issue
 */
-
-type PatchV5ReposOwnerIssuesNumberOpts struct {
-	AccessToken optional.String
-	Repo        optional.String
-	Title       optional.String
-	State       optional.String
-	Body        optional.String
-	Assignee    optional.String
-	Milestone   optional.Int32
-	Labels      optional.String
-	Program     optional.String
-}
-
-func (a *IssuesApiService) PatchV5ReposOwnerIssuesNumber(ctx context.Context, owner string, number string, localVarOptionals *PatchV5ReposOwnerIssuesNumberOpts) (Issue, *http.Response, error) {
+func (a *IssuesApiService) PatchV5ReposOwnerIssuesNumber(ctx context.Context, owner string, number string, body IssueUpdateParam) (Issue, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Patch")
 		localVarPostBody    interface{}
@@ -1884,33 +1861,8 @@ func (a *IssuesApiService) PatchV5ReposOwnerIssuesNumber(ctx context.Context, ow
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Repo.IsSet() {
-		localVarFormParams.Add("repo", parameterToString(localVarOptionals.Repo.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Title.IsSet() {
-		localVarFormParams.Add("title", parameterToString(localVarOptionals.Title.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.State.IsSet() {
-		localVarFormParams.Add("state", parameterToString(localVarOptionals.State.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
-		localVarFormParams.Add("body", parameterToString(localVarOptionals.Body.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Assignee.IsSet() {
-		localVarFormParams.Add("assignee", parameterToString(localVarOptionals.Assignee.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Milestone.IsSet() {
-		localVarFormParams.Add("milestone", parameterToString(localVarOptionals.Milestone.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Labels.IsSet() {
-		localVarFormParams.Add("labels", parameterToString(localVarOptionals.Labels.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Program.IsSet() {
-		localVarFormParams.Add("program", parameterToString(localVarOptionals.Program.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err

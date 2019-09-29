@@ -231,13 +231,23 @@ func (s *Server) AddLabelInIssue(event *gitee.NoteEvent) error {
 
 		// invoke gitee api to add labels
 		if len(listOfAddLabels) > 0 {
-			localVarOptionals := &gitee.PostV5ReposOwnerRepoIssuesNumberLabelsOpts{}
-			localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
-			localVarOptionals.Body = optional.NewInterface(listOfAddLabels)
-			glog.Infof("invoke api to add labels: %v", listOfAddLabels)
+			// build label string
+			var strLabel string
+			for _, currentlabel := range listofItemLabels {
+				strLabel += currentlabel.Name + ","
+			}
+			for _, addedlabel := range listOfAddLabels {
+				strLabel += addedlabel + ","
+			}
+			strLabel = strings.TrimRight(strLabel, ",")
+			body := gitee.IssueUpdateParam{}
+			body.Repo = repo
+			body.AccessToken = s.Config.GiteeToken
+			body.Labels = strLabel
+			glog.Infof("invoke api to add labels: %v", strLabel)
 
-			// add labels
-			_, _, err := s.GiteeClient.LabelsApi.PostV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, localVarOptionals)
+			// patch labels
+			_, _, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, number, body)
 			if err != nil {
 				glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
 				return err

@@ -27,10 +27,10 @@ type Issue struct {
 	Title         string        `json:"title,omitempty"`
 	Body          string        `json:"body,omitempty"`
 	BodyHtml      string        `json:"body_html,omitempty"`
-	User          string        `json:"user,omitempty"`
+	User          *UserBasic    `json:"user,omitempty"`
 	Labels        []Label       `json:"labels,omitempty"`
 	Assignee      *UserBasic    `json:"assignee,omitempty"`
-	Collaborators *UserBasic    `json:"collaborators,omitempty"`
+	Collaborators []UserBasic   `json:"collaborators,omitempty"`
 	Repository    string        `json:"repository,omitempty"`
 	Milestone     *Milestone    `json:"milestone,omitempty"`
 	CreatedAt     time.Time     `json:"created_at,omitempty"`
