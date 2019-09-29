@@ -3,6 +3,8 @@ package cibot
 import (
 	"strings"
 
+	"github.com/antihax/optional"
+
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
 )
@@ -99,18 +101,26 @@ func GetListOfRemoveLabels(mapOfRemoveLabels map[string]string, listofItemLabels
 
 // AddLabel adds label
 func (s *Server) AddLabel(event *gitee.NoteEvent) error {
+	if *event.NoteableType == "PullRequest" {
+		// PullRequest
+		return s.AddLabelInPulRequest(event)
+	} else if *event.NoteableType == "Issue" {
+		// Issue
+		return s.AddLabelInIssue(event)
+	} else {
+		return nil
+	}
+}
+
+// AddLabelInPulRequest adds label in pull request
+func (s *Server) AddLabelInPulRequest(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
 	owner := event.Repository.Owner.Login
 	repo := event.Repository.Name
 	var number int32
-	if *event.NoteableType == "PullRequest" {
-		// Pull Request
-		if event.PullRequest != nil {
-			number = event.PullRequest.Number
-		}
-	} else {
-		// Issue
+	if event.PullRequest != nil {
+		number = event.PullRequest.Number
 	}
 	glog.Infof("add label started. comment: %s owner: %s repo: %s number: %d",
 		comment, owner, repo, number)
@@ -156,9 +166,6 @@ func (s *Server) AddLabel(event *gitee.NoteEvent) error {
 				strLabel += addedlabel + ","
 			}
 			strLabel = strings.TrimRight(strLabel, ",")
-			// localVarOptionals := &gitee.PatchV5ReposOwnerRepoPullsNumberOpts{}
-			// localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
-			// localVarOptionals.Labels = optional.NewString(strLabel)
 			body := gitee.PullRequestUpdateParam{}
 			body.AccessToken = s.Config.GiteeToken
 			body.Labels = strLabel
@@ -180,20 +187,93 @@ func (s *Server) AddLabel(event *gitee.NoteEvent) error {
 	return nil
 }
 
+// AddLabelInIssue adds label in issue
+func (s *Server) AddLabelInIssue(event *gitee.NoteEvent) error {
+	// get basic informations
+	comment := event.Comment.Body
+	owner := event.Repository.Owner.Login
+	repo := event.Repository.Name
+	var number string
+	if event.Issue != nil {
+		number = event.Issue.Number
+	}
+	glog.Infof("add label started. comment: %s owner: %s repo: %s number: %s",
+		comment, owner, repo, number)
+
+	// /kind label1
+	// /kind label2
+	getLabels := strings.Split(comment, "\r\n")
+
+	for _, labelToAdd := range getLabels {
+		// map of add labels
+		mapOfAddLabels := GetLabelsMap(labelToAdd)
+		glog.Infof("map of add labels: %v", mapOfAddLabels)
+
+		// list labels in current gitee repository
+		listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, nil)
+		if err != nil {
+			glog.Errorf("unable to list repository labels. err: %v", err)
+			return err
+		}
+		glog.Infof("list of repository labels: %v", listofRepoLabels)
+
+		// list labels in current item
+		listofItemLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, nil)
+		if err != nil {
+			glog.Errorf("unable to get labels in issue. err: %v", err)
+			return err
+		}
+		glog.Infof("list of item labels: %v", listofItemLabels)
+
+		// list of add labels
+		listOfAddLabels := GetListOfAddLabels(mapOfAddLabels, listofRepoLabels, listofItemLabels)
+		glog.Infof("list of add labels: %v", listOfAddLabels)
+
+		// invoke gitee api to add labels
+		if len(listOfAddLabels) > 0 {
+			localVarOptionals := &gitee.PostV5ReposOwnerRepoIssuesNumberLabelsOpts{}
+			localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
+			localVarOptionals.Body = optional.NewInterface(listOfAddLabels)
+			glog.Infof("invoke api to add labels: %v", listOfAddLabels)
+
+			// add labels
+			_, _, err := s.GiteeClient.LabelsApi.PostV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, localVarOptionals)
+			if err != nil {
+				glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
+				return err
+			} else {
+				glog.Infof("add labels successfully: %v", listOfAddLabels)
+			}
+		} else {
+			glog.Infof("no label to add for this event")
+		}
+	}
+
+	return nil
+}
+
 // RemoveLabel removes label
 func (s *Server) RemoveLabel(event *gitee.NoteEvent) error {
+	if *event.NoteableType == "PullRequest" {
+		// PullRequest
+		return s.RemoveLabelInPullRequest(event)
+	} else if *event.NoteableType == "Issue" {
+		// Issue
+		return s.RemoveLabelInIssue(event)
+	} else {
+		return nil
+	}
+}
+
+// RemoveLabelInPullRequest removes label in pull request
+func (s *Server) RemoveLabelInPullRequest(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
 	owner := event.Repository.Owner.Login
 	repo := event.Repository.Name
 	var number int32
-	if *event.NoteableType == "PullRequest" {
-		// Pull Request
-		if event.PullRequest != nil {
-			number = event.PullRequest.Number
-		}
-	} else {
-		// Issue
+	if event.PullRequest != nil {
+		number = event.PullRequest.Number
 	}
 	glog.Infof("remove label started. comment: %s owner: %s repo: %s number: %d",
 		comment, owner, repo, number)
@@ -215,11 +295,6 @@ func (s *Server) RemoveLabel(event *gitee.NoteEvent) error {
 		}
 		listofItemLabels := pr.Labels
 		glog.Infof("list of item labels: %v", listofItemLabels)
-		if err != nil {
-			glog.Errorf("unable to list item labels. err: %v", err)
-			return err
-		}
-		glog.Infof("list of item labels: %v", listofItemLabels)
 
 		// list of remove labels
 		listOfRemoveLabels := GetListOfRemoveLabels(mapOfRemoveLabels, listofItemLabels)
@@ -237,9 +312,6 @@ func (s *Server) RemoveLabel(event *gitee.NoteEvent) error {
 
 			}
 			strLabel = strings.TrimRight(strLabel, ",")
-			// localVarOptionals := &gitee.PatchV5ReposOwnerRepoPullsNumberOpts{}
-			// localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
-			// localVarOptionals.Labels = optional.NewString(strLabel)
 			body := gitee.PullRequestUpdateParam{}
 			body.AccessToken = s.Config.GiteeToken
 			body.Labels = strLabel
@@ -252,6 +324,63 @@ func (s *Server) RemoveLabel(event *gitee.NoteEvent) error {
 				return err
 			} else {
 				glog.Infof("remove labels successfully: %v", listOfRemoveLabels)
+			}
+		} else {
+			glog.Infof("no label to remove for this event")
+		}
+	}
+
+	return nil
+}
+
+// RemoveLabelInIssue removes label in issue
+func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
+	// get basic informations
+	comment := event.Comment.Body
+	owner := event.Repository.Owner.Login
+	repo := event.Repository.Name
+	var number string
+	if event.Issue != nil {
+		number = event.Issue.Number
+	}
+	glog.Infof("remove label started. comment: %s owner: %s repo: %s number: %d",
+		comment, owner, repo, number)
+
+	// /remove-kind label1
+	// /remove-kind label2
+	getLables := strings.Split(comment, "\r\n")
+
+	for _, labelToRemove := range getLables {
+		// map of add labels
+		mapOfRemoveLabels := GetLabelsMap(labelToRemove)
+		glog.Infof("map of remove labels: %v", mapOfRemoveLabels)
+
+		// list labels in current item
+		listofItemLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, nil)
+		if err != nil {
+			glog.Errorf("unable to get labels in issue. err: %v", err)
+			return err
+		}
+		glog.Infof("list of item labels: %v", listofItemLabels)
+
+		// list of remove labels
+		listOfRemoveLabels := GetListOfRemoveLabels(mapOfRemoveLabels, listofItemLabels)
+		glog.Infof("list of remove labels: %v", listOfRemoveLabels)
+
+		// invoke gitee api to remove labels
+		if len(listOfRemoveLabels) > 0 {
+			glog.Infof("invoke api to remove labels: %v", listOfRemoveLabels)
+			// remove labels
+			for _, removedlabel := range listOfRemoveLabels {
+				localVarOptionals := &gitee.DeleteV5ReposOwnerRepoIssuesNumberLabelsNameOpts{}
+				localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
+				_, err := s.GiteeClient.LabelsApi.DeleteV5ReposOwnerRepoIssuesNumberLabelsName(s.Context, owner, repo, number, removedlabel, localVarOptionals)
+				if err != nil {
+					glog.Errorf("unable to remove label: %s err: %v", removedlabel, err)
+					return err
+				} else {
+					glog.Infof("remove label successfully: %s", removedlabel)
+				}
 			}
 		} else {
 			glog.Infof("no label to remove for this event")

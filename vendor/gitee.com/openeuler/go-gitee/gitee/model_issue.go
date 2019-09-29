@@ -28,7 +28,7 @@ type Issue struct {
 	Body          string        `json:"body,omitempty"`
 	BodyHtml      string        `json:"body_html,omitempty"`
 	User          string        `json:"user,omitempty"`
-	Labels        *Label        `json:"labels,omitempty"`
+	Labels        []Label       `json:"labels,omitempty"`
 	Assignee      *UserBasic    `json:"assignee,omitempty"`
 	Collaborators *UserBasic    `json:"collaborators,omitempty"`
 	Repository    string        `json:"repository,omitempty"`

@@ -16,6 +16,7 @@ type NoteEvent struct {
 	ShortCommitID *string          `json:"short_commit_id,omitempty"`
 	Enterprise    *EnterpriseBasic `json:"enterprise,omitempty"`
 	PullRequest   *PullRequest     `json:"pull_request,omitempty"`
+	Issue         *Issue           `json:"issue,omitempty"`
 	HookName      *string          `json:"hook_name,omitempty"`
 	Password      *string          `json:"password,omitempty"`
 }
