@@ -25,10 +25,10 @@ type ProjectsFile struct {
 }
 
 type Project struct {
-	Name        *string `yaml:"name"`
-	Owner       *string `yaml:"owner"`
-	Type        *string `yaml:"type"`
-	Description *string `yaml:"description"`
+	Name        *string  `yaml:"name"`
+	Owner       []string `yaml:"owner"`
+	Type        *string  `yaml:"type"`
+	Description *string  `yaml:"description"`
 }
 
 // Serve
@@ -82,10 +82,12 @@ func (handler *InitHandler) Serve() {
 
 		// invoke create project member
 		glog.Infof("begin to create project member: %s", *p.Name)
-		_, _, err = handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoCollaboratorsUsername(handler.Context, DefaultOrg, *p.Name, *p.Owner, memberbody)
-		if err != nil {
-			glog.Errorf("fail to create project member: %v", err)
-			continue
+		for j := 0; j < len(p.Owner); j++ {
+			_, _, err = handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoCollaboratorsUsername(handler.Context, DefaultOrg, *p.Name, p.Owner[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to create project member: %v", err)
+				continue
+			}
 		}
 		glog.Infof("end to create project member: %s", *p.Name)
 
