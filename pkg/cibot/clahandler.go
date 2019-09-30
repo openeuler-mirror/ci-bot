@@ -14,11 +14,6 @@ type CLAHandler struct {
 }
 
 type CLARequest struct {
-	IsSuccess   bool    `json:"isSuccess,omitempty"`
-	Description *string `json:"description,omitempty"`
-}
-
-type CLAResult struct {
 	Type        int     `json:"type,omitempty"`
 	Name        *string `json:"name,omitempty"`
 	Title       *string `json:"title,omitempty"`
@@ -28,6 +23,11 @@ type CLAResult struct {
 	Email       *string `json:"email,omitempty"`
 	Telephone   *string `json:"telephone,omitempty"`
 	Fax         *string `json:"fax,omitempty"`
+}
+
+type CLAResult struct {
+	IsSuccess   bool    `json:"isSuccess,omitempty"`
+	Description *string `json:"description,omitempty"`
 }
 
 // ServeHTTP validates an incoming cla request.
@@ -52,7 +52,7 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		glog.Infof("cla request content: %v", clarequest)
 
 		// constuct result
-		claresult := CLARequest{
+		claresult := CLAResult{
 			IsSuccess: true,
 		}
 		result, err := json.Marshal(claresult)
@@ -63,10 +63,16 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		// CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		// Content type
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(result))
+	} else if r.Method == "OPTIONS" {
+		// CORS
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		glog.Infof("finish request method: %s", r.Method)
 	} else {
 		glog.Infof("unsupport request method: %s", r.Method)
 	}
