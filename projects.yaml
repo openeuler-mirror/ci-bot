@@ -1,9 +1,9 @@
 projects:
   - name: python-tools
-    owner: freesky-edward
+    owner: edisontest
     type: private
     description: ""
   - name: goclient
-    owner: xiangxinyong
+    owner: edisontest
     type: public
     description: "go client"
