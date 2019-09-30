@@ -46,7 +46,7 @@ func (handler *InitHandler) Serve() {
 		glog.Errorf("fail to unmarshal: %v", err)
 	}
 
-	glog.Infof("projects: %v", projects)
+	glog.Infof("projects: %d", len(projects.Projects))
 	for i := 0; i < len(projects.Projects); i++ {
 		// log
 		p := projects.Projects[i]
@@ -60,9 +60,10 @@ func (handler *InitHandler) Serve() {
 		repobody.HasIssues = true
 		repobody.HasWiki = true
 		if *p.Type == "private" {
-			repobody.Public = 0
+			repobody.Private = true
 		} else {
-			repobody.Public = 1
+			glog.Infof("begin to public: %s", *p.Type)
+			repobody.Private = false
 		}
 
 		// invoke create repository
