@@ -1,0 +1,9 @@
+projects:
+  - name: python-tools
+    owner: freesky-edward
+    type: private
+    description: ""
+  - name: goclient
+    owner: xiangxinyong
+    type: public
+    description: "go client"
