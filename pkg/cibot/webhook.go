@@ -64,13 +64,19 @@ func (s *Webhook) Run() {
 	// return 200 for health check
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {})
 
-	// setting handler
+	// setting webhook handler
 	webHookHandler := Server{
 		Config:      config,
 		Context:     ctx,
 		GiteeClient: giteeClient,
 	}
 	http.HandleFunc("/webhook", webHookHandler.ServeHTTP)
+
+	// setting cla handler
+	claHandler := CLAHandler{
+		Context: ctx,
+	}
+	http.HandleFunc("/cla", claHandler.ServeHTTP)
 
 	//starting server
 	address := s.Address + ":" + strconv.FormatInt(s.Port, 10)
