@@ -12,12 +12,11 @@ package gitee
 import (
 	"context"
 	"fmt"
+	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -4358,37 +4357,12 @@ func (a *RepositoriesApiService) PostV5EnterprisesEnterpriseRepos(ctx context.Co
 RepositoriesApiService 创建组织仓库
 创建组织仓库
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param name 仓库名称
  * @param org 组织的路径(path/login)
- * @param optional nil or *PostV5OrgsOrgReposOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Description" (optional.String) -  仓库描述
-     * @param "Homepage" (optional.String) -  主页(eg: https://gitee.com)
-     * @param "HasIssues" (optional.Bool) -  允许提Issue与否。默认: 允许(true)
-     * @param "HasWiki" (optional.Bool) -  提供Wiki与否。默认: 提供(true)
-     * @param "Public" (optional.Int32) -  仓库开源类型。0(私有), 1(外部开源), 2(内部开源)，注：与private互斥，以public为主。
-     * @param "Private" (optional.Bool) -  仓库公开或私有。默认: 公开(false)，注：与public互斥，以public为主。
-     * @param "AutoInit" (optional.Bool) -  值为true时则会用README初始化仓库。默认: 不初始化(false)
-     * @param "GitignoreTemplate" (optional.String) -  Git Ingore模版
-     * @param "LicenseTemplate" (optional.String) -  License模版
+ * @param body Repositorie 内容
 
 @return Project
 */
-
-type PostV5OrgsOrgReposOpts struct {
-	AccessToken       optional.String
-	Description       optional.String
-	Homepage          optional.String
-	HasIssues         optional.Bool
-	HasWiki           optional.Bool
-	Public            optional.Int32
-	Private           optional.Bool
-	AutoInit          optional.Bool
-	GitignoreTemplate optional.String
-	LicenseTemplate   optional.String
-}
-
-func (a *RepositoriesApiService) PostV5OrgsOrgRepos(ctx context.Context, name string, org string, localVarOptionals *PostV5OrgsOrgReposOpts) (Project, *http.Response, error) {
+func (a *RepositoriesApiService) PostV5OrgsOrgRepos(ctx context.Context, org string, body RepositoryPostParam) (Project, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -4422,37 +4396,8 @@ func (a *RepositoriesApiService) PostV5OrgsOrgRepos(ctx context.Context, name st
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("name", parameterToString(name, ""))
-	if localVarOptionals != nil && localVarOptionals.Description.IsSet() {
-		localVarFormParams.Add("description", parameterToString(localVarOptionals.Description.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Homepage.IsSet() {
-		localVarFormParams.Add("homepage", parameterToString(localVarOptionals.Homepage.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.HasIssues.IsSet() {
-		localVarFormParams.Add("has_issues", parameterToString(localVarOptionals.HasIssues.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.HasWiki.IsSet() {
-		localVarFormParams.Add("has_wiki", parameterToString(localVarOptionals.HasWiki.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Public.IsSet() {
-		localVarFormParams.Add("public", parameterToString(localVarOptionals.Public.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Private.IsSet() {
-		localVarFormParams.Add("private", parameterToString(localVarOptionals.Private.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.AutoInit.IsSet() {
-		localVarFormParams.Add("auto_init", parameterToString(localVarOptionals.AutoInit.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.GitignoreTemplate.IsSet() {
-		localVarFormParams.Add("gitignore_template", parameterToString(localVarOptionals.GitignoreTemplate.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.LicenseTemplate.IsSet() {
-		localVarFormParams.Add("license_template", parameterToString(localVarOptionals.LicenseTemplate.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -5588,18 +5533,11 @@ RepositoriesApiService 添加仓库成员
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param username 用户名(username/login)
- * @param permission 成员权限: 拉代码(pull)，推代码(push)，管理员(admin)。默认: push
- * @param optional nil or *PutV5ReposOwnerRepoCollaboratorsUsernameOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ * @param body 仓库成员内容
 
 @return ProjectMember
 */
-
-type PutV5ReposOwnerRepoCollaboratorsUsernameOpts struct {
-	AccessToken optional.String
-}
-
-func (a *RepositoriesApiService) PutV5ReposOwnerRepoCollaboratorsUsername(ctx context.Context, owner string, repo string, username string, permission string, localVarOptionals *PutV5ReposOwnerRepoCollaboratorsUsernameOpts) (ProjectMember, *http.Response, error) {
+func (a *RepositoriesApiService) PutV5ReposOwnerRepoCollaboratorsUsername(ctx context.Context, owner string, repo string, username string, body ProjectMemberPutParam) (ProjectMember, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Put")
 		localVarPostBody    interface{}
@@ -5635,10 +5573,8 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoCollaboratorsUsername(ctx co
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("permission", parameterToString(permission, ""))
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
