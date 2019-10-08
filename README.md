@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repository is used to address the code of openeuler ci bot.
+This repository is used to address the code of openEuler ci bot.
 
 ## Build
 
