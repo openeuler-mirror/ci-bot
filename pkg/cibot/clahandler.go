@@ -127,7 +127,7 @@ func (s *CLAHandler) HandleRequest(request CLARequest) error {
 	// Check email in database
 	var lenEmail int
 	err = database.DBConnection.Model(&database.CLADetails{}).
-		Where("email = ?", cds.Email, cds.Telephone).Count(&lenEmail).Error
+		Where("email = ?", cds.Email).Count(&lenEmail).Error
 	if err != nil {
 		glog.Errorf("check email exitency error: %v", err)
 		return err
