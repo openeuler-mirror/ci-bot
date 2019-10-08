@@ -88,15 +88,31 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (s *CLAHandler) HandleRequest(request CLARequest) error {
 	// build model object
 	cds := database.CLADetails{
-		Type:        request.Type,
-		Name:        *request.Name,
-		Title:       *request.Title,
-		Corporation: *request.Corporation,
-		Address:     *request.Address,
-		Date:        *request.Date,
-		Email:       *request.Email,
-		Telephone:   *request.Telephone,
-		Fax:         *request.Fax,
+		Type: request.Type,
+	}
+	if request.Name != nil {
+		cds.Name = *request.Name
+	}
+	if request.Title != nil {
+		cds.Title = *request.Title
+	}
+	if request.Corporation != nil {
+		cds.Corporation = *request.Corporation
+	}
+	if request.Address != nil {
+		cds.Address = *request.Address
+	}
+	if request.Date != nil {
+		cds.Date = *request.Date
+	}
+	if request.Email != nil {
+		cds.Email = *request.Email
+	}
+	if request.Telephone != nil {
+		cds.Telephone = *request.Telephone
+	}
+	if request.Fax != nil {
+		cds.Fax = *request.Fax
 	}
 
 	// tostring
