@@ -3,6 +3,7 @@ package cibot
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 
@@ -122,6 +123,30 @@ func (s *CLAHandler) HandleRequest(request CLARequest) error {
 		return err
 	}
 	glog.Infof("add cla details data: %s", data)
+
+	// Check email in database
+	var lenEmail int
+	err = database.DBConnection.Model(&database.CLADetails{}).
+		Where("email = ?", cds.Email, cds.Telephone).Count(&lenEmail).Error
+	if err != nil {
+		glog.Errorf("check email exitency error: %v", err)
+		return err
+	}
+	if lenEmail > 0 {
+		return errors.New("email is already registered")
+	}
+
+	// Check telephone in database
+	var lenTelephone int
+	err = database.DBConnection.Model(&database.CLADetails{}).
+		Where("telephone = ?", cds.Telephone).Count(&lenTelephone).Error
+	if err != nil {
+		glog.Errorf("check telephone exitency error: %v", err)
+		return err
+	}
+	if lenTelephone > 0 {
+		return errors.New("telephone is already registered")
+	}
 
 	// add cla in database
 	err = database.DBConnection.Create(&cds).Error
