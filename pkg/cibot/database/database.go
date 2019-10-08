@@ -47,6 +47,7 @@ func ConnectDataBase(config config.Config) (*gorm.DB, error) {
 		config.DataBaseHost,
 		config.DataBasePort,
 		config.DataBaseName)
+	glog.Infof("connecting str: %v", connStr)
 
 	return gorm.Open(config.DataBaseType, connStr)
 }
