@@ -1,13 +1,13 @@
 projects:
-  - name: python-tools
-    owner:
-      - freesky-edward
-      - tommylike
-    type: private
-    description: ""
-  - name: goclient
-    owner:
-      - xiangxinyong
-      - edisontest
-    type: public
-    description: "go client"
+  # - name: python-tools
+  #   owner:
+  #     - freesky-edward
+  #     - tommylike
+  #   type: private
+  #   description: ""
+  # - name: goclient
+  #   owner:
+  #     - xiangxinyong
+  #     - edisontest
+  #   type: public
+  #   description: "go client"

@@ -1,10 +1,10 @@
 owner: "openeuler-ci-bot"
 repository: "https://gitee.com/openeuler/website"
-giteeToken: ""
-webhookSecret: ""
+giteeToken: "******"
+webhookSecret: "123456789"
 databaseType: "mysql"
 databaseHost: "127.0.0.1"
 databasePort: 3306
 databaseName: "cibot"
-databaseUserName: "******"
+databaseUserName: "root"
 databasePassword: "******"
