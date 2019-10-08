@@ -28,9 +28,9 @@ type CLARequest struct {
 }
 
 type CLAResult struct {
-	IsSuccess   bool   `json:"isSuccess,omitempty"`
+	IsSuccess   bool   `json:"isSuccess"`
+	ErrorCode   int    `json:"errorCode"`
 	Description string `json:"description,omitempty"`
-	ErrorCode   int    `json:"errorCode,omitempty"`
 }
 
 const (
@@ -191,7 +191,6 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 	// add cla in database
 	err = database.DBConnection.Create(&cds).Error
 	if err != nil {
-		glog.Errorf("add cla details error: %v", err)
 		s.HandleResult(w, CLAResult{
 			IsSuccess:   false,
 			Description: fmt.Sprintf("add cla details error: %v", err),
