@@ -4,6 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 
+	"gitee.com/openeuler/ci-bot/pkg/cibot/config"
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
 	"gopkg.in/yaml.v2"
@@ -14,7 +15,7 @@ var (
 )
 
 type InitHandler struct {
-	Config       Config
+	Config       config.Config
 	Context      context.Context
 	GiteeClient  *gitee.APIClient
 	ProjectsFile string
