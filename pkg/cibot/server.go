@@ -54,6 +54,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		glog.Info("received a issue event")
 	case *gitee.PullRequestEvent:
 		glog.Info("received a pull request event")
+		go s.HandlePullRequestEvent(event.(*gitee.PullRequestEvent))
 	case *gitee.TagPushEvent:
 		glog.Info("received a tag push event")
 	}
