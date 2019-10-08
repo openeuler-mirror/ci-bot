@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"gitee.com/openeuler/ci-bot/pkg/cibot/config"
+	"gitee.com/openeuler/ci-bot/pkg/cibot/database"
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
 	"github.com/spf13/pflag"
@@ -44,7 +46,7 @@ func (s *Webhook) Run() {
 	}
 
 	// unmarshal config file
-	var config Config
+	var config config.Config
 	err = yaml.Unmarshal(configContent, &config)
 	if err != nil {
 		glog.Fatalf("fail to unmarshal: %v", err)
@@ -72,6 +74,11 @@ func (s *Webhook) Run() {
 		ProjectsFile: s.ProjectsFile,
 	}
 	go initHandler.Serve()
+
+	err = database.New(config)
+	if err != nil {
+		glog.Error("init back database error: %v", err)
+	}
 
 	// return 200 for health check
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {})

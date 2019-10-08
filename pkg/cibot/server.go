@@ -5,19 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
+	"gitee.com/openeuler/ci-bot/pkg/cibot/config"
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
 )
 
-type Config struct {
-	Owner         string `yaml:"owner"`
-	Repo          string `yaml:"repository"`
-	GiteeToken    string `yaml:"giteeToken"`
-	WebhookSecret string `yaml:"webhookSecret"`
-}
-
 type Server struct {
-	Config      Config
+	Config      config.Config
 	Context     context.Context
 	GiteeClient *gitee.APIClient
 }
