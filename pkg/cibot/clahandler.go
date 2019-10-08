@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"gitee.com/openeuler/ci-bot/pkg/cibot/database"
 	"github.com/golang/glog"
 )
 
@@ -50,6 +51,11 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		glog.Infof("cla request content: %v", clarequest)
+		err = s.HandleRequest(clarequest)
+		if err != nil {
+			glog.Errorf("handle request error: %v", err)
+			return
+		}
 
 		// constuct result
 		claresult := CLAResult{
@@ -76,4 +82,37 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	} else {
 		glog.Infof("unsupport request method: %s", r.Method)
 	}
+}
+
+// HandleRequest handles the cla request
+func (s *CLAHandler) HandleRequest(request CLARequest) error {
+	// build model object
+	cds := database.CLADetails{
+		Type:        request.Type,
+		Name:        *request.Name,
+		Title:       *request.Title,
+		Corporation: *request.Corporation,
+		Address:     *request.Address,
+		Date:        *request.Date,
+		Email:       *request.Email,
+		Telephone:   *request.Telephone,
+		Fax:         *request.Fax,
+	}
+
+	// tostring
+	data, err := cds.ToString()
+	if err != nil {
+		glog.Errorf("request tostring error: %v", err)
+		return err
+	}
+	glog.Infof("add cla details data: %s", data)
+
+	// add cla in database
+	err = database.DBConnection.Create(&cds).Error
+	if err != nil {
+		glog.Errorf("add cla details error: %v", err)
+		return err
+	}
+
+	return nil
 }

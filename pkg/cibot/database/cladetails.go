@@ -54,3 +54,13 @@ func (cds CLADetails) GetAdditionalInfo(additionalinfo interface{}) error {
 	}
 	return nil
 }
+
+// ToString for convert
+func (cds CLADetails) ToString() (string, error) {
+	// Marshal operation datas
+	operationdatas, err := json.Marshal(cds)
+	if err != nil {
+		return "", fmt.Errorf("marshal operation details failed. Error: %s", err)
+	}
+	return string(operationdatas), nil
+}
