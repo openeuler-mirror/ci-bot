@@ -3,7 +3,7 @@ package cibot
 import (
 	"context"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -28,9 +28,17 @@ type CLARequest struct {
 }
 
 type CLAResult struct {
-	IsSuccess   bool    `json:"isSuccess,omitempty"`
-	Description *string `json:"description,omitempty"`
+	IsSuccess   bool   `json:"isSuccess,omitempty"`
+	Description string `json:"description,omitempty"`
+	ErrorCode   int    `json:"errorCode,omitempty"`
 }
+
+const (
+	ErrorCode_OK                = 0
+	ErrorCode_ServerHandleError = 1
+	ErrorCode_EmailError        = 2
+	ErrorCode_TelephoneError    = 3
+)
 
 // ServeHTTP validates an incoming cla request.
 func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +47,11 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// read body
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			glog.Errorf("read body error: %v", err)
+			s.HandleResult(w, CLAResult{
+				IsSuccess:   false,
+				Description: fmt.Sprintf("read body error: %v", err),
+				ErrorCode:   ErrorCode_ServerHandleError,
+			})
 			return
 		}
 
@@ -47,34 +59,16 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		var clarequest CLARequest
 		err = json.Unmarshal(body, &clarequest)
 		if err != nil {
-			glog.Errorf("unmarshal body error: %v", err)
+			s.HandleResult(w, CLAResult{
+				IsSuccess:   false,
+				Description: fmt.Sprintf("unmarshal json error: %v", err),
+				ErrorCode:   ErrorCode_ServerHandleError,
+			})
 			return
 		}
 
 		glog.Infof("cla request content: %v", clarequest)
-		err = s.HandleRequest(clarequest)
-		if err != nil {
-			glog.Errorf("handle request error: %v", err)
-			return
-		}
-
-		// constuct result
-		claresult := CLAResult{
-			IsSuccess: true,
-		}
-		result, err := json.Marshal(claresult)
-		if err != nil {
-			glog.Errorf("marshal result error: %v", err)
-			return
-		}
-
-		// CORS
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		// Content type
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(result))
+		s.HandleRequest(w, clarequest)
 	} else if r.Method == "OPTIONS" {
 		// CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -85,8 +79,32 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// HandleResult output result to client
+func (s *CLAHandler) HandleResult(w http.ResponseWriter, r CLAResult) {
+	// log error code
+	if !r.IsSuccess {
+		glog.Errorf("handle result error code: %v description: %v",
+			r.ErrorCode, r.Description)
+	}
+
+	// constuct result
+	result, err := json.Marshal(r)
+	if err != nil {
+		glog.Errorf("marshal result error: %v", err)
+		return
+	}
+
+	// CORS
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	// Content type
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(result))
+}
+
 // HandleRequest handles the cla request
-func (s *CLAHandler) HandleRequest(request CLARequest) error {
+func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 	// build model object
 	cds := database.CLADetails{
 		Type: request.Type,
@@ -119,8 +137,12 @@ func (s *CLAHandler) HandleRequest(request CLARequest) error {
 	// tostring
 	data, err := cds.ToString()
 	if err != nil {
-		glog.Errorf("request tostring error: %v", err)
-		return err
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("request tostring error: %v", err),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
 	}
 	glog.Infof("add cla details data: %s", data)
 
@@ -129,11 +151,20 @@ func (s *CLAHandler) HandleRequest(request CLARequest) error {
 	err = database.DBConnection.Model(&database.CLADetails{}).
 		Where("email = ?", cds.Email).Count(&lenEmail).Error
 	if err != nil {
-		glog.Errorf("check email exitency error: %v", err)
-		return err
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("check email exitency error: %v", err),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
 	}
 	if lenEmail > 0 {
-		return errors.New("email is already registered")
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: "email is already registered",
+			ErrorCode:   ErrorCode_EmailError,
+		})
+		return
 	}
 
 	// Check telephone in database
@@ -141,19 +172,37 @@ func (s *CLAHandler) HandleRequest(request CLARequest) error {
 	err = database.DBConnection.Model(&database.CLADetails{}).
 		Where("telephone = ?", cds.Telephone).Count(&lenTelephone).Error
 	if err != nil {
-		glog.Errorf("check telephone exitency error: %v", err)
-		return err
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("check telephone exitency error: %v", err),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
 	}
 	if lenTelephone > 0 {
-		return errors.New("telephone is already registered")
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: "telephone is already registered",
+			ErrorCode:   ErrorCode_TelephoneError,
+		})
+		return
 	}
 
 	// add cla in database
 	err = database.DBConnection.Create(&cds).Error
 	if err != nil {
 		glog.Errorf("add cla details error: %v", err)
-		return err
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("add cla details error: %v", err),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
 	}
 
-	return nil
+	// constuct result
+	s.HandleResult(w, CLAResult{
+		IsSuccess: true,
+		ErrorCode: ErrorCode_OK,
+	})
 }
