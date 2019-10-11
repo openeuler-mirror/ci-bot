@@ -28,4 +28,5 @@ type UserBasic struct {
 	ReceivedEventsUrl string `json:"received_events_url,omitempty"`
 	Type_             string `json:"type,omitempty"`
 	SiteAdmin         bool   `json:"site_admin,omitempty"`
+	Email             string `json:"email,omitempty"`
 }

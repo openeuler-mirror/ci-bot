@@ -39,4 +39,5 @@ type User struct {
 	Watched           string `json:"watched,omitempty"`
 	CreatedAt         string `json:"created_at,omitempty"`
 	UpdatedAt         string `json:"updated_at,omitempty"`
+	Email             string `json:"email,omitempty"`
 }
