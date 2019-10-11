@@ -7,12 +7,11 @@ import (
 )
 
 const (
-	claNotFoundMessage = `
-Thanks for your pull request. Before we can look at your pull request, you'll need to sign a Contributor License Agreement (CLA).
+	claNotFoundMessage = `Thanks for your pull request.
+**Before we can look at your pull request, you'll need to sign a Contributor License Agreement (CLA).**
 **Please follow instructions at <https://openeuler.org/en/cla.html> to sign the CLA.**
-It may take a couple minutes for the CLA signature to be fully registered; after that,
-please reply here with a new comment **/check-cla** and we'll verify. Thanks.
----
+It may take a couple minutes for the CLA signature to be fully registered;
+after that, please reply here with a new comment **/check-cla** and we'll verify.
 - If you've already signed a CLA, it's possible we don't have your Gitee username or you're using a different email address.
   Check your existing CLA data and verify that your email at <https://gitee.com/profile/emails>.
 - If you have done the above and are still having issues with the CLA being reported as unsigned,
