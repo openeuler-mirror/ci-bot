@@ -26,4 +26,12 @@ func (s *Server) HandleNoteEvent(event *gitee.NoteEvent) {
 			glog.Errorf("failed to remove label: %v", err)
 		}
 	}
+
+	// check cla by note event
+	if RegCheckCLA.MatchString(event.Comment.Body) {
+		err := s.CheckCLAByNoteEvent(event)
+		if err != nil {
+			glog.Errorf("failed to check cla by note event: %v", err)
+		}
+	}
 }

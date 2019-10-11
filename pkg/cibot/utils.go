@@ -19,6 +19,8 @@ var (
 	RegAddLabel = regexp.MustCompile(`(?mi)^/(kind|priority|sig|openeuler-cla)\s*(.*)$`)
 	// RegRemoveLabel
 	RegRemoveLabel = regexp.MustCompile(`(?mi)^/remove-(kind|priority|sig|openeuler-cla)\s*(.*)$`)
+	// RegCheckCLA
+	RegCheckCLA = regexp.MustCompile(`(?mi)^/check-cla\s*$`)
 )
 
 // UrlEncode replcae special chars in url
