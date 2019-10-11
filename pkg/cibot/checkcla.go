@@ -79,6 +79,17 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			}
 
 			// add comment
+			body := gitee.PullRequestCommentPostParam{}
+			body.AccessToken = s.Config.GiteeToken
+			body.Body = claNotFoundMessage
+			owner := event.Repository.Owner.Login
+			repo := event.Repository.Name
+			number := event.PullRequest.Number
+			_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+			if err != nil {
+				glog.Errorf("unable to add comment in pull request: %v", err)
+				return err
+			}
 		}
 	}
 	return nil
@@ -140,6 +151,17 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		}
 
 		// add comment
+		body := gitee.PullRequestCommentPostParam{}
+		body.AccessToken = s.Config.GiteeToken
+		body.Body = claNotFoundMessage
+		owner := event.Repository.Owner.Login
+		repo := event.Repository.Name
+		number := event.PullRequest.Number
+		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+		if err != nil {
+			glog.Errorf("unable to add comment in pull request: %v", err)
+			return err
+		}
 	}
 	return nil
 }
