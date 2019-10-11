@@ -77,7 +77,7 @@ func (s *Webhook) Run() {
 
 	err = database.New(config)
 	if err != nil {
-		glog.Error("init back database error: %v", err)
+		glog.Errorf("init back database error: %v", err)
 	}
 
 	// return 200 for health check

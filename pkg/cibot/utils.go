@@ -6,15 +6,19 @@ import (
 )
 
 const (
-	kind       = "/kind"
-	RemoveKind = "/remove-kind"
+	kind         = "/kind"
+	RemoveKind   = "/remove-kind"
+	AddClaYes    = "/openeuler-cla yes"
+	AddClaNo     = "/openeuler-cla no"
+	RemoveClaYes = "/remove-openeuler-cla yes"
+	RemoveClaNo  = "/remove-openeuler-cla no"
 )
 
 var (
 	// RegAddLabel
-	RegAddLabel = regexp.MustCompile(`(?mi)^/(kind|priority|sig)\s*(.*)$`)
+	RegAddLabel = regexp.MustCompile(`(?mi)^/(kind|priority|sig|openeuler-cla)\s*(.*)$`)
 	// RegRemoveLabel
-	RegRemoveLabel = regexp.MustCompile(`(?mi)^/remove-(kind|priority|sig)\s*(.*)$`)
+	RegRemoveLabel = regexp.MustCompile(`(?mi)^/remove-(kind|priority|sig|openeuler-cla)\s*(.*)$`)
 )
 
 // UrlEncode replcae special chars in url
