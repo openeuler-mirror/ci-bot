@@ -16,9 +16,9 @@ const (
 
 var (
 	// RegAddLabel
-	RegAddLabel = regexp.MustCompile(`(?mi)^/(kind|priority|sig|openeuler-cla)\s*(.*)$`)
+	RegAddLabel = regexp.MustCompile(`(?mi)^/(kind|priority|sig)\s*(.*)$`)
 	// RegRemoveLabel
-	RegRemoveLabel = regexp.MustCompile(`(?mi)^/remove-(kind|priority|sig|openeuler-cla)\s*(.*)$`)
+	RegRemoveLabel = regexp.MustCompile(`(?mi)^/remove-(kind|priority|sig)\s*(.*)$`)
 	// RegCheckCLA
 	RegCheckCLA = regexp.MustCompile(`(?mi)^/check-cla\s*$`)
 )
