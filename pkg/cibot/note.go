@@ -10,6 +10,10 @@ func (s *Server) HandleNoteEvent(event *gitee.NoteEvent) {
 	if event == nil {
 		return
 	}
+	// just handle create comment event
+	if *event.Action != "comment" {
+		return
+	}
 
 	// add label
 	if RegAddLabel.MatchString(event.Comment.Body) {
