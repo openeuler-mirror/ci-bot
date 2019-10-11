@@ -1,4 +1,4 @@
-# gitee.com/openeuler/go-gitee v0.0.0-20191011020509-60959ae56e00
+# gitee.com/openeuler/go-gitee v0.0.0-20191011075216-722ba5fadf78
 gitee.com/openeuler/go-gitee/gitee
 # github.com/antihax/optional v0.0.0-20180407024304-ca021399b1a6
 github.com/antihax/optional

@@ -12,12 +12,11 @@ package gitee
 import (
 	"context"
 	"fmt"
+	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -1763,24 +1762,11 @@ PullRequestsApiService 提交Pull Request评论
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param number 第几个PR，即本仓库PR的序数
- * @param body 必填。评论内容
- * @param optional nil or *PostV5ReposOwnerRepoPullsNumberCommentsOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "CommitId" (optional.String) -  可选。PR代码评论的commit id
-     * @param "Path" (optional.String) -  可选。PR代码评论的文件名
-     * @param "Position" (optional.Int32) -  可选。PR代码评论diff中的行数
+ * @param body 评论内容
 
 @return PullRequestComments
 */
-
-type PostV5ReposOwnerRepoPullsNumberCommentsOpts struct {
-	AccessToken optional.String
-	CommitId    optional.String
-	Path        optional.String
-	Position    optional.Int32
-}
-
-func (a *PullRequestsApiService) PostV5ReposOwnerRepoPullsNumberComments(ctx context.Context, owner string, repo string, number int32, body string, localVarOptionals *PostV5ReposOwnerRepoPullsNumberCommentsOpts) (PullRequestComments, *http.Response, error) {
+func (a *PullRequestsApiService) PostV5ReposOwnerRepoPullsNumberComments(ctx context.Context, owner string, repo string, number int32, body PullRequestCommentPostParam) (PullRequestComments, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -1816,19 +1802,8 @@ func (a *PullRequestsApiService) PostV5ReposOwnerRepoPullsNumberComments(ctx con
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("body", parameterToString(body, ""))
-	if localVarOptionals != nil && localVarOptionals.CommitId.IsSet() {
-		localVarFormParams.Add("commit_id", parameterToString(localVarOptionals.CommitId.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Path.IsSet() {
-		localVarFormParams.Add("path", parameterToString(localVarOptionals.Path.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Position.IsSet() {
-		localVarFormParams.Add("position", parameterToString(localVarOptionals.Position.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
