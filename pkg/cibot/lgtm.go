@@ -20,7 +20,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
-			glog.Infof("add lgtm started. comment: %s issueAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
+			glog.Infof("add lgtm started. comment: %s prAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
 				comment, prAuthor, commentAuthor, owner, repo, prNumber)
 
 			// can not lgtm on self-own pr
@@ -72,7 +72,7 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
-			glog.Infof("remove lgtm started. comment: %s issueAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
+			glog.Infof("remove lgtm started. comment: %s prAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
 				comment, prAuthor, commentAuthor, owner, repo, prNumber)
 
 			// can cancel lgtm on self-own pr

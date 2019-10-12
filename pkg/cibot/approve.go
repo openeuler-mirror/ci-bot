@@ -19,7 +19,7 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
-			glog.Infof("add approve started. comment: %s issueAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
+			glog.Infof("add approve started. comment: %s prAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
 				comment, prAuthor, commentAuthor, owner, repo, prNumber)
 
 			// check if current author has write permission
@@ -65,7 +65,7 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
-			glog.Infof("remove approve started. comment: %s issueAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
+			glog.Infof("remove approve started. comment: %s prAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
 				comment, prAuthor, commentAuthor, owner, repo, prNumber)
 
 			// check if current author has write permission
@@ -80,7 +80,7 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 			}
 
 			// permission: admin, write, read, none
-			if permission.Permission == "admin" && permission.Permission == "write" {
+			if permission.Permission == "admin" || permission.Permission == "write" {
 				// remove approved label
 				removelabel := &gitee.NoteEvent{}
 				removelabel.PullRequest = event.PullRequest
