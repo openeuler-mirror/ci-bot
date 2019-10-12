@@ -1963,25 +1963,11 @@ PullRequestsApiService 合并Pull Request
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param number 第几个PR，即本仓库PR的序数
- * @param optional nil or *PutV5ReposOwnerRepoPullsNumberMergeOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "MergeMethod" (optional.String) -  可选。合并PR的方法，merge（合并所有提交）和 squash（扁平化分支合并）。默认为merge。
-     * @param "PruneSourceBranch" (optional.Bool) -  可选。合并PR后是否删除源分支，默认false（不删除）
-     * @param "Title" (optional.String) -  可选。合并标题，默认为PR的标题
-     * @param "Description" (optional.String) -  可选。合并描述，默认为 \&quot;Merge pull request !{pr_id} from {author}/{source_branch}\&quot;，与页面显示的默认一致。
+ * @param body PullRequest合入参数
 
 
 */
-
-type PutV5ReposOwnerRepoPullsNumberMergeOpts struct {
-	AccessToken       optional.String
-	MergeMethod       optional.String
-	PruneSourceBranch optional.Bool
-	Title             optional.String
-	Description       optional.String
-}
-
-func (a *PullRequestsApiService) PutV5ReposOwnerRepoPullsNumberMerge(ctx context.Context, owner string, repo string, number int32, localVarOptionals *PutV5ReposOwnerRepoPullsNumberMergeOpts) (*http.Response, error) {
+func (a *PullRequestsApiService) PutV5ReposOwnerRepoPullsNumberMerge(ctx context.Context, owner string, repo string, number int32, body PullRequestMergePutParam) (*http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Put")
 		localVarPostBody   interface{}
@@ -2016,21 +2002,8 @@ func (a *PullRequestsApiService) PutV5ReposOwnerRepoPullsNumberMerge(ctx context
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.MergeMethod.IsSet() {
-		localVarFormParams.Add("merge_method", parameterToString(localVarOptionals.MergeMethod.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.PruneSourceBranch.IsSet() {
-		localVarFormParams.Add("prune_source_branch", parameterToString(localVarOptionals.PruneSourceBranch.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Title.IsSet() {
-		localVarFormParams.Add("title", parameterToString(localVarOptionals.Title.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Description.IsSet() {
-		localVarFormParams.Add("description", parameterToString(localVarOptionals.Description.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err

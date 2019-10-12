@@ -19,6 +19,8 @@ gitee.com/openeuler/go-gitee v0.0.0-20191011020509-60959ae56e00 h1:UWjgmcPxjIbIw
 gitee.com/openeuler/go-gitee v0.0.0-20191011020509-60959ae56e00/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
 gitee.com/openeuler/go-gitee v0.0.0-20191011075216-722ba5fadf78 h1:SQ9wdIDxeg6nYMHK9BR13cFq8Po0XF83LCmRK+JFUI8=
 gitee.com/openeuler/go-gitee v0.0.0-20191011075216-722ba5fadf78/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
+gitee.com/openeuler/go-gitee v0.0.0-20191012095914-05eb04d749d8 h1:5VT4cpVms0RJWbxtjoffx2jk/AjWu1g4tHHgWgbLAao=
+gitee.com/openeuler/go-gitee v0.0.0-20191012095914-05eb04d749d8/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWXgklEdEo=
 github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMxUHB2q5Ap20/P/eIdh4G0pI=
