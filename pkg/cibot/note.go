@@ -38,4 +38,36 @@ func (s *Server) HandleNoteEvent(event *gitee.NoteEvent) {
 			glog.Errorf("failed to check cla by note event: %v", err)
 		}
 	}
+
+	// add lgtm
+	if RegAddLgtm.MatchString(event.Comment.Body) {
+		err := s.AddLgtm(event)
+		if err != nil {
+			glog.Errorf("failed to add lgtm: %v", err)
+		}
+	}
+
+	// remove lgtm
+	if RegRemoveLgtm.MatchString(event.Comment.Body) {
+		err := s.RemoveLgtm(event)
+		if err != nil {
+			glog.Errorf("failed to remove lgtm: %v", err)
+		}
+	}
+
+	// add approve
+	if RegAddApprove.MatchString(event.Comment.Body) {
+		err := s.AddApprove(event)
+		if err != nil {
+			glog.Errorf("failed to add approved: %v", err)
+		}
+	}
+
+	// remove approve
+	if RegRemoveApprove.MatchString(event.Comment.Body) {
+		err := s.RemoveApprove(event)
+		if err != nil {
+			glog.Errorf("failed to remove approved: %v", err)
+		}
+	}
 }

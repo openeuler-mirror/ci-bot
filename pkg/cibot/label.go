@@ -400,3 +400,126 @@ func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
 
 	return nil
 }
+
+// AddSpecifyLabelInPulRequest adds specify labels in pull request
+func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfAddLabels map[string]string) error {
+	// get basic informations
+	comment := event.Comment.Body
+	owner := event.Repository.Owner.Login
+	repo := event.Repository.Name
+	var number int32
+	if event.PullRequest != nil {
+		number = event.PullRequest.Number
+	}
+	glog.Infof("add specify label started. comment: %s owner: %s repo: %s number: %d",
+		comment, owner, repo, number)
+
+	// list labels in current gitee repository
+	listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, nil)
+	if err != nil {
+		glog.Errorf("unable to list repository labels. err: %v", err)
+		return err
+	}
+	glog.Infof("list of repository labels: %v", listofRepoLabels)
+
+	// list labels in current item
+	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, nil)
+	if err != nil {
+		glog.Errorf("unable to get pull request. err: %v", err)
+		return err
+	}
+	listofItemLabels := pr.Labels
+	glog.Infof("list of item labels: %v", listofItemLabels)
+
+	// list of add labels
+	listOfAddLabels := GetListOfAddLabels(mapOfAddLabels, listofRepoLabels, listofItemLabels)
+	glog.Infof("list of add labels: %v", listOfAddLabels)
+
+	// invoke gitee api to add labels
+	if len(listOfAddLabels) > 0 {
+		// build label string
+		var strLabel string
+		for _, currentlabel := range listofItemLabels {
+			strLabel += currentlabel.Name + ","
+		}
+		for _, addedlabel := range listOfAddLabels {
+			strLabel += addedlabel + ","
+		}
+		strLabel = strings.TrimRight(strLabel, ",")
+		body := gitee.PullRequestUpdateParam{}
+		body.AccessToken = s.Config.GiteeToken
+		body.Labels = strLabel
+		glog.Infof("invoke api to add labels: %v", strLabel)
+
+		// patch labels
+		_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
+		if err != nil {
+			glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
+			return err
+		} else {
+			glog.Infof("add labels successfully: %v", listOfAddLabels)
+		}
+	} else {
+		glog.Infof("no label to add for this event")
+	}
+
+	return nil
+}
+
+// RemoveSpecifyLabelsInPulRequest removes specify labels in pull request
+func (s *Server) RemoveSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfRemoveLabels map[string]string) error {
+	// get basic informations
+	comment := event.Comment.Body
+	owner := event.Repository.Owner.Login
+	repo := event.Repository.Name
+	var number int32
+	if event.PullRequest != nil {
+		number = event.PullRequest.Number
+	}
+	glog.Infof("remove label started. comment: %s owner: %s repo: %s number: %d",
+		comment, owner, repo, number)
+
+	// list labels in current item
+	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, nil)
+	if err != nil {
+		glog.Errorf("unable to get pull request. err: %v", err)
+		return err
+	}
+	listofItemLabels := pr.Labels
+	glog.Infof("list of item labels: %v", listofItemLabels)
+
+	// list of remove labels
+	listOfRemoveLabels := GetListOfRemoveLabels(mapOfRemoveLabels, listofItemLabels)
+	glog.Infof("list of remove labels: %v", listOfRemoveLabels)
+
+	// invoke gitee api to remove labels
+	if len(listOfRemoveLabels) > 0 {
+		// build label string
+		var strLabel string
+		for _, currentlabel := range listofItemLabels {
+			strLabel += currentlabel.Name + ","
+		}
+		for _, removedlabel := range listOfRemoveLabels {
+			strLabel = strings.Replace(strLabel, removedlabel+",", "", 1)
+
+		}
+		strLabel = strings.TrimRight(strLabel, ",")
+		body := gitee.PullRequestUpdateParam{}
+		body.AccessToken = s.Config.GiteeToken
+		body.Labels = strLabel
+		glog.Infof("invoke api to remove labels: %v", strLabel)
+
+		// patch labels
+		_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
+		if err != nil {
+			glog.Errorf("unable to remove labels: %v err: %v", listOfRemoveLabels, err)
+			return err
+		} else {
+			glog.Infof("remove labels successfully: %v", listOfRemoveLabels)
+		}
+	} else {
+		glog.Infof("no label to remove for this event")
+	}
+
+	return nil
+}
