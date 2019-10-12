@@ -47,6 +47,10 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 				}
 			}
 			// try to merge pr
+			err = s.MergePullRequest(event)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

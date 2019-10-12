@@ -54,6 +54,10 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				}
 			}
 			// try to merge pr
+			err = s.MergePullRequest(event)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
