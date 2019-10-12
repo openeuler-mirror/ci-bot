@@ -58,6 +58,13 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 		// current pr can be merged
 		if event.PullRequest.Mergeable {
 			// merge pr
+			body := gitee.PullRequestMergePutParam{}
+			body.AccessToken = s.Config.GiteeToken
+			_, err = s.GiteeClient.PullRequestsApi.PutV5ReposOwnerRepoPullsNumberMerge(s.Context, owner, repo, prNumber, body)
+			if err != nil {
+				glog.Errorf("unable to merge pull request. err: %v", err)
+				return err
+			}
 		}
 	}
 
