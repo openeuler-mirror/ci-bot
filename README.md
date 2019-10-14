@@ -26,6 +26,10 @@ $ make
 $ ./ci-bot
 ```
 
+## Command Help
+
+See the [Command Help](https://gitee.com/openeuler/community/blob/master/en/command.md) file for details.
+
 ## License
 
 See the [LICENSE](LICENSE) file for details.
