@@ -4,6 +4,10 @@
 
 This repository is used to address the code of openEuler ci bot.
 
+## Architecture
+
+<img src="./docs/images/architecture.png" />
+
 ## Build
 
 Before you get started, make sure to have [Go](https://golang.org/) already installed in your local machine.
