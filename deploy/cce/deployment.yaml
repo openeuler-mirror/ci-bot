@@ -33,7 +33,7 @@ spec:
           name: http
           protocol: TCP
         volumeMounts:
-        - mountPath: /go/src/gitee.com/openeuler/ci-bot/
+        - mountPath: /bot/
           name: configmap-volume
       volumes:
       - name: configmap-volume
