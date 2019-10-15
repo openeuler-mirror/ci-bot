@@ -8,23 +8,23 @@ This repository is used to address the code of openEuler ci bot.
 
 <img src="./docs/images/architecture.png" />
 
-## Build
+## Prerequisites
 
-Before you get started, make sure to have [Go](https://golang.org/) already installed in your local machine.
+You'll need to setup a MySQL Database before you are getting started.
+This is an example to create Database instance.
 
-```
-$ mkdir -p $GOPATH/src/gitee.com/openeuler
-$ cd $GOPATH/src/gitee.com/openeuler
-$ git clone https://gitee.com/openeuler/ci-bot
-$ cd ci-bot
-$ make
-```
+* Setup MySQL instance by the Huawei Cloud Relational Database Service (RDS)
+* Login in MySQL with your account and password
+* Create database instance by running the following command
+    ```
+    CREATE DATABASE cibot;
+    ```
+The information of database instance will be used in the following Installation.
 
-## Usage
+## Getting Started
 
-```
-$ ./ci-bot
-```
+* [Getting Started on Locally](deploy/locally/README.md)
+* [Getting Started on CCE](deploy/cce/README.md)
 
 ## Command Help
 
