@@ -867,7 +867,7 @@ RepositoriesApiService 获取一个组织的仓库
      * @param "Page" (optional.Int32) -  当前的页码
      * @param "PerPage" (optional.Int32) -  每页的数量，最大为 100
 
-@return Project
+@return []Project
 */
 
 type GetV5OrgsOrgReposOpts struct {
@@ -877,13 +877,13 @@ type GetV5OrgsOrgReposOpts struct {
 	PerPage     optional.Int32
 }
 
-func (a *RepositoriesApiService) GetV5OrgsOrgRepos(ctx context.Context, org string, localVarOptionals *GetV5OrgsOrgReposOpts) (Project, *http.Response, error) {
+func (a *RepositoriesApiService) GetV5OrgsOrgRepos(ctx context.Context, org string, localVarOptionals *GetV5OrgsOrgReposOpts) ([]Project, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
 		localVarFileName    string
 		localVarFileBytes   []byte
-		localVarReturnValue Project
+		localVarReturnValue []Project
 	)
 
 	// create path and map variables
@@ -954,7 +954,7 @@ func (a *RepositoriesApiService) GetV5OrgsOrgRepos(ctx context.Context, org stri
 		}
 
 		if localVarHttpResponse.StatusCode == 200 {
-			var v Project
+			var v []Project
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
