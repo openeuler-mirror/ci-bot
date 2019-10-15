@@ -81,7 +81,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			body := gitee.PullRequestCommentPostParam{}
 			body.AccessToken = s.Config.GiteeToken
 			body.Body = claNotFoundMessage
-			owner := event.Repository.Owner.Login
+			owner := event.Repository.Namespace
 			repo := event.Repository.Name
 			number := event.PullRequest.Number
 			_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
@@ -153,7 +153,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		body := gitee.PullRequestCommentPostParam{}
 		body.AccessToken = s.Config.GiteeToken
 		body.Body = claNotFoundMessage
-		owner := event.Repository.Owner.Login
+		owner := event.Repository.Namespace
 		repo := event.Repository.Name
 		number := event.PullRequest.Number
 		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)

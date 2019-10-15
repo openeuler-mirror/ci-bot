@@ -14,7 +14,7 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 		if event.PullRequest.State == "open" {
 			// get basic params
 			comment := event.Comment.Body
-			owner := event.Repository.Owner.Login
+			owner := event.Repository.Namespace
 			repo := event.Repository.Name
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
@@ -64,7 +64,7 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 		if event.PullRequest.State == "open" {
 			// get basic params
 			comment := event.Comment.Body
-			owner := event.Repository.Owner.Login
+			owner := event.Repository.Namespace
 			repo := event.Repository.Name
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number

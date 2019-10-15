@@ -116,7 +116,7 @@ func (s *Server) AddLabel(event *gitee.NoteEvent) error {
 func (s *Server) AddLabelInPulRequest(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
-	owner := event.Repository.Owner.Login
+	owner := event.Repository.Namespace
 	repo := event.Repository.Name
 	var number int32
 	if event.PullRequest != nil {
@@ -191,7 +191,7 @@ func (s *Server) AddLabelInPulRequest(event *gitee.NoteEvent) error {
 func (s *Server) AddLabelInIssue(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
-	owner := event.Repository.Owner.Login
+	owner := event.Repository.Namespace
 	repo := event.Repository.Name
 	var number string
 	if event.Issue != nil {
@@ -279,7 +279,7 @@ func (s *Server) RemoveLabel(event *gitee.NoteEvent) error {
 func (s *Server) RemoveLabelInPullRequest(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
-	owner := event.Repository.Owner.Login
+	owner := event.Repository.Namespace
 	repo := event.Repository.Name
 	var number int32
 	if event.PullRequest != nil {
@@ -347,7 +347,7 @@ func (s *Server) RemoveLabelInPullRequest(event *gitee.NoteEvent) error {
 func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
-	owner := event.Repository.Owner.Login
+	owner := event.Repository.Namespace
 	repo := event.Repository.Name
 	var number string
 	if event.Issue != nil {
@@ -405,7 +405,7 @@ func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
 func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfAddLabels map[string]string) error {
 	// get basic informations
 	comment := event.Comment.Body
-	owner := event.Repository.Owner.Login
+	owner := event.Repository.Namespace
 	repo := event.Repository.Name
 	var number int32
 	if event.PullRequest != nil {
@@ -470,7 +470,7 @@ func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfAddLa
 func (s *Server) RemoveSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfRemoveLabels map[string]string) error {
 	// get basic informations
 	comment := event.Comment.Body
-	owner := event.Repository.Owner.Login
+	owner := event.Repository.Namespace
 	repo := event.Repository.Name
 	var number int32
 	if event.PullRequest != nil {

@@ -27,7 +27,7 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 // MergePullRequest with lgtm and approved label
 func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	// get basic params
-	owner := event.Repository.Owner.Login
+	owner := event.Repository.Namespace
 	repo := event.Repository.Name
 	prNumber := event.PullRequest.Number
 	glog.Infof("merge pull request started. owner: %s repo: %s number: %d", owner, repo, prNumber)
