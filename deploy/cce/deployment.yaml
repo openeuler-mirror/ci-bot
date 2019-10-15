@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: botinfod
-        image: swr.cn-south-1.myhuaweicloud.com/openeuler/bot:v1.0.201910151519517896
+        image: swr.cn-south-1.myhuaweicloud.com/openeuler/bot:v1.0.201910151641553825
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8888
