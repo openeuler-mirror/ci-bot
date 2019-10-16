@@ -167,7 +167,7 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 		return
 	}
 
-	// Check telephone in database
+	/* Check telephone in database
 	var lenTelephone int
 	err = database.DBConnection.Model(&database.CLADetails{}).
 		Where("telephone = ?", cds.Telephone).Count(&lenTelephone).Error
@@ -186,7 +186,7 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 			ErrorCode:   ErrorCode_TelephoneError,
 		})
 		return
-	}
+	}*/
 
 	// add cla in database
 	err = database.DBConnection.Create(&cds).Error
