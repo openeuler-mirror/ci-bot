@@ -172,10 +172,14 @@ func (s *Server) AddLabelInPulRequest(event *gitee.NoteEvent) error {
 			glog.Infof("invoke api to add labels: %v", strLabel)
 
 			// patch labels
-			_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
+			_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
 			if err != nil {
-				glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
-				return err
+				if response.StatusCode == 400 {
+					glog.Infof("add labels successfully with status code %d: %v", response.StatusCode, listOfAddLabels)
+				} else {
+					glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
+					return err
+				}
 			} else {
 				glog.Infof("add labels successfully: %v", listOfAddLabels)
 			}
@@ -328,10 +332,14 @@ func (s *Server) RemoveLabelInPullRequest(event *gitee.NoteEvent) error {
 			glog.Infof("invoke api to remove labels: %v", strLabel)
 
 			// patch labels
-			_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
+			_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
 			if err != nil {
-				glog.Errorf("unable to remove labels: %v err: %v", listOfRemoveLabels, err)
-				return err
+				if response.StatusCode == 400 {
+					glog.Infof("remove labels successfully with status code %d: %v", response.StatusCode, listOfRemoveLabels)
+				} else {
+					glog.Errorf("unable to remove labels: %v err: %v", listOfRemoveLabels, err)
+					return err
+				}
 			} else {
 				glog.Infof("remove labels successfully: %v", listOfRemoveLabels)
 			}
@@ -452,10 +460,14 @@ func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfAddLa
 		glog.Infof("invoke api to add labels: %v", strLabel)
 
 		// patch labels
-		_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
+		_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
 		if err != nil {
-			glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
-			return err
+			if response.StatusCode == 400 {
+				glog.Infof("add labels successfully with status code %d: %v", response.StatusCode, listOfAddLabels)
+			} else {
+				glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
+				return err
+			}
 		} else {
 			glog.Infof("add labels successfully: %v", listOfAddLabels)
 		}
@@ -510,10 +522,14 @@ func (s *Server) RemoveSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfRe
 		glog.Infof("invoke api to remove labels: %v", strLabel)
 
 		// patch labels
-		_, _, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
+		_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
 		if err != nil {
-			glog.Errorf("unable to remove labels: %v err: %v", listOfRemoveLabels, err)
-			return err
+			if response.StatusCode == 400 {
+				glog.Infof("remove labels successfully with status code %d: %v", response.StatusCode, listOfRemoveLabels)
+			} else {
+				glog.Errorf("unable to remove labels: %v err: %v", listOfRemoveLabels, err)
+				return err
+			}
 		} else {
 			glog.Infof("remove labels successfully: %v", listOfRemoveLabels)
 		}
