@@ -31,6 +31,10 @@ var (
 	RegAddApprove = regexp.MustCompile(`(?mi)^/approve\s*$`)
 	// RegRemoveApprove
 	RegRemoveApprove = regexp.MustCompile(`(?mi)^/approve cancel\s*$`)
+	// RegClose
+	RegClose = regexp.MustCompile(`(?mi)^/close\s*$`)
+	// RegReOpen
+	RegReOpen = regexp.MustCompile(`(?mi)^/reopen\s*$`)
 )
 
 // UrlEncode replcae special chars in url

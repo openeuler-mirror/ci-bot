@@ -70,4 +70,20 @@ func (s *Server) HandleNoteEvent(event *gitee.NoteEvent) {
 			glog.Errorf("failed to remove approved: %v", err)
 		}
 	}
+
+	// close
+	if RegClose.MatchString(event.Comment.Body) {
+		err := s.Close(event)
+		if err != nil {
+			glog.Errorf("failed to close: %v", err)
+		}
+	}
+
+	// reopen
+	if RegReOpen.MatchString(event.Comment.Body) {
+		err := s.ReOpen(event)
+		if err != nil {
+			glog.Errorf("failed to reopen: %v", err)
+		}
+	}
 }
