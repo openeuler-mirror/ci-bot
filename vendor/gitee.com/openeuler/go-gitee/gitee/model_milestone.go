@@ -26,5 +26,5 @@ type Milestone struct {
 	CreatedAt    time.Time `json:"created_at,omitempty"`
 	OpenIssues   int32     `json:"open_issues,omitempty"`
 	ClosedIssues int32     `json:"closed_issues,omitempty"`
-	DueOn        time.Time `json:"due_on,omitempty"`
+	DueOn        string    `json:"due_on,omitempty"`
 }
