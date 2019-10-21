@@ -11,6 +11,7 @@ import (
 func (s *Server) Close(event *gitee.NoteEvent) error {
 	// handle PullRequest
 	if *event.NoteableType == "PullRequest" {
+		/* when gitee support to close pr by api
 		// handle open
 		if event.PullRequest.State == "open" {
 			// get basic params
@@ -54,7 +55,7 @@ func (s *Server) Close(event *gitee.NoteEvent) error {
 					glog.Infof("close successfully: %v", prNumber)
 				}
 			}
-		}
+		}*/
 	} else if *event.NoteableType == "Issue" {
 		// handle open
 		if event.Issue.State == "open" {
@@ -88,7 +89,7 @@ func (s *Server) Close(event *gitee.NoteEvent) error {
 				glog.Infof("invoke api to close: %s", issueNumber)
 
 				// patch state
-				_, response, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, issueAuthor, body)
+				_, response, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, issueNumber, body)
 				if err != nil {
 					if response.StatusCode == 400 {
 						glog.Infof("close successfully with status code %d: %s", response.StatusCode, issueNumber)

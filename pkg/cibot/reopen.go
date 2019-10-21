@@ -11,6 +11,7 @@ import (
 func (s *Server) ReOpen(event *gitee.NoteEvent) error {
 	// handle PullRequest
 	if *event.NoteableType == "PullRequest" {
+		/* when gitee support to close pr by api
 		// handle open
 		if event.PullRequest.State == "closed" {
 			// get basic params
@@ -54,7 +55,7 @@ func (s *Server) ReOpen(event *gitee.NoteEvent) error {
 					glog.Infof("reopen successfully: %v", prNumber)
 				}
 			}
-		}
+		}*/
 	} else if *event.NoteableType == "Issue" {
 		// handle open
 		if event.Issue.State == "closed" {
@@ -88,7 +89,7 @@ func (s *Server) ReOpen(event *gitee.NoteEvent) error {
 				glog.Infof("invoke api to reopen: %s", issueNumber)
 
 				// patch state
-				_, response, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, issueAuthor, body)
+				_, response, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, issueNumber, body)
 				if err != nil {
 					if response.StatusCode == 400 {
 						glog.Infof("reopen successfully with status code %d: %s", response.StatusCode, issueNumber)
