@@ -39,8 +39,10 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				glog.Errorf("unable to get comment author permission: %v", err)
 				return err
 			}
+			// check author is owner
+			isOwner := s.CheckIsOwner(event, commentAuthor)
 			// permission: admin, write, read, none
-			if permission.Permission == "admin" || permission.Permission == "write" {
+			if permission.Permission == "admin" || permission.Permission == "write" || isOwner {
 				// add lgtm label
 				addlabel := &gitee.NoteEvent{}
 				addlabel.PullRequest = event.PullRequest
@@ -52,11 +54,11 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				if err != nil {
 					return err
 				}
-			}
-			// try to merge pr
-			err = s.MergePullRequest(event)
-			if err != nil {
-				return err
+				// try to merge pr
+				err = s.MergePullRequest(event)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -91,8 +93,10 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 					glog.Errorf("unable to get comment author permission: %v", err)
 					return err
 				}
+				// check author is owner
+				isOwner := s.CheckIsOwner(event, commentAuthor)
 				// permission: admin, write, read, none
-				if permission.Permission != "admin" && permission.Permission != "write" {
+				if permission.Permission != "admin" && permission.Permission != "write" && !isOwner {
 					glog.Info("no permission to remove lgtm")
 					return nil
 				}

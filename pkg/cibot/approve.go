@@ -32,8 +32,10 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 				glog.Errorf("unable to get comment author permission: %v", err)
 				return err
 			}
+			// check author is owner
+			isOwner := s.CheckIsOwner(event, commentAuthor)
 			// permission: admin, write, read, none
-			if permission.Permission == "admin" || permission.Permission == "write" {
+			if permission.Permission == "admin" || permission.Permission == "write" || isOwner {
 				// add approved label
 				addlabel := &gitee.NoteEvent{}
 				addlabel.PullRequest = event.PullRequest
@@ -45,11 +47,11 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 				if err != nil {
 					return err
 				}
-			}
-			// try to merge pr
-			err = s.MergePullRequest(event)
-			if err != nil {
-				return err
+				// try to merge pr
+				err = s.MergePullRequest(event)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -82,9 +84,10 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 				glog.Errorf("unable to get comment author permission: %v", err)
 				return err
 			}
-
+			// check author is owner
+			isOwner := s.CheckIsOwner(event, commentAuthor)
 			// permission: admin, write, read, none
-			if permission.Permission == "admin" || permission.Permission == "write" {
+			if permission.Permission == "admin" || permission.Permission == "write" || isOwner {
 				// remove approved label
 				removelabel := &gitee.NoteEvent{}
 				removelabel.PullRequest = event.PullRequest

@@ -17,6 +17,24 @@ type OwnersFile struct {
 	Maintainers []string `yaml:"maintainers"`
 }
 
+// CheckIsOwner checks the author is owner in repository
+func (s *Server) CheckIsOwner(event *gitee.NoteEvent, author string) bool {
+	isOwner := false
+	// get owners
+	owners := s.GetOwners(event)
+	if owners != nil {
+		if len(owners) > 0 {
+			for _, owner := range owners {
+				if owner == author {
+					isOwner = true
+					break
+				}
+			}
+		}
+	}
+	return isOwner
+}
+
 // GetOwners gets owners from owners file in repository
 func (s *Server) GetOwners(event *gitee.NoteEvent) []string {
 	// get basic params
