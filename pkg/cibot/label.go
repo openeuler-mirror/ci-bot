@@ -326,6 +326,10 @@ func (s *Server) RemoveLabelInPullRequest(event *gitee.NoteEvent) error {
 
 			}
 			strLabel = strings.TrimRight(strLabel, ",")
+			// avoid to unable to remove labels when no label is exsit
+			if strLabel == "" {
+				strLabel = ","
+			}
 			body := gitee.PullRequestUpdateParam{}
 			body.AccessToken = s.Config.GiteeToken
 			body.Labels = strLabel
@@ -516,6 +520,10 @@ func (s *Server) RemoveSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfRe
 
 		}
 		strLabel = strings.TrimRight(strLabel, ",")
+		// avoid to unable to remove labels when no label is exsit
+		if strLabel == "" {
+			strLabel = ","
+		}
 		body := gitee.PullRequestUpdateParam{}
 		body.AccessToken = s.Config.GiteeToken
 		body.Labels = strLabel
