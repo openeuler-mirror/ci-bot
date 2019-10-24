@@ -23,6 +23,7 @@ func (s *Server) CheckIsOwner(event *gitee.NoteEvent, author string) bool {
 	// get owners
 	owners := s.GetOwners(event)
 	if owners != nil {
+		glog.Infof("check isowner started. owners: %v", owners)
 		if len(owners) > 0 {
 			for _, owner := range owners {
 				if owner == author {
@@ -32,6 +33,7 @@ func (s *Server) CheckIsOwner(event *gitee.NoteEvent, author string) bool {
 			}
 		}
 	}
+	glog.Infof("check %s isowner result: %t", author, isOwner)
 	return isOwner
 }
 
