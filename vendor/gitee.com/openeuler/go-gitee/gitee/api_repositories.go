@@ -2244,7 +2244,7 @@ RepositoriesApiService 获取仓库具体路径下的内容
      * @param "AccessToken" (optional.String) -  用户授权码
      * @param "Ref" (optional.String) -  分支、tag或commit。默认: 仓库的默认分支(通常是master)
 
-@return []Content
+@return Content
 */
 
 type GetV5ReposOwnerRepoContentsPathOpts struct {
@@ -2252,13 +2252,13 @@ type GetV5ReposOwnerRepoContentsPathOpts struct {
 	Ref         optional.String
 }
 
-func (a *RepositoriesApiService) GetV5ReposOwnerRepoContentsPath(ctx context.Context, owner string, repo string, path string, localVarOptionals *GetV5ReposOwnerRepoContentsPathOpts) ([]Content, *http.Response, error) {
+func (a *RepositoriesApiService) GetV5ReposOwnerRepoContentsPath(ctx context.Context, owner string, repo string, path string, localVarOptionals *GetV5ReposOwnerRepoContentsPathOpts) (Content, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
 		localVarFileName    string
 		localVarFileBytes   []byte
-		localVarReturnValue []Content
+		localVarReturnValue Content
 	)
 
 	// create path and map variables
@@ -2325,7 +2325,7 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoContentsPath(ctx context.Con
 		}
 
 		if localVarHttpResponse.StatusCode == 200 {
-			var v []Content
+			var v Content
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
