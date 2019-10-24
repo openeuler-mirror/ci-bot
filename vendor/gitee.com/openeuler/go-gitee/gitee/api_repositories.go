@@ -2262,7 +2262,7 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoContentsPath(ctx context.Con
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v5/repos/{owner}/{repo}/contents(/{path})"
+	localVarPath := a.client.cfg.BasePath + "/v5/repos/{owner}/{repo}/contents/{path}"
 	localVarPath = strings.Replace(localVarPath, "{"+"owner"+"}", fmt.Sprintf("%v", owner), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"repo"+"}", fmt.Sprintf("%v", repo), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"path"+"}", fmt.Sprintf("%v", path), -1)

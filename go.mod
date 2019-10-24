@@ -3,7 +3,7 @@ module gitee.com/openeuler/ci-bot
 go 1.13
 
 require (
-	gitee.com/openeuler/go-gitee v0.0.0-20191021094009-3b63f67fe7f2
+	gitee.com/openeuler/go-gitee v0.0.0-20191024072313-fc6ddce8c718
 	github.com/antihax/optional v0.0.0-20180407024304-ca021399b1a6
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/protobuf v1.3.2 // indirect
