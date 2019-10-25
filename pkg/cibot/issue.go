@@ -13,7 +13,7 @@ func (s *Server) HandleIssueEvent(event *gitee.IssueEvent) {
 
 	// handle events
 	switch *event.Action {
-	case "create":
-		glog.Info("received a issue create event")
+	case "open":
+		glog.Info("received a issue open event")
 	}
 }

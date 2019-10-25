@@ -14,8 +14,9 @@ const (
 	RemoveClaNo       = "/remove-openeuler-cla no"
 	LabelNameLgtm     = "lgtm"
 	LabelNameApproved = "approved"
-	tipBotMessage     = `All of the projects in OpenEuler Community are maintained by ***openeuler-ci-bot***.
-That means the developpers can comment below every pull requst or issue to trigger Bot Commands.
+	tipBotMessage     = `Hey ***%s***, Welcome to openEuler Community.
+All of the projects in OpenEuler Community are maintained by ***openeuler-ci-bot***.
+That means the developpers can comment below every pull request or issue to trigger Bot Commands.
 Please follow instructions at <https://gitee.com/openeuler/community/blob/master/en/command.md> to find the details.`
 )
 

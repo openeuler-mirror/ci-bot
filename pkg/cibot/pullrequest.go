@@ -1,6 +1,7 @@
 package cibot
 
 import (
+	"fmt"
 	"strings"
 
 	"gitee.com/openeuler/go-gitee/gitee"
@@ -20,21 +21,22 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 	switch *event.Action {
 	case "create":
 		glog.Info("received a pull request create event")
-		err := s.CheckCLAByPullRequestEvent(event)
-		if err != nil {
-			glog.Errorf("failed to check cla by pull request event: %v", err)
-		}
 
 		// add comment
 		body := gitee.PullRequestCommentPostParam{}
 		body.AccessToken = s.Config.GiteeToken
-		body.Body = tipBotMessage
+		body.Body = fmt.Sprintf(tipBotMessage, event.Sender.Login)
 		owner := event.Repository.Namespace
 		repo := event.Repository.Name
 		number := event.PullRequest.Number
 		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 		if err != nil {
 			glog.Errorf("unable to add comment in pull request: %v", err)
+		}
+
+		err := s.CheckCLAByPullRequestEvent(event)
+		if err != nil {
+			glog.Errorf("failed to check cla by pull request event: %v", err)
 		}
 	}
 }
