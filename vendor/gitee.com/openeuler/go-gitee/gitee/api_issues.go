@@ -2158,18 +2158,11 @@ IssuesApiService 创建某个Issue评论
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param number Issue 编号(区分大小写，无需添加 # 号)
- * @param body The contents of the comment.
- * @param optional nil or *PostV5ReposOwnerRepoIssuesNumberCommentsOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ * @param body Issue comment内容
 
 @return Note
 */
-
-type PostV5ReposOwnerRepoIssuesNumberCommentsOpts struct {
-	AccessToken optional.String
-}
-
-func (a *IssuesApiService) PostV5ReposOwnerRepoIssuesNumberComments(ctx context.Context, owner string, repo string, number string, body string, localVarOptionals *PostV5ReposOwnerRepoIssuesNumberCommentsOpts) (Note, *http.Response, error) {
+func (a *IssuesApiService) PostV5ReposOwnerRepoIssuesNumberComments(ctx context.Context, owner string, repo string, number string, body IssueCommentPostParam) (Note, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -2205,10 +2198,8 @@ func (a *IssuesApiService) PostV5ReposOwnerRepoIssuesNumberComments(ctx context.
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("body", parameterToString(body, ""))
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
