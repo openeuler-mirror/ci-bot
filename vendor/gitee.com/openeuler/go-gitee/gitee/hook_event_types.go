@@ -26,7 +26,24 @@ type PushEvent struct {
 }
 
 type IssueEvent struct {
-	Action *string `json:"action,omitempty"`
+	Action      *string          `json:"action,omitempty"`
+	Issue       *Issue           `json:"issue,omitempty"`
+	Repository  *Project         `json:"repository,omitempty"`
+	Project     *Project         `json:"project,omitempty"`
+	Sender      *User            `json:"sender,omitempty"`
+	TargetUser  *User            `json:"target_user,omitempty"`
+	User        *User            `json:"user,omitempty"`
+	Assignee    *UserBasic       `json:"assignee,omitempty"`
+	UpdatedBy   *User            `json:"updated_by,omitempty"`
+	IID         string           `json:"iid,omitempty"`
+	Title       *string          `json:"title,omitempty"`
+	Description *string          `json:"description,omitempty"`
+	State       *string          `json:"state,omitempty"`
+	Milestone   *Milestone       `json:"milestone,omitempty"`
+	URL         *string          `json:"url,omitempty"`
+	Enterprise  *EnterpriseBasic `json:"enterprise,omitempty"`
+	HookName    *string          `json:"hook_name,omitempty"`
+	Password    *string          `json:"password,omitempty"`
 }
 
 type RepoInfo struct {
