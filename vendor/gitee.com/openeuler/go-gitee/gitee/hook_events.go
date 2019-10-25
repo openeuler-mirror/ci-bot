@@ -22,7 +22,7 @@ func (e *HookEvent) ParsePayload() (payload interface{}, err error) {
 		payload = &NoteEvent{}
 	case "PushEvent":
 		payload = &PushEvent{}
-	case "IssuesEvent":
+	case "IssueEvent":
 		payload = &IssueEvent{}
 	case "PullRequestEvent":
 		payload = &PullRequestEvent{}
