@@ -7,6 +7,10 @@ import (
 	"github.com/golang/glog"
 )
 
+const (
+	lgtmSelfOwnMessage = `Thanks for your comment, but you can not add **lgtm** on your self-own pull request.:astonished: `
+)
+
 // AddLgtm adds lgtm label
 func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 	// handle PullRequest
@@ -26,6 +30,18 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 			// can not lgtm on self-own pr
 			if prAuthor == commentAuthor {
 				glog.Info("can not lgtm on self-own pr")
+				// add comment
+				body := gitee.PullRequestCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = lgtmSelfOwnMessage
+				owner := event.Repository.Namespace
+				repo := event.Repository.Name
+				number := event.PullRequest.Number
+				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
+					return err
+				}
 				return nil
 			}
 
