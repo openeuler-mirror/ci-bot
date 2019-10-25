@@ -12,9 +12,9 @@ const (
 	approvedAddedMessage           = `[Notifier] ***approved*** is added in this pull request by: ***%s***. :wave: `
 	approvedRemovedMessage         = `[Notifier] ***approved*** is removed in this pull request by: ***%s***. :flushed: `
 	approvedAddNoPermissionMessage = `[Notifier] ***%s*** has no permission to add ***approved*** in this pull request. :astonished:
-please to contact the collaborators on this repository.`
+please contact to the collaborators in this repository.`
 	approvedRemoveNoPermissionMessage = `[Notifier] ***%s*** has no permission to remove ***approved*** in this pull request. :astonished:
-please to contact the collaborators on this repository.`
+please contact to the collaborators in this repository.`
 )
 
 // AddApprove adds approved label
