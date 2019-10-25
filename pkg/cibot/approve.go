@@ -1,9 +1,16 @@
 package cibot
 
 import (
+	"fmt"
+
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/antihax/optional"
 	"github.com/golang/glog"
+)
+
+const (
+	approvedAddedMessage   = `[Notifier] ***approved*** is added in this pull request by: ***%s***. :wave: `
+	approvedRemovedMessage = `[Notifier] ***approved*** is removed in this pull request by: ***%s***. :flushed: `
 )
 
 // AddApprove adds approved label
@@ -45,6 +52,18 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 				mapOfAddLabels[LabelNameApproved] = LabelNameApproved
 				err = s.AddSpecifyLabelsInPulRequest(addlabel, mapOfAddLabels)
 				if err != nil {
+					return err
+				}
+				// add comment
+				body := gitee.PullRequestCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(approvedAddedMessage, commentAuthor)
+				owner := event.Repository.Namespace
+				repo := event.Repository.Name
+				number := event.PullRequest.Number
+				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
 					return err
 				}
 				// try to merge pr
@@ -97,6 +116,18 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 				mapOfRemoveLabels[LabelNameApproved] = LabelNameApproved
 				err = s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
 				if err != nil {
+					return err
+				}
+				// add comment
+				body := gitee.PullRequestCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(approvedRemovedMessage, commentAuthor)
+				owner := event.Repository.Namespace
+				repo := event.Repository.Name
+				number := event.PullRequest.Number
+				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
 					return err
 				}
 			}
