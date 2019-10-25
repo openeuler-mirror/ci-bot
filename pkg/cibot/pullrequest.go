@@ -29,12 +29,12 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		owner := event.Repository.Namespace
 		repo := event.Repository.Name
 		number := event.PullRequest.Number
-		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+		_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 		if err != nil {
 			glog.Errorf("unable to add comment in pull request: %v", err)
 		}
 
-		err := s.CheckCLAByPullRequestEvent(event)
+		err = s.CheckCLAByPullRequestEvent(event)
 		if err != nil {
 			glog.Errorf("failed to check cla by pull request event: %v", err)
 		}
