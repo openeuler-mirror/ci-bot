@@ -9,8 +9,12 @@ import (
 )
 
 const (
-	approvedAddedMessage   = `[Notifier] ***approved*** is added in this pull request by: ***%s***. :wave: `
-	approvedRemovedMessage = `[Notifier] ***approved*** is removed in this pull request by: ***%s***. :flushed: `
+	approvedAddedMessage           = `[Notifier] ***approved*** is added in this pull request by: ***%s***. :wave: `
+	approvedRemovedMessage         = `[Notifier] ***approved*** is removed in this pull request by: ***%s***. :flushed: `
+	approvedAddNoPermissionMessage = `[Notifier] ***%s*** has no permission to add ***approved*** in this pull request. :astonished:
+please to contact the collaborators on this repository.`
+	approvedRemoveNoPermissionMessage = `[Notifier] ***%s*** has no permission to remove ***approved*** in this pull request. :astonished:
+please to contact the collaborators on this repository.`
 )
 
 // AddApprove adds approved label
@@ -71,6 +75,19 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 				if err != nil {
 					return err
 				}
+			} else {
+				// add comment
+				body := gitee.PullRequestCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(approvedAddNoPermissionMessage, commentAuthor)
+				owner := event.Repository.Namespace
+				repo := event.Repository.Name
+				number := event.PullRequest.Number
+				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
+					return err
+				}
 			}
 		}
 	}
@@ -122,6 +139,19 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 				body := gitee.PullRequestCommentPostParam{}
 				body.AccessToken = s.Config.GiteeToken
 				body.Body = fmt.Sprintf(approvedRemovedMessage, commentAuthor)
+				owner := event.Repository.Namespace
+				repo := event.Repository.Name
+				number := event.PullRequest.Number
+				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
+					return err
+				}
+			} else {
+				// add comment
+				body := gitee.PullRequestCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(approvedRemoveNoPermissionMessage, commentAuthor)
 				owner := event.Repository.Namespace
 				repo := event.Repository.Name
 				number := event.PullRequest.Number

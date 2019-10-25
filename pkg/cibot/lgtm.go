@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	lgtmSelfOwnMessage = `[Notifier] ***lgtm*** can not be aded in your self-own pull request. :astonished: `
+	lgtmSelfOwnMessage = `[Notifier] ***lgtm*** can not be added in your self-own pull request. :astonished: `
 	lgtmAddedMessage   = `[Notifier] ***lgtm*** is added in this pull request by: ***%s***. :wave: `
 	lgtmRemovedMessage = `[Notifier] ***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
 )
