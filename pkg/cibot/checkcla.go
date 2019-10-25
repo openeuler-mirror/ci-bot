@@ -17,6 +17,7 @@ after that, please reply here with a new comment **/check-cla** and we'll verify
 - If you have done the above and are still having issues with the CLA being reported as unsigned,
   send a message to the backup e-mail support address at: contact@openeuler.org
 `
+	claFoundMessage = `Thanks for your pull request. you've already signed openEuler CLA successfully. :wave: `
 )
 
 // CheckCLAByNoteEvent check cla by NoteEvent
@@ -52,6 +53,19 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			removelabel.Comment.Body = RemoveClaNo
 			err = s.RemoveLabelInPullRequest(removelabel)
 			if err != nil {
+				return err
+			}
+
+			// add comment
+			body := gitee.PullRequestCommentPostParam{}
+			body.AccessToken = s.Config.GiteeToken
+			body.Body = claFoundMessage
+			owner := event.Repository.Namespace
+			repo := event.Repository.Name
+			number := event.PullRequest.Number
+			_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+			if err != nil {
+				glog.Errorf("unable to add comment in pull request: %v", err)
 				return err
 			}
 		} else {
@@ -124,6 +138,19 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		removelabel.Comment.Body = RemoveClaNo
 		err = s.RemoveLabelInPullRequest(removelabel)
 		if err != nil {
+			return err
+		}
+
+		// add comment
+		body := gitee.PullRequestCommentPostParam{}
+		body.AccessToken = s.Config.GiteeToken
+		body.Body = claFoundMessage
+		owner := event.Repository.Namespace
+		repo := event.Repository.Name
+		number := event.PullRequest.Number
+		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+		if err != nil {
+			glog.Errorf("unable to add comment in pull request: %v", err)
 			return err
 		}
 	} else {
