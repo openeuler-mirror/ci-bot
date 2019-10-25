@@ -1,6 +1,8 @@
 package cibot
 
 import (
+	"fmt"
+
 	"github.com/antihax/optional"
 
 	"gitee.com/openeuler/go-gitee/gitee"
@@ -8,7 +10,9 @@ import (
 )
 
 const (
-	lgtmSelfOwnMessage = `Thanks for your comment, but you can not add **lgtm** on your self-own pull request.:astonished: `
+	lgtmSelfOwnMessage = `[Notifier] ***lgtm*** can not be aded in your self-own pull request. :astonished: `
+	lgtmAddedMessage   = `[Notifier] ***lgtm*** is added in this pull request by: ***%s***. :wave: `
+	lgtmRemovedMessage = `[Notifier] ***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
 )
 
 // AddLgtm adds lgtm label
@@ -70,6 +74,18 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				if err != nil {
 					return err
 				}
+				// add comment
+				body := gitee.PullRequestCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(lgtmAddedMessage, commentAuthor)
+				owner := event.Repository.Namespace
+				repo := event.Repository.Name
+				number := event.PullRequest.Number
+				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
+					return err
+				}
 				// try to merge pr
 				err = s.MergePullRequest(event)
 				if err != nil {
@@ -127,6 +143,17 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 			mapOfRemoveLabels[LabelNameLgtm] = LabelNameLgtm
 			err := s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
 			if err != nil {
+				return err
+			}
+
+			// add comment
+			body := gitee.PullRequestCommentPostParam{}
+			body.AccessToken = s.Config.GiteeToken
+			body.Body = fmt.Sprintf(lgtmRemovedMessage, commentAuthor)
+			number := event.PullRequest.Number
+			_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+			if err != nil {
+				glog.Errorf("unable to add comment in pull request: %v", err)
 				return err
 			}
 		}
