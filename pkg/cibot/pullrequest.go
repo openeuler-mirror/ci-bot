@@ -38,6 +38,37 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		if err != nil {
 			glog.Errorf("failed to check cla by pull request event: %v", err)
 		}
+	case "update":
+		glog.Info("received a pull request update event")
+
+		// get pr info
+		owner := event.Repository.Namespace
+		repo := event.Repository.Name
+		number := event.PullRequest.Number
+		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, nil)
+		if err != nil {
+			glog.Errorf("unable to get pull request. err: %v", err)
+			return
+		}
+		listofPrLabels := pr.Labels
+		glog.Infof("List of pr labels: %v", listofPrLabels)
+
+		// check if it has lgtm label
+		hasLgtm := false
+		for _, l := range listofPrLabels {
+			if l.Name == LabelNameLgtm {
+				hasLgtm = true
+				break
+			}
+		}
+		// remove lgtm if changes happen
+		if hasLgtm {
+			err = s.CheckLgtmByPullRequestUpdate(event)
+			if err != nil {
+				glog.Errorf("check lgtm by pull request update. err: %v", err)
+				return
+			}
+		}
 	}
 }
 

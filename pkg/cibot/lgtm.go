@@ -10,14 +10,15 @@ import (
 )
 
 const (
-	lgtmSelfOwnMessage = `***lgtm*** can not be added in your self-own pull request. :astonished: `
-	lgtmAddedMessage   = `***lgtm*** is added in this pull request by: ***%s***. :wave: 
-<input type="hidden" value="%s"/>`
+	lgtmSelfOwnMessage         = `***lgtm*** can not be added in your self-own pull request. :astonished: `
+	lgtmAddedMessage           = `***lgtm*** is added in this pull request by: ***%s***. :wave: `
 	lgtmRemovedMessage         = `***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
 	lgtmAddNoPermissionMessage = `***%s*** has no permission to add ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
 	lgtmRemoveNoPermissionMessage = `***%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
+	lgtmRemovePullRequestChangeMessage = `new changes are detected.
+***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
 )
 
 // AddLgtm adds lgtm label
@@ -82,7 +83,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				// add comment
 				body := gitee.PullRequestCommentPostParam{}
 				body.AccessToken = s.Config.GiteeToken
-				body.Body = fmt.Sprintf(lgtmAddedMessage, commentAuthor, event.PullRequest.Head.Sha)
+				body.Body = fmt.Sprintf(lgtmAddedMessage, commentAuthor) + fmt.Sprintf(LabelHiddenValue, event.PullRequest.Head.Sha)
 				owner := event.Repository.Namespace
 				repo := event.Repository.Name
 				number := event.PullRequest.Number
@@ -188,5 +189,79 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 			}
 		}
 	}
+	return nil
+}
+
+// CheckLgtmByPullRequestUpdate checks lgtm when received the pull request update event
+func (s *Server) CheckLgtmByPullRequestUpdate(event *gitee.PullRequestEvent) error {
+	owner := event.Repository.Namespace
+	repo := event.Repository.Name
+	prNumber := event.PullRequest.Number
+	commentCount := event.PullRequest.Comments
+	var perPage int32 = 20
+	pageCount := commentCount / perPage
+	if commentCount%perPage > 0 {
+		pageCount++
+	}
+	if perPage == 0 {
+		pageCount++
+	}
+	glog.Infof("pull request comment count: %v page count: %v per page: %v", commentCount, pageCount, perPage)
+
+	// find comments from the last page
+	lastlgtmSha := ""
+	for page := pageCount; page > 0; page-- {
+		localVarOptionals := &gitee.GetV5ReposOwnerRepoPullsNumberCommentsOpts{}
+		localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
+		localVarOptionals.PerPage = optional.NewInt32(pageCount)
+		localVarOptionals.Page = optional.NewInt32(page)
+
+		comments, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, localVarOptionals)
+		if err != nil {
+			glog.Errorf("unable to get pull request comments. err: %v", err)
+			return err
+		}
+		if len(comments) > 0 {
+			// from the last comment
+			for length := len(comments) - 1; length >= 0; length-- {
+				comment := comments[length]
+				m := RegBotAddLgtm.FindStringSubmatch(comment.Body)
+				if comment.User.Login == BotName && m != nil && comment.UpdatedAt == comment.CreatedAt {
+					lastlgtmSha = m[3]
+					break
+				}
+			}
+		}
+
+		// get the last sha when lgtm
+		if lastlgtmSha != "" {
+			// if the sha is changed
+			if lastlgtmSha != event.PullRequest.Head.Sha {
+				// remove lgtm label
+				removelabel := &gitee.NoteEvent{}
+				removelabel.PullRequest = event.PullRequest
+				removelabel.Repository = event.Repository
+				removelabel.Comment = &gitee.Note{}
+				mapOfRemoveLabels := map[string]string{}
+				mapOfRemoveLabels[LabelNameLgtm] = LabelNameLgtm
+				err := s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
+				if err != nil {
+					return err
+				}
+
+				// add comment
+				body := gitee.PullRequestCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(lgtmRemovePullRequestChangeMessage, BotName)
+				_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
+					return err
+				}
+			}
+			break
+		}
+	}
+
 	return nil
 }

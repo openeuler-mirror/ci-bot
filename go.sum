@@ -39,6 +39,8 @@ gitee.com/openeuler/go-gitee v0.0.0-20191025054735-b3cda19038cc h1:eaEwj7E2BHCjd
 gitee.com/openeuler/go-gitee v0.0.0-20191025054735-b3cda19038cc/go.mod h1:afudu/8wYUdFMJF6hnTrg71GTvmBZmuRsE837IPmCgM=
 gitee.com/openeuler/go-gitee v0.0.0-20191026031534-eb9f29a34d2c h1:F2AatVSIb58QtN/X37WW2McBsW3OA9VWMoy46acOyKQ=
 gitee.com/openeuler/go-gitee v0.0.0-20191026031534-eb9f29a34d2c/go.mod h1:TQrS/LP/DFXLqM+lVrZd4nL2pbTrqiXABGT9PJepVTA=
+gitee.com/openeuler/go-gitee v0.0.0-20191026063009-4c397e7b9a78 h1:qqvTYWlgHHSiHMC8Ah8dw+lfLal+qZChkc0Nt2+nBQU=
+gitee.com/openeuler/go-gitee v0.0.0-20191026063009-4c397e7b9a78/go.mod h1:TQrS/LP/DFXLqM+lVrZd4nL2pbTrqiXABGT9PJepVTA=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWXgklEdEo=
 github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMxUHB2q5Ap20/P/eIdh4G0pI=

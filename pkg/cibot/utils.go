@@ -1,6 +1,7 @@
 package cibot
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -14,6 +15,8 @@ const (
 	RemoveClaNo       = "/remove-openeuler-cla no"
 	LabelNameLgtm     = "lgtm"
 	LabelNameApproved = "approved"
+	LabelHiddenValue  = "<input type=hidden value=%s />"
+	BotName           = "openeuler-ci-bot"
 	tipBotMessage     = `Hey ***%s***, Welcome to openEuler Community.
 All of the projects in OpenEuler Community are maintained by ***openeuler-ci-bot***.
 That means the developpers can comment below every pull request or issue to trigger Bot Commands.
@@ -39,6 +42,8 @@ var (
 	RegClose = regexp.MustCompile(`(?mi)^/close\s*$`)
 	// RegReOpen
 	RegReOpen = regexp.MustCompile(`(?mi)^/reopen\s*$`)
+	// RegBotAddLgtm
+	RegBotAddLgtm = regexp.MustCompile(fmt.Sprintf(lgtmAddedMessage, "(.*)") + fmt.Sprintf(LabelHiddenValue, "(.*)"))
 )
 
 // UrlEncode replcae special chars in url
