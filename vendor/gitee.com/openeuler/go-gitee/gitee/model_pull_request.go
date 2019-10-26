@@ -41,4 +41,9 @@ type PullRequest struct {
 	Base              *BasicInfo  `json:"base,omitempty"`
 	Links             string      `json:"_links,omitempty"`
 	User              *UserBasic  `json:"user,omitempty"`
+	Comments          int32       `json:"comments,omitempty"`
+	Commits           int32       `json:"commits,omitempty"`
+	Additions         int32       `json:"additions,omitempty"`
+	Deletions         int32       `json:"deletions,omitempty"`
+	ChangedFiles      int32       `json:"changed_files,omitempty"`
 }
