@@ -10,12 +10,13 @@ import (
 )
 
 const (
-	lgtmSelfOwnMessage         = `[Notifier] ***lgtm*** can not be added in your self-own pull request. :astonished: `
-	lgtmAddedMessage           = `[Notifier] ***lgtm*** is added in this pull request by: ***%s***. :wave: `
-	lgtmRemovedMessage         = `[Notifier] ***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
-	lgtmAddNoPermissionMessage = `[Notifier] ***%s*** has no permission to add ***lgtm*** in this pull request. :astonished:
+	lgtmSelfOwnMessage = `***lgtm*** can not be added in your self-own pull request. :astonished: `
+	lgtmAddedMessage   = `***lgtm*** is added in this pull request by: ***%s***. :wave: 
+<input type="hidden" value="%s"/>`
+	lgtmRemovedMessage         = `***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
+	lgtmAddNoPermissionMessage = `***%s*** has no permission to add ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
-	lgtmRemoveNoPermissionMessage = `[Notifier] ***%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
+	lgtmRemoveNoPermissionMessage = `***%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
 )
 
@@ -81,7 +82,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				// add comment
 				body := gitee.PullRequestCommentPostParam{}
 				body.AccessToken = s.Config.GiteeToken
-				body.Body = fmt.Sprintf(lgtmAddedMessage, commentAuthor)
+				body.Body = fmt.Sprintf(lgtmAddedMessage, commentAuthor, event.PullRequest.Head.Sha)
 				owner := event.Repository.Namespace
 				repo := event.Repository.Name
 				number := event.PullRequest.Number
