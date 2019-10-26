@@ -17,8 +17,7 @@ const (
 please contact to the collaborators in this repository.`
 	lgtmRemoveNoPermissionMessage = `***%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
-	lgtmRemovePullRequestChangeMessage = `new changes are detected.
-***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
+	lgtmRemovePullRequestChangeMessage = `new changes are detected. ***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
 )
 
 // AddLgtm adds lgtm label
@@ -213,7 +212,7 @@ func (s *Server) CheckLgtmByPullRequestUpdate(event *gitee.PullRequestEvent) err
 	for page := pageCount; page > 0; page-- {
 		localVarOptionals := &gitee.GetV5ReposOwnerRepoPullsNumberCommentsOpts{}
 		localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
-		localVarOptionals.PerPage = optional.NewInt32(pageCount)
+		localVarOptionals.PerPage = optional.NewInt32(perPage)
 		localVarOptionals.Page = optional.NewInt32(page)
 
 		comments, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, localVarOptionals)
@@ -226,8 +225,9 @@ func (s *Server) CheckLgtmByPullRequestUpdate(event *gitee.PullRequestEvent) err
 			for length := len(comments) - 1; length >= 0; length-- {
 				comment := comments[length]
 				m := RegBotAddLgtm.FindStringSubmatch(comment.Body)
-				if comment.User.Login == BotName && m != nil && comment.UpdatedAt == comment.CreatedAt {
-					lastlgtmSha = m[3]
+				if /*comment.User.Login == BotName &&*/ m != nil && comment.UpdatedAt == comment.CreatedAt {
+					lastlgtmSha = m[1]
+					glog.Infof("pull request comment with lastlgtmSha: %v", comment)
 					break
 				}
 			}
@@ -235,6 +235,7 @@ func (s *Server) CheckLgtmByPullRequestUpdate(event *gitee.PullRequestEvent) err
 
 		// get the last sha when lgtm
 		if lastlgtmSha != "" {
+			glog.Infof("lastlgtmSha: %v sha: %v", lastlgtmSha, event.PullRequest.Head.Sha)
 			// if the sha is changed
 			if lastlgtmSha != event.PullRequest.Head.Sha {
 				// remove lgtm label
