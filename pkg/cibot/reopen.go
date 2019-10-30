@@ -1,12 +1,17 @@
 package cibot
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/antihax/optional"
 
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
+)
+
+const (
+	reopenIssueMessage = `this issue is reopened by: ***@%s***.`
 )
 
 // ReOpen reopens pr or issue
@@ -111,6 +116,14 @@ func (s *Server) ReOpen(event *gitee.NoteEvent) error {
 					}
 				} else {
 					glog.Infof("reopen successfully: %v", issueNumber)
+				}
+				// add comment
+				bodyComment := gitee.IssueCommentPostParam{}
+				bodyComment.AccessToken = s.Config.GiteeToken
+				bodyComment.Body = fmt.Sprintf(reopenIssueMessage, commentAuthor)
+				_, _, err = s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, bodyComment)
+				if err != nil {
+					glog.Errorf("unable to add comment in issue: %v", err)
 				}
 			}
 		}

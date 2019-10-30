@@ -1,12 +1,17 @@
 package cibot
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/antihax/optional"
 
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
+)
+
+const (
+	closeIssueMessage = `this issue is closed by: ***@%s***.`
 )
 
 // Close closes pr or issue
@@ -111,6 +116,14 @@ func (s *Server) Close(event *gitee.NoteEvent) error {
 					}
 				} else {
 					glog.Infof("close successfully: %v", issueNumber)
+				}
+				// add comment
+				bodyComment := gitee.IssueCommentPostParam{}
+				bodyComment.AccessToken = s.Config.GiteeToken
+				bodyComment.Body = fmt.Sprintf(closeIssueMessage, commentAuthor)
+				_, _, err = s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, bodyComment)
+				if err != nil {
+					glog.Errorf("unable to add comment in issue: %v", err)
 				}
 			}
 		}
