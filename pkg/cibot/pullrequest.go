@@ -45,7 +45,9 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		owner := event.Repository.Namespace
 		repo := event.Repository.Name
 		number := event.PullRequest.Number
-		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, nil)
+		lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
+		lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
 		if err != nil {
 			glog.Errorf("unable to get pull request. err: %v", err)
 			return
@@ -149,7 +151,9 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	glog.Infof("merge pull request started. owner: %s repo: %s number: %d", owner, repo, prNumber)
 
 	// list labels in current pull request
-	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, prNumber, nil)
+	lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
+	lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, prNumber, lvos)
 	if err != nil {
 		glog.Errorf("unable to get pull request. err: %v", err)
 		return err

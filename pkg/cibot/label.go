@@ -135,7 +135,9 @@ func (s *Server) AddLabelInPulRequest(event *gitee.NoteEvent) error {
 		glog.Infof("map of add labels: %v", mapOfAddLabels)
 
 		// list labels in current gitee repository
-		listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, nil)
+		lvosRepo := &gitee.GetV5ReposOwnerRepoLabelsOpts{}
+		lvosRepo.AccessToken = optional.NewString(s.Config.GiteeToken)
+		listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, lvosRepo)
 		if err != nil {
 			glog.Errorf("unable to list repository labels. err: %v", err)
 			return err
@@ -143,7 +145,9 @@ func (s *Server) AddLabelInPulRequest(event *gitee.NoteEvent) error {
 		glog.Infof("list of repository labels: %v", listofRepoLabels)
 
 		// list labels in current item
-		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, nil)
+		lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
+		lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
 		if err != nil {
 			glog.Errorf("unable to get pull request. err: %v", err)
 			return err
@@ -214,7 +218,9 @@ func (s *Server) AddLabelInIssue(event *gitee.NoteEvent) error {
 		glog.Infof("map of add labels: %v", mapOfAddLabels)
 
 		// list labels in current gitee repository
-		listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, nil)
+		lvosRepo := &gitee.GetV5ReposOwnerRepoLabelsOpts{}
+		lvosRepo.AccessToken = optional.NewString(s.Config.GiteeToken)
+		listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, lvosRepo)
 		if err != nil {
 			glog.Errorf("unable to list repository labels. err: %v", err)
 			return err
@@ -222,7 +228,9 @@ func (s *Server) AddLabelInIssue(event *gitee.NoteEvent) error {
 		glog.Infof("list of repository labels: %v", listofRepoLabels)
 
 		// list labels in current item
-		listofItemLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, nil)
+		lvos := &gitee.GetV5ReposOwnerRepoIssuesNumberLabelsOpts{}
+		lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+		listofItemLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, lvos)
 		if err != nil {
 			glog.Errorf("unable to get labels in issue. err: %v", err)
 			return err
@@ -302,7 +310,9 @@ func (s *Server) RemoveLabelInPullRequest(event *gitee.NoteEvent) error {
 		glog.Infof("map of remove labels: %v", mapOfRemoveLabels)
 
 		// list labels in current item
-		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, nil)
+		lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
+		lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
 		if err != nil {
 			glog.Errorf("unable to get pull request. err: %v", err)
 			return err
@@ -378,7 +388,9 @@ func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
 		glog.Infof("map of remove labels: %v", mapOfRemoveLabels)
 
 		// list labels in current item
-		listofItemLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, nil)
+		lvos := &gitee.GetV5ReposOwnerRepoIssuesNumberLabelsOpts{}
+		lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+		listofItemLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, lvos)
 		if err != nil {
 			glog.Errorf("unable to get labels in issue. err: %v", err)
 			return err
@@ -427,7 +439,9 @@ func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfAddLa
 		comment, owner, repo, number)
 
 	// list labels in current gitee repository
-	listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, nil)
+	lvosRepo := &gitee.GetV5ReposOwnerRepoLabelsOpts{}
+	lvosRepo.AccessToken = optional.NewString(s.Config.GiteeToken)
+	listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, lvosRepo)
 	if err != nil {
 		glog.Errorf("unable to list repository labels. err: %v", err)
 		return err
@@ -435,7 +449,9 @@ func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfAddLa
 	glog.Infof("list of repository labels: %v", listofRepoLabels)
 
 	// list labels in current item
-	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, nil)
+	lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
+	lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
 	if err != nil {
 		glog.Errorf("unable to get pull request. err: %v", err)
 		return err
@@ -496,7 +512,9 @@ func (s *Server) RemoveSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfRe
 		comment, owner, repo, number)
 
 	// list labels in current item
-	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, nil)
+	lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
+	lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
 	if err != nil {
 		glog.Errorf("unable to get pull request. err: %v", err)
 		return err
