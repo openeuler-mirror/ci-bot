@@ -12,6 +12,8 @@ const (
 	issueAssignMessage       = `this issue is assigned to: ***%s***.`
 	issueCanNotAssignMessage = `this issue can not be assigned to: ***%s***.
 please try to assign to the repository collaborators.`
+	issueNoNeedAssignMessage = `this issue is already assigned to: ***%s***.
+please do not assign repeatedly.`
 )
 
 // Assign a collaborator for issue
@@ -79,7 +81,15 @@ func (s *Server) Assign(event *gitee.NoteEvent) error {
 					}
 				}
 			} else {
-				glog.Infof("no need to assign: %v", issueNumber)
+				glog.Infof("already assign: %v", issueNumber)
+				// add comment
+				body := gitee.IssueCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(issueNoNeedAssignMessage, assignee)
+				_, _, err := s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in issue: %v", err)
+				}
 			}
 		}
 	}
