@@ -1,6 +1,8 @@
 package cibot
 
 import (
+	"strings"
+
 	"github.com/antihax/optional"
 
 	"gitee.com/openeuler/go-gitee/gitee"
@@ -86,6 +88,16 @@ func (s *Server) Close(event *gitee.NoteEvent) error {
 				body.Repo = repo
 				body.AccessToken = s.Config.GiteeToken
 				body.State = "closed"
+				// build label string
+				var strLabel string
+				for _, l := range event.Issue.Labels {
+					strLabel += l.Name + ","
+				}
+				strLabel = strings.TrimRight(strLabel, ",")
+				if strLabel == "" {
+					strLabel = ","
+				}
+				body.Labels = strLabel
 				glog.Infof("invoke api to close: %s", issueNumber)
 
 				// patch state

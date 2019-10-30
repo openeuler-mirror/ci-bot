@@ -49,6 +49,16 @@ func (s *Server) UnAssign(event *gitee.NoteEvent) error {
 				// we need to change this once gitee fixes this bug.
 				body.Assignee = ""
 				body.AccessToken = s.Config.GiteeToken
+				// build label string
+				var strLabel string
+				for _, l := range event.Issue.Labels {
+					strLabel += l.Name + ","
+				}
+				strLabel = strings.TrimRight(strLabel, ",")
+				if strLabel == "" {
+					strLabel = ","
+				}
+				body.Labels = strLabel
 				glog.Infof("invoke api to unassign: %s", issueNumber)
 
 				// patch assignee

@@ -50,6 +50,17 @@ func (s *Server) Assign(event *gitee.NoteEvent) error {
 				body.Repo = repo
 				body.Assignee = assignee
 				body.AccessToken = s.Config.GiteeToken
+				// build label string
+				var strLabel string
+				for _, l := range event.Issue.Labels {
+					strLabel += l.Name + ","
+				}
+				strLabel = strings.TrimRight(strLabel, ",")
+				if strLabel == "" {
+					strLabel = ","
+				}
+				body.Labels = strLabel
+
 				glog.Infof("invoke api to assign: %s", issueNumber)
 
 				// patch assignee
