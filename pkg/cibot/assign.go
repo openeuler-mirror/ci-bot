@@ -1,10 +1,17 @@
 package cibot
 
 import (
+	"fmt"
 	"strings"
 
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
+)
+
+const (
+	issueAssignMessage       = `this issue is assigned to: ***%s***.`
+	issueCanNotAssignMessage = `this issue can not be assigned to: ***%s***.
+please try to assign to the repository collaborators.`
 )
 
 // Assign a collaborator for issue
@@ -37,12 +44,32 @@ func (s *Server) Assign(event *gitee.NoteEvent) error {
 			glog.Infof("invoke api to assign: %s", issueNumber)
 
 			// patch assignee
-			_, _, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, issueNumber, body)
+			_, response, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, issueNumber, body)
 			if err != nil {
-				glog.Errorf("unable to assign: %s err: %v", issueNumber, err)
-				return err
+				if response.StatusCode == 403 {
+					glog.Infof("unable to assign with status code %d: %s", response.StatusCode, issueNumber)
+					// add comment
+					body := gitee.IssueCommentPostParam{}
+					body.AccessToken = s.Config.GiteeToken
+					body.Body = fmt.Sprintf(issueCanNotAssignMessage, assignee)
+					_, _, err := s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, body)
+					if err != nil {
+						glog.Errorf("unable to add comment in issue: %v", err)
+					}
+				} else {
+					glog.Errorf("unable to assign: %s err: %v", issueNumber, err)
+					return err
+				}
 			} else {
 				glog.Infof("assign successfully: %v", issueNumber)
+				// add comment
+				body := gitee.IssueCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(issueAssignMessage, assignee)
+				_, _, err := s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in issue: %v", err)
+				}
 			}
 		}
 	}
