@@ -1,10 +1,17 @@
 package cibot
 
 import (
+	"fmt"
 	"strings"
 
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
+)
+
+const (
+	issueUnAssignMessage       = `***%s*** is unassigned from this issue.`
+	issueCanNotUnAssignMessage = `***%s*** can not be unassigned from this issue.
+please try to unassign the assignee from this issue.`
 )
 
 // UnAssign a collaborator for issue
@@ -38,6 +45,8 @@ func (s *Server) UnAssign(event *gitee.NoteEvent) error {
 			if issueAssignee == unassignee {
 				body := gitee.IssueUpdateParam{}
 				body.Repo = repo
+				// todo: the assignee can no be empty, this is a bug from gitee.
+				// we need to change this once gitee fixes this bug.
 				body.Assignee = ""
 				body.AccessToken = s.Config.GiteeToken
 				glog.Infof("invoke api to unassign: %s", issueNumber)
@@ -49,8 +58,25 @@ func (s *Server) UnAssign(event *gitee.NoteEvent) error {
 					return err
 				}
 				glog.Infof("unassign successfully: %v", issueNumber)
+
+				// add comment
+				bodyComment := gitee.IssueCommentPostParam{}
+				bodyComment.AccessToken = s.Config.GiteeToken
+				bodyComment.Body = fmt.Sprintf(issueUnAssignMessage, unassignee)
+				_, _, err = s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, bodyComment)
+				if err != nil {
+					glog.Errorf("unable to add comment in issue: %v", err)
+				}
 			} else {
-				glog.Infof("no need to unassign: %v", issueNumber)
+				glog.Infof("can not unassign: %v", issueNumber)
+				// add comment
+				body := gitee.IssueCommentPostParam{}
+				body.AccessToken = s.Config.GiteeToken
+				body.Body = fmt.Sprintf(issueCanNotUnAssignMessage, unassignee)
+				_, _, err := s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in issue: %v", err)
+				}
 			}
 		}
 	}
