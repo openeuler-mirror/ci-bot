@@ -37,39 +37,49 @@ func (s *Server) Assign(event *gitee.NoteEvent) error {
 				assignee = strings.TrimSpace(substrings[1])
 			}
 
-			body := gitee.IssueUpdateParam{}
-			body.Repo = repo
-			body.Assignee = assignee
-			body.AccessToken = s.Config.GiteeToken
-			glog.Infof("invoke api to assign: %s", issueNumber)
+			// if issue assignee is the same with assignee
+			issueAssignee := ""
+			if event.Issue.Assignee != nil {
+				issueAssignee = event.Issue.Assignee.Login
+			}
 
-			// patch assignee
-			_, response, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, issueNumber, body)
-			if err != nil {
-				if response.StatusCode == 403 {
-					glog.Infof("unable to assign with status code %d: %s", response.StatusCode, issueNumber)
+			if issueAssignee != assignee {
+				body := gitee.IssueUpdateParam{}
+				body.Repo = repo
+				body.Assignee = assignee
+				body.AccessToken = s.Config.GiteeToken
+				glog.Infof("invoke api to assign: %s", issueNumber)
+
+				// patch assignee
+				_, response, err := s.GiteeClient.IssuesApi.PatchV5ReposOwnerIssuesNumber(s.Context, owner, issueNumber, body)
+				if err != nil {
+					if response.StatusCode == 403 {
+						glog.Infof("unable to assign with status code %d: %s", response.StatusCode, issueNumber)
+						// add comment
+						body := gitee.IssueCommentPostParam{}
+						body.AccessToken = s.Config.GiteeToken
+						body.Body = fmt.Sprintf(issueCanNotAssignMessage, assignee)
+						_, _, err := s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, body)
+						if err != nil {
+							glog.Errorf("unable to add comment in issue: %v", err)
+						}
+					} else {
+						glog.Errorf("unable to assign: %s err: %v", issueNumber, err)
+						return err
+					}
+				} else {
+					glog.Infof("assign successfully: %v", issueNumber)
 					// add comment
 					body := gitee.IssueCommentPostParam{}
 					body.AccessToken = s.Config.GiteeToken
-					body.Body = fmt.Sprintf(issueCanNotAssignMessage, assignee)
+					body.Body = fmt.Sprintf(issueAssignMessage, assignee)
 					_, _, err := s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, body)
 					if err != nil {
 						glog.Errorf("unable to add comment in issue: %v", err)
 					}
-				} else {
-					glog.Errorf("unable to assign: %s err: %v", issueNumber, err)
-					return err
 				}
 			} else {
-				glog.Infof("assign successfully: %v", issueNumber)
-				// add comment
-				body := gitee.IssueCommentPostParam{}
-				body.AccessToken = s.Config.GiteeToken
-				body.Body = fmt.Sprintf(issueAssignMessage, assignee)
-				_, _, err := s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, issueNumber, body)
-				if err != nil {
-					glog.Errorf("unable to add comment in issue: %v", err)
-				}
+				glog.Infof("no need to assign: %v", issueNumber)
 			}
 		}
 	}
