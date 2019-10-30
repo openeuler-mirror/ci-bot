@@ -86,4 +86,20 @@ func (s *Server) HandleNoteEvent(event *gitee.NoteEvent) {
 			glog.Errorf("failed to reopen: %v", err)
 		}
 	}
+
+	// assign
+	if RegAssign.MatchString(event.Comment.Body) {
+		err := s.Assign(event)
+		if err != nil {
+			glog.Errorf("failed to assign: %v", err)
+		}
+	}
+
+	// unassign
+	if RegUnAssign.MatchString(event.Comment.Body) {
+		err := s.UnAssign(event)
+		if err != nil {
+			glog.Errorf("failed to unassign: %v", err)
+		}
+	}
 }

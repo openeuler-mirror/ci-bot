@@ -44,6 +44,10 @@ var (
 	RegReOpen = regexp.MustCompile(`(?mi)^/reopen\s*$`)
 	// RegBotAddLgtm
 	RegBotAddLgtm = regexp.MustCompile(fmt.Sprintf(LabelHiddenValue, "(.*)"))
+	// RegAssign
+	RegAssign = regexp.MustCompile(`(?mi)^/assign(( @?[-\w]+?)*)\s*$`)
+	// RegUnAssign
+	RegUnAssign = regexp.MustCompile(`(?mi)^/unassign(( @?[-\w]+?)*)\s*$`)
 )
 
 // UrlEncode replcae special chars in url
