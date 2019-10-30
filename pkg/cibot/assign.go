@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	issueAssignMessage       = `this issue is assigned to: ***%s***.`
-	issueCanNotAssignMessage = `this issue can not be assigned to: ***%s***.
+	issueAssignMessage       = `this issue is assigned to: ***@%s***.`
+	issueCanNotAssignMessage = `this issue can not be assigned to: ***@%s***.
 please try to assign to the repository collaborators.`
-	issueNoNeedAssignMessage = `this issue is already assigned to: ***%s***.
+	issueNoNeedAssignMessage = `this issue is already assigned to: ***@%s***.
 please do not assign repeatedly.`
 )
 

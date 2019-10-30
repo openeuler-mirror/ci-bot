@@ -11,13 +11,13 @@ import (
 
 const (
 	lgtmSelfOwnMessage         = `***lgtm*** can not be added in your self-own pull request. :astonished: `
-	lgtmAddedMessage           = `***lgtm*** is added in this pull request by: ***%s***. :wave: `
-	lgtmRemovedMessage         = `***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
-	lgtmAddNoPermissionMessage = `***%s*** has no permission to add ***lgtm*** in this pull request. :astonished:
+	lgtmAddedMessage           = `***lgtm*** is added in this pull request by: ***@%s***. :wave: `
+	lgtmRemovedMessage         = `***lgtm*** is removed in this pull request by: ***@%s***. :flushed: `
+	lgtmAddNoPermissionMessage = `***@%s*** has no permission to add ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
-	lgtmRemoveNoPermissionMessage = `***%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
+	lgtmRemoveNoPermissionMessage = `***@%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
-	lgtmRemovePullRequestChangeMessage = `new changes are detected. ***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
+	lgtmRemovePullRequestChangeMessage = `new changes are detected. ***lgtm*** is removed in this pull request by: ***@%s***. :flushed: `
 )
 
 // AddLgtm adds lgtm label

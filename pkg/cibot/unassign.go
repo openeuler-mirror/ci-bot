@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	issueUnAssignMessage       = `***%s*** is unassigned from this issue.`
-	issueCanNotUnAssignMessage = `***%s*** can not be unassigned from this issue.
+	issueUnAssignMessage       = `***@%s*** is unassigned from this issue.`
+	issueCanNotUnAssignMessage = `***@%s*** can not be unassigned from this issue.
 please try to unassign the assignee from this issue.`
 )
 
