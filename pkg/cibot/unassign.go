@@ -45,9 +45,8 @@ func (s *Server) UnAssign(event *gitee.NoteEvent) error {
 			if issueAssignee == unassignee {
 				body := gitee.IssueUpdateParam{}
 				body.Repo = repo
-				// todo: the assignee can no be empty, this is a bug from gitee.
-				// we need to change this once gitee fixes this bug.
-				body.Assignee = ""
+				// set " " to empty the assignee by gitee
+				body.Assignee = " "
 				body.AccessToken = s.Config.GiteeToken
 				// build label string
 				var strLabel string
