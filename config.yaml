@@ -8,3 +8,7 @@ databasePort: 3306
 databaseName: "cibot"
 databaseUserName: "root"
 databasePassword: "******"
+watchProjectFileOwner: openeuler
+watchprojectFileRepo: ci-bot
+watchprojectFilePath: projects.yaml
+watchProjectFileRef: master

@@ -62,10 +62,23 @@ func UpgradeDataBase(db *gorm.DB) error {
 		if err := db.Exec(UpgradesTableSQL).Error; err != nil {
 			return err
 		}
-		// table instance_details
+		// table cla_details
 		if err := db.Exec(CLADetailsTableSQL).Error; err != nil {
 			return err
 		}
+		// table projectfiles
+		if err := db.Exec(ProjectFilesTableSQL).Error; err != nil {
+			return err
+		}
+		// table repositories
+		if err := db.Exec(RepositoriesTableSQL).Error; err != nil {
+			return err
+		}
+		// table privileges
+		if err := db.Exec(PrivilegesTableSQL).Error; err != nil {
+			return err
+		}
+
 		return nil
 	}
 
