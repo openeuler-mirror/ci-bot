@@ -192,20 +192,11 @@ func (handler *InitHandler) watch() {
 										if lenRepositories > 0 {
 											glog.Infof("repository: %s is exist. no action.", *ps.Repostiories[i].Name)
 										} else {
-											// add repository in gitee
-											err = handler.addRepositoriesinGitee(*ps.Community.Name, *ps.Repostiories[i].Name,
-												*ps.Repostiories[i].Description, *ps.Repostiories[i].Type)
-											if err != nil {
-												glog.Errorf("failed to add repositories: %v", err)
-												continue
-											}
-
-											// add repository in database
-											err = handler.addRepositoriesinDB(*ps.Community.Name, *ps.Repostiories[i].Name,
+											// add repository
+											err = handler.addRepositories(*ps.Community.Name, *ps.Repostiories[i].Name,
 												*ps.Repostiories[i].Description, *ps.Repostiories[i].Type, pf.ID)
 											if err != nil {
 												glog.Errorf("failed to add repositories: %v", err)
-												continue
 											}
 										}
 									}
@@ -236,6 +227,24 @@ func (handler *InitHandler) getRepositoriesLength(owner string, repo string, id 
 		glog.Errorf("unable to get repositories files: %v", err)
 	}
 	return lenRepositories, err
+}
+
+// addRepositories add repository
+func (handler *InitHandler) addRepositories(owner, repo, description, t string, id uint) error {
+	// add repository in gitee
+	err := handler.addRepositoriesinGitee(owner, repo, description, t)
+	if err != nil {
+		glog.Errorf("failed to add repositories: %v", err)
+		return err
+	}
+
+	// add repository in database
+	err = handler.addRepositoriesinDB(owner, repo, description, t, id)
+	if err != nil {
+		glog.Errorf("failed to add repositories: %v", err)
+		return err
+	}
+	return nil
 }
 
 // addRepositoriesinDB add repository in database
