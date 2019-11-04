@@ -19,8 +19,8 @@ func (s *Server) HandlePushEvent(event *gitee.PushEvent) {
 	if (event.Repository.Namespace == s.Config.WatchProjectFileOwner) && (event.Repository.Name == s.Config.WatchprojectFileRepo) {
 		// owner and repo are matched
 		if event.Ref != nil {
-			ref := event.Ref
-			configRef := s.Config.watchProjectFileRef
+			ref := *event.Ref
+			configRef := s.Config.WatchProjectFileRef
 			if configRef == "" {
 				configRef = "master"
 			}

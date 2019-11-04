@@ -62,7 +62,6 @@ func (handler *InitHandler) initWaitingSha() error {
 	watchRepo := handler.Config.WatchprojectFileRepo
 	watchPath := handler.Config.WatchprojectFilePath
 	watchRef := handler.Config.WatchProjectFileRef
-	watchDuration := handler.Config.WatchProjectFileDuration
 
 	// invoke api to get file contents
 	localVarOptionals := &gitee.GetV5ReposOwnerRepoContentsPathOpts{}
@@ -121,8 +120,9 @@ func (handler *InitHandler) initWaitingSha() error {
 			glog.Errorf("unable to create project files: %v", err)
 			return err
 		}
-		glog.Infof("add project file successfully:", contents.Sha)
+		glog.Infof("add project file successfully: %s", contents.Sha)
 	}
+	return nil
 }
 
 // watch database
