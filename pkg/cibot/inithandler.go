@@ -21,8 +21,8 @@ type InitHandler struct {
 }
 
 type Projects struct {
-	Community Community    `yaml:"community"`
-	Projects  []Repostiory `yaml:"repostiories"`
+	Community    Community    `yaml:"community"`
+	Repostiories []Repostiory `yaml:"repostiories"`
 }
 
 type Community struct {
@@ -35,12 +35,12 @@ type Community struct {
 
 type Repostiory struct {
 	Name        *string  `yaml:"name"`
+	Description *string  `yaml:"description"`
+	Type        *string  `yaml:"type"`
 	Manager     []string `yaml:"manager"`
 	Developer   []string `yaml:"developer"`
 	Viewer      []string `yaml:"viewer"`
 	Reporter    []string `yaml:"reporter"`
-	Type        *string  `yaml:"type"`
-	Description *string  `yaml:"description"`
 }
 
 // Serve
@@ -182,6 +182,33 @@ func (handler *InitHandler) watch() {
 									glog.Errorf("failed to unmarshal projects: %v", err)
 								} else {
 									glog.Infof("get blob result: %v", ps)
+									for i := 0; i < len(ps.Repostiories); i++ {
+										// get repositories length
+										lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repostiories[i].Name, pf.ID)
+										if err != nil {
+											glog.Errorf("failed to get repositories length: %v", err)
+											continue
+										}
+										if lenRepositories > 0 {
+											glog.Infof("repository: %s is exist. no action.", *ps.Repostiories[i].Name)
+										} else {
+											// add repository in gitee
+											err = handler.addRepositoriesinGitee(*ps.Community.Name, *ps.Repostiories[i].Name,
+												*ps.Repostiories[i].Description, *ps.Repostiories[i].Type)
+											if err != nil {
+												glog.Errorf("failed to add repositories: %v", err)
+												continue
+											}
+
+											// add repository in database
+											err = handler.addRepositoriesinDB(*ps.Community.Name, *ps.Repostiories[i].Name,
+												*ps.Repostiories[i].Description, *ps.Repostiories[i].Type, pf.ID)
+											if err != nil {
+												glog.Errorf("failed to add repositories: %v", err)
+												continue
+											}
+										}
+									}
 								}
 							}
 						}
@@ -196,4 +223,63 @@ func (handler *InitHandler) watch() {
 		glog.Info("end to serve")
 		time.Sleep(time.Duration(watchDuration) * time.Second)
 	}
+}
+
+// GetRepositoriesLength get repositories length
+func (handler *InitHandler) getRepositoriesLength(owner string, repo string, id uint) (int, error) {
+	// Check repositories file
+	var lenRepositories int
+	err := database.DBConnection.Model(&database.Repositories{}).
+		Where("owner = ? and repo = ? and project_file_id = ?", owner, repo, id).
+		Count(&lenRepositories).Error
+	if err != nil {
+		glog.Errorf("unable to get repositories files: %v", err)
+	}
+	return lenRepositories, err
+}
+
+// addRepositoriesinDB add repository in database
+func (handler *InitHandler) addRepositoriesinDB(owner, repo, description, t string, id uint) error {
+	// add repository
+	addrepo := database.Repositories{
+		Owner:         owner,
+		Repo:          repo,
+		Description:   description,
+		Type:          t,
+		ProjectFileID: id,
+	}
+
+	// create repository
+	err := database.DBConnection.Create(&addrepo).Error
+	if err != nil {
+		glog.Errorf("unable to create repository: %v", err)
+		return err
+	}
+	return nil
+}
+
+// addRepositoriesinGitee add repository in giteee
+func (handler *InitHandler) addRepositoriesinGitee(owner, repo, description, t string) error {
+	// build create repository param
+	repobody := gitee.RepositoryPostParam{}
+	repobody.AccessToken = handler.Config.GiteeToken
+	repobody.Name = repo
+	repobody.Description = description
+	repobody.HasIssues = true
+	repobody.HasWiki = true
+	if t == "private" {
+		repobody.Private = true
+	} else {
+		repobody.Private = false
+	}
+
+	// invoke create repository
+	glog.Infof("begin to create repository: %s", repo)
+	_, _, err := handler.GiteeClient.RepositoriesApi.PostV5OrgsOrgRepos(handler.Context, owner, repobody)
+	if err != nil {
+		glog.Errorf("fail to create repository: %v", err)
+		return err
+	}
+	glog.Infof("end to create repository: %s", repo)
+	return nil
 }

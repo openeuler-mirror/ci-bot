@@ -32,7 +32,7 @@ type Repositories struct {
 	Repo           string
 	Description    string
 	Type           string
-	ProjectFileID  int
+	ProjectFileID  uint
 	AdditionalInfo string `sql:"type:text"`
 }
 

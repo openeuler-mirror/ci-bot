@@ -28,7 +28,7 @@ type Privileges struct {
 	gorm.Model
 	User           string
 	Type           string
-	RepositoryID   int
+	RepositoryID   uint
 	AdditionalInfo string `sql:"type:text"`
 }
 
