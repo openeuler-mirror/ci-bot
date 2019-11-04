@@ -1,13 +1,22 @@
-projects:
-  # - name: python-tools
-  #   owner:
-  #     - freesky-edward
-  #     - tommylike
-  #   type: private
-  #   description: ""
-  # - name: goclient
-  #   owner:
-  #     - xiangxinyong
-  #     - edisontest
-  #   type: public
-  #   description: "go client"
+community:
+  name: openeuler
+  manager:
+    - jimmy_hero
+  developer:
+    - jimmy_hero
+  viewer:
+    - jimmy_hero
+  reporter:
+    - jimmy_hero
+repostiories:
+  - name: openEuler-indexhtml
+    description: ""
+    type: private
+    manager:
+      - jimmy_hero
+    developer:
+      - jimmy_hero
+    viewer:
+      - jimmy_hero
+    reporter:
+      - jimmy_hero

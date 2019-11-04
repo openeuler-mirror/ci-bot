@@ -50,6 +50,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		go s.HandleNoteEvent(event.(*gitee.NoteEvent))
 	case *gitee.PushEvent:
 		glog.Info("received a push event")
+		go s.HandlePushEvent(event.(*gitee.PushEvent))
 	case *gitee.IssueEvent:
 		glog.Info("received a issue event")
 		go s.HandleIssueEvent(event.(*gitee.IssueEvent))

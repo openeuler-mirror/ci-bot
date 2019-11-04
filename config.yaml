@@ -12,3 +12,4 @@ watchProjectFileOwner: openeuler
 watchprojectFileRepo: ci-bot
 watchprojectFilePath: projects.yaml
 watchProjectFileRef: master
+watchProjectFileDuration: 60
