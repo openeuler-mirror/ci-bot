@@ -9,11 +9,21 @@
 
 package gitee
 
+import (
+	"time"
+)
+
 type Commit struct {
-	Sha       string `json:"sha,omitempty"`
-	Author    string `json:"author,omitempty"`
-	Committer string `json:"committer,omitempty"`
-	Message   string `json:"message,omitempty"`
-	Tree      string `json:"tree,omitempty"`
-	Parents   string `json:"parents,omitempty"`
+	Id        string     `json:"id,omitempty"`
+	TreeId    string     `json:"tree_id,omitempty"`
+	ParentIds []string   `json:"parent_ids,omitempty"`
+	Message   string     `json:"message,omitempty"`
+	Timestamp time.Time  `json:"timestamp,omitempty"`
+	Url       string     `json:"url,omitempty"`
+	Author    *UserBasic `json:"author,omitempty"`
+	Committer *UserBasic `json:"committer,omitempty"`
+	Distinct  bool       `json:"distinct,omitempty"`
+	Added     []string   `json:"added,omitempty"`
+	Removed   []string   `json:"removed,omitempty"`
+	Modified  []string   `json:"modified,omitempty"`
 }

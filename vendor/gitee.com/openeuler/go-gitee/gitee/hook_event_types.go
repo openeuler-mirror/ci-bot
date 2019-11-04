@@ -22,7 +22,26 @@ type NoteEvent struct {
 }
 
 type PushEvent struct {
-	Action *string `json:"action,omitempty"`
+	Ref                *string          `json:"ref,omitempty"`
+	Before             *string          `json:"before,omitempty"`
+	After              *string          `json:"after,omitempty"`
+	TotalCommitsCount  int64            `json:"total_commits_count,omitempty"`
+	CommitsMoreThanTen *bool            `json:"commits_more_than_ten,omitempty"`
+	Created            *bool            `json:"created,omitempty"`
+	Deleted            *bool            `json:"deleted,omitempty"`
+	Compare            *string          `json:"compare,omitempty"`
+	Commits            []Commit         `json:"commits,omitempty"`
+	HeadCommit         *Commit          `json:"head_commit,omitempty"`
+	Repository         *Project         `json:"repository,omitempty"`
+	Project            *Project         `json:"project,omitempty"`
+	UserID             int64            `json:"user_id,omitempty"`
+	UserName           *string          `json:"user_name,omitempty"`
+	User               *User            `json:"user,omitempty"`
+	Pusher             *User            `json:"pusher,omitempty"`
+	Sender             *User            `json:"sender,omitempty"`
+	Enterprise         *EnterpriseBasic `json:"enterprise,omitempty"`
+	HookName           *string          `json:"hook_name,omitempty"`
+	Password           *string          `json:"password,omitempty"`
 }
 
 type IssueEvent struct {
