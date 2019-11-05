@@ -16,9 +16,10 @@ var PrivilegesTableSQL = fmt.Sprintf(`CREATE TABLE %s (
 	created_at timestamp NULL DEFAULT NULL,
 	updated_at timestamp NULL DEFAULT NULL,
 	deleted_at timestamp NULL DEFAULT NULL,
+	owner varchar(255) DEFAULT NULL,
+	repo varchar(255) DEFAULT NULL,
 	user varchar(255) DEFAULT NULL,
 	type varchar(255) DEFAULT NULL,
-	repository_id int(10) unsigned DEFAULT NULL,
 	additional_info text,
 	PRIMARY KEY (id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8`, PrivilegesTableName)
@@ -26,9 +27,10 @@ var PrivilegesTableSQL = fmt.Sprintf(`CREATE TABLE %s (
 // Privileges defines
 type Privileges struct {
 	gorm.Model
+	Owner          string
+	Repo           string
 	User           string
 	Type           string
-	RepositoryID   uint
 	AdditionalInfo string `sql:"type:text"`
 }
 

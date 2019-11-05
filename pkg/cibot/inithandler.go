@@ -22,26 +22,33 @@ type InitHandler struct {
 
 type Projects struct {
 	Community    Community    `yaml:"community"`
-	Repostiories []Repostiory `yaml:"repostiories"`
+	Repositories []Repository `yaml:"repositories"`
 }
 
 type Community struct {
-	Name      *string  `yaml:"name"`
-	Manager   []string `yaml:"manager"`
-	Developer []string `yaml:"developer"`
-	Viewer    []string `yaml:"viewer"`
-	Reporter  []string `yaml:"reporter"`
+	Name       *string  `yaml:"name"`
+	Managers   []string `yaml:"managers"`
+	Developers []string `yaml:"developers"`
+	Viewers    []string `yaml:"viewers"`
+	Reporters  []string `yaml:"reporters"`
 }
 
-type Repostiory struct {
+type Repository struct {
 	Name        *string  `yaml:"name"`
 	Description *string  `yaml:"description"`
 	Type        *string  `yaml:"type"`
-	Manager     []string `yaml:"manager"`
-	Developer   []string `yaml:"developer"`
-	Viewer      []string `yaml:"viewer"`
-	Reporter    []string `yaml:"reporter"`
+	Managers    []string `yaml:"managers"`
+	Developers  []string `yaml:"developers"`
+	Viewers     []string `yaml:"viewers"`
+	Reporters   []string `yaml:"reporters"`
 }
+
+var (
+	PrivilegeManager   = "manager"
+	PrivilegeDeveloper = "developer"
+	PrivilegeViewer    = "viewer"
+	PrivilegeReporter  = "reporter"
+)
 
 // Serve
 func (handler *InitHandler) Serve() {
@@ -182,22 +189,27 @@ func (handler *InitHandler) watch() {
 									glog.Errorf("failed to unmarshal projects: %v", err)
 								} else {
 									glog.Infof("get blob result: %v", ps)
-									for i := 0; i < len(ps.Repostiories); i++ {
+									for i := 0; i < len(ps.Repositories); i++ {
 										// get repositories length
-										lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repostiories[i].Name, pf.ID)
+										lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repositories[i].Name, pf.ID)
 										if err != nil {
 											glog.Errorf("failed to get repositories length: %v", err)
 											continue
 										}
 										if lenRepositories > 0 {
-											glog.Infof("repository: %s is exist. no action.", *ps.Repostiories[i].Name)
+											glog.Infof("repository: %s is exist. no action.", *ps.Repositories[i].Name)
 										} else {
 											// add repository
-											err = handler.addRepositories(*ps.Community.Name, *ps.Repostiories[i].Name,
-												*ps.Repostiories[i].Description, *ps.Repostiories[i].Type, pf.ID)
+											err = handler.addRepositories(*ps.Community.Name, *ps.Repositories[i].Name,
+												*ps.Repositories[i].Description, *ps.Repositories[i].Type, pf.ID)
 											if err != nil {
 												glog.Errorf("failed to add repositories: %v", err)
 											}
+										}
+										// add members
+										err = handler.handleMembers(ps.Community, ps.Repositories[i])
+										if err != nil {
+											glog.Errorf("failed to add members: %v", err)
 										}
 									}
 								}
@@ -290,5 +302,237 @@ func (handler *InitHandler) addRepositoriesinGitee(owner, repo, description, t s
 		return err
 	}
 	glog.Infof("end to create repository: %s", repo)
+	return nil
+}
+
+// isUsingRepositoryMember check if using repository member not community member
+func (handler *InitHandler) isUsingRepositoryMember(r Repository) bool {
+	return len(r.Managers) > 0 || len(r.Developers) > 0 || len(r.Viewers) > 0 || len(r.Reporters) > 0
+}
+
+// handleMembers handle members
+func (handler *InitHandler) handleMembers(c Community, r Repository) error {
+	// if the members is defined in the repositories, it means that
+	// all the members defined in the community will not be inherited by repositories.
+	members := make(map[string]map[string]string)
+	if handler.isUsingRepositoryMember(r) {
+		// using repositories members
+		members = handler.getMembersMap(r.Managers, r.Developers, r.Viewers, r.Reporters)
+
+	} else {
+		// using community members
+		members = handler.getMembersMap(c.Managers, c.Developers, c.Viewers, c.Reporters)
+	}
+
+	// get members from database
+	var ps []database.Privileges
+	err := database.DBConnection.Model(&database.Privileges{}).
+		Where("owner = ? and repo = ?", c.Name, r.Name).Find(&ps).Error
+	if err != nil {
+		glog.Errorf("unable to get members: %v", err)
+		return err
+	}
+	membersinDB := handler.getMembersMapByDB(ps)
+
+	// managers
+	handler.addManagers(members[PrivilegeManager], membersinDB[PrivilegeManager])
+	handler.removeManagers(members[PrivilegeManager], membersinDB[PrivilegeManager])
+
+	// developers
+	handler.addDevelopers(members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
+	handler.removeDevelopers(members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
+
+	// viewers
+	handler.addViewers(members[PrivilegeViewer], membersinDB[PrivilegeViewer])
+	handler.removeViewers(members[PrivilegeViewer], membersinDB[PrivilegeViewer])
+
+	// reporters
+	handler.addReporters(members[PrivilegeReporter], membersinDB[PrivilegeReporter])
+	handler.removeReporters(members[PrivilegeReporter], membersinDB[PrivilegeReporter])
+
+	return nil
+}
+
+// getMembersMap get members map
+func (handler *InitHandler) getMembersMap(managers, developers, viewers, reporters []string) map[string]map[string]string {
+	mapManagers := make(map[string]string)
+	mapDevelopers := make(map[string]string)
+	mapViewers := make(map[string]string)
+	mapReporters := make(map[string]string)
+	if len(managers) > 0 {
+		for _, m := range managers {
+			mapManagers[m] = m
+		}
+	}
+	if len(developers) > 0 {
+		for _, d := range developers {
+			// skip when developer is already in managers
+			_, okinManagers := mapManagers[d]
+			if !okinManagers {
+				mapDevelopers[d] = d
+			}
+		}
+	}
+	if len(viewers) > 0 {
+		for _, v := range viewers {
+			// skip when viewer is already in managers or developers
+			_, okinManagers := mapManagers[v]
+			_, okinDevelopers := mapDevelopers[v]
+			if !okinManagers && !okinDevelopers {
+				mapViewers[v] = v
+			}
+		}
+	}
+	if len(reporters) > 0 {
+		for _, rt := range reporters {
+			// skip when reporter is already in managers or developers or viewer
+			_, okinManagers := mapManagers[rt]
+			_, okinDevelopers := mapDevelopers[rt]
+			_, okinViewers := mapViewers[rt]
+			if !okinManagers && !okinDevelopers && !okinViewers {
+				mapReporters[rt] = rt
+			}
+		}
+	}
+
+	// all members map
+	members := make(map[string]map[string]string)
+	members[PrivilegeManager] = mapManagers
+	members[PrivilegeDeveloper] = mapDevelopers
+	members[PrivilegeViewer] = mapViewers
+	members[PrivilegeReporter] = mapReporters
+	return members
+}
+
+// getMembersMapByDB get members map from database
+func (handler *InitHandler) getMembersMapByDB(ps []database.Privileges) map[string]map[string]string {
+	members := make(map[string]map[string]string)
+	mapManagers := make(map[string]string)
+	mapDevelopers := make(map[string]string)
+	mapViewers := make(map[string]string)
+	mapReporters := make(map[string]string)
+	// all members map
+	members[PrivilegeManager] = mapManagers
+	members[PrivilegeDeveloper] = mapDevelopers
+	members[PrivilegeViewer] = mapViewers
+	members[PrivilegeReporter] = mapReporters
+	if len(ps) > 0 {
+		for _, p := range ps {
+			members[p.Type][p.User] = p.User
+		}
+	}
+
+	return members
+}
+
+// addManagers add managers
+func (handler *InitHandler) addManagers(mapManagers, mapManagersInDB map[string]string) error {
+	// managers added
+	listOfAddManagers := make([]string, 0)
+	for _, m := range mapManagers {
+		_, okinManagers := mapManagersInDB[m]
+		if !okinManagers {
+			listOfAddManagers = append(listOfAddManagers, m)
+		}
+	}
+	glog.Infof("list of add managers: %v", listOfAddManagers)
+	return nil
+}
+
+// addDevelopers add developers
+func (handler *InitHandler) addDevelopers(mapDevelopers, mapDevelopersInDB map[string]string) error {
+	// developers added
+	listOfAddDevelopers := make([]string, 0)
+	for _, d := range mapDevelopers {
+		_, okinDevelopers := mapDevelopersInDB[d]
+		if !okinDevelopers {
+			listOfAddDevelopers = append(listOfAddDevelopers, d)
+		}
+	}
+	glog.Infof("list of add developers: %v", listOfAddDevelopers)
+	return nil
+}
+
+// addViewers add viewers
+func (handler *InitHandler) addViewers(mapViewers, mapViewersInDB map[string]string) error {
+	// viewers added
+	listOfAddViewers := make([]string, 0)
+	for _, v := range mapViewers {
+		_, okinViewers := mapViewersInDB[v]
+		if !okinViewers {
+			listOfAddViewers = append(listOfAddViewers, v)
+		}
+	}
+	glog.Infof("list of add viewers: %v", listOfAddViewers)
+	return nil
+}
+
+// addReporters add reporters
+func (handler *InitHandler) addReporters(mapReporters, mapReportersInDB map[string]string) error {
+	// reporters added
+	listOfAddReporters := make([]string, 0)
+	for _, rt := range mapReporters {
+		_, okinReporters := mapReportersInDB[rt]
+		if !okinReporters {
+			listOfAddReporters = append(listOfAddReporters, rt)
+		}
+	}
+	glog.Infof("list of add reporters: %v", listOfAddReporters)
+	return nil
+}
+
+// removeManagers remove managers
+func (handler *InitHandler) removeManagers(mapManagers, mapManagersInDB map[string]string) error {
+	// managers removed
+	listOfRemoveManagers := make([]string, 0)
+	for _, m := range mapManagersInDB {
+		_, okinManagers := mapManagers[m]
+		if !okinManagers {
+			listOfRemoveManagers = append(listOfRemoveManagers, m)
+		}
+	}
+	glog.Infof("list of removed managers: %v", listOfRemoveManagers)
+	return nil
+}
+
+// removeDevelopers remove developers
+func (handler *InitHandler) removeDevelopers(mapDevelopers, mapDevelopersInDB map[string]string) error {
+	// developers removed
+	listOfRemoveDevelopers := make([]string, 0)
+	for _, d := range mapDevelopersInDB {
+		_, okinDevelopers := mapDevelopers[d]
+		if !okinDevelopers {
+			listOfRemoveDevelopers = append(listOfRemoveDevelopers, d)
+		}
+	}
+	glog.Infof("list of removed developers: %v", listOfRemoveDevelopers)
+	return nil
+}
+
+// removeViewers remove viewers
+func (handler *InitHandler) removeViewers(mapViewers, mapViewersInDB map[string]string) error {
+	// viewers removed
+	listOfRemoveViewers := make([]string, 0)
+	for _, v := range mapViewersInDB {
+		_, okinViewers := mapViewers[v]
+		if !okinViewers {
+			listOfRemoveViewers = append(listOfRemoveViewers, v)
+		}
+	}
+	glog.Infof("list of removed viewers: %v", listOfRemoveViewers)
+	return nil
+}
+
+// removeReporters remove reporters
+func (handler *InitHandler) removeReporters(mapReporters, mapReportersInDB map[string]string) error {
+	// reporters removed
+	listOfRemoveReporters := make([]string, 0)
+	for _, rt := range mapReportersInDB {
+		_, okinReporters := mapReporters[rt]
+		if !okinReporters {
+			listOfRemoveReporters = append(listOfRemoveReporters, rt)
+		}
+	}
+	glog.Infof("list of removed reporters: %v", listOfRemoveReporters)
 	return nil
 }

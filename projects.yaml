@@ -1,22 +1,22 @@
 community:
   name: openeuler
-  manager:
+  managers:
     - jimmy_hero
-  developer:
+  developers:
     - jimmy_hero
-  viewer:
+  viewers:
     - jimmy_hero
-  reporter:
+  reporters:
     - jimmy_hero
-repostiories:
+repositories:
   - name: openEuler-indexhtml
     description: ""
     type: private
-    manager:
+    managers:
       - jimmy_hero
-    developer:
+    developers:
       - jimmy_hero
-    viewer:
+    viewers:
       - jimmy_hero
-    reporter:
+    reporters:
       - jimmy_hero
