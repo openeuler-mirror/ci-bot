@@ -3,6 +3,7 @@ package cibot
 import (
 	"context"
 	"encoding/base64"
+	"strconv"
 	"time"
 
 	"gitee.com/openeuler/ci-bot/pkg/cibot/config"
@@ -446,7 +447,7 @@ func (handler *InitHandler) getMembersMapByDB(ps []database.Privileges) map[stri
 	members[PrivilegeReporter] = mapReporters
 	if len(ps) > 0 {
 		for _, p := range ps {
-			members[p.Type][p.User] = p.User
+			members[p.Type][p.User] = strconv.Itoa(int(p.ID))
 		}
 	}
 
@@ -457,7 +458,7 @@ func (handler *InitHandler) getMembersMapByDB(ps []database.Privileges) map[stri
 func (handler *InitHandler) addManagers(c Community, r Repository, mapManagers, mapManagersInDB map[string]string) error {
 	// managers added
 	listOfAddManagers := make([]string, 0)
-	for _, m := range mapManagers {
+	for m := range mapManagers {
 		_, okinManagers := mapManagersInDB[m]
 		if !okinManagers {
 			listOfAddManagers = append(listOfAddManagers, m)
@@ -478,6 +479,17 @@ func (handler *InitHandler) addManagers(c Community, r Repository, mapManagers, 
 				glog.Errorf("fail to create manager: %v", err)
 				continue
 			}
+			// create privilege
+			ps := database.Privileges{
+				Owner: *c.Name,
+				Repo:  *r.Name,
+				User:  listOfAddManagers[j],
+				Type:  PrivilegeManager,
+			}
+			err = database.DBConnection.Create(&ps).Error
+			if err != nil {
+				glog.Errorf("fail to create manager in database: %v", err)
+			}
 		}
 		glog.Infof("end to create manager for: %s", *r.Name)
 	}
@@ -488,7 +500,7 @@ func (handler *InitHandler) addManagers(c Community, r Repository, mapManagers, 
 func (handler *InitHandler) removeManagers(c Community, r Repository, mapManagers, mapManagersInDB map[string]string) error {
 	// managers removed
 	listOfRemoveManagers := make([]string, 0)
-	for _, m := range mapManagersInDB {
+	for m := range mapManagersInDB {
 		_, okinManagers := mapManagers[m]
 		if !okinManagers {
 			listOfRemoveManagers = append(listOfRemoveManagers, m)
@@ -508,6 +520,14 @@ func (handler *InitHandler) removeManagers(c Community, r Repository, mapManager
 				glog.Errorf("fail to remove managers: %v", err)
 				continue
 			}
+			// delete privilege
+			id, _ := strconv.Atoi(mapManagersInDB[listOfRemoveManagers[j]])
+			ps := database.Privileges{}
+			ps.ID = uint(id)
+			err = database.DBConnection.Delete(&ps).Error
+			if err != nil {
+				glog.Errorf("fail to remove manager in database: %v", err)
+			}
 		}
 		glog.Infof("end to remove managers for: %s", *r.Name)
 	}
@@ -518,7 +538,7 @@ func (handler *InitHandler) removeManagers(c Community, r Repository, mapManager
 func (handler *InitHandler) addDevelopers(c Community, r Repository, mapDevelopers, mapDevelopersInDB map[string]string) error {
 	// developers added
 	listOfAddDevelopers := make([]string, 0)
-	for _, d := range mapDevelopers {
+	for d := range mapDevelopers {
 		_, okinDevelopers := mapDevelopersInDB[d]
 		if !okinDevelopers {
 			listOfAddDevelopers = append(listOfAddDevelopers, d)
@@ -539,6 +559,17 @@ func (handler *InitHandler) addDevelopers(c Community, r Repository, mapDevelope
 				glog.Errorf("fail to create developers: %v", err)
 				continue
 			}
+			// create privilege
+			ps := database.Privileges{
+				Owner: *c.Name,
+				Repo:  *r.Name,
+				User:  listOfAddDevelopers[j],
+				Type:  PrivilegeDeveloper,
+			}
+			err = database.DBConnection.Create(&ps).Error
+			if err != nil {
+				glog.Errorf("fail to create developers in database: %v", err)
+			}
 		}
 		glog.Infof("end to create developers for: %s", *r.Name)
 	}
@@ -549,7 +580,7 @@ func (handler *InitHandler) addDevelopers(c Community, r Repository, mapDevelope
 func (handler *InitHandler) removeDevelopers(c Community, r Repository, mapDevelopers, mapDevelopersInDB map[string]string) error {
 	// developers removed
 	listOfRemoveDevelopers := make([]string, 0)
-	for _, d := range mapDevelopersInDB {
+	for d := range mapDevelopersInDB {
 		_, okinDevelopers := mapDevelopers[d]
 		if !okinDevelopers {
 			listOfRemoveDevelopers = append(listOfRemoveDevelopers, d)
@@ -569,6 +600,14 @@ func (handler *InitHandler) removeDevelopers(c Community, r Repository, mapDevel
 				glog.Errorf("fail to remove developers: %v", err)
 				continue
 			}
+			// delete privilege
+			id, _ := strconv.Atoi(mapDevelopersInDB[listOfRemoveDevelopers[j]])
+			ps := database.Privileges{}
+			ps.ID = uint(id)
+			err = database.DBConnection.Delete(&ps).Error
+			if err != nil {
+				glog.Errorf("fail to remove developers in database: %v", err)
+			}
 		}
 		glog.Infof("end to remove developers for: %s", *r.Name)
 	}
@@ -579,7 +618,7 @@ func (handler *InitHandler) removeDevelopers(c Community, r Repository, mapDevel
 func (handler *InitHandler) addViewers(c Community, r Repository, mapViewers, mapViewersInDB map[string]string) error {
 	// viewers added
 	listOfAddViewers := make([]string, 0)
-	for _, v := range mapViewers {
+	for v := range mapViewers {
 		_, okinViewers := mapViewersInDB[v]
 		if !okinViewers {
 			listOfAddViewers = append(listOfAddViewers, v)
@@ -600,6 +639,17 @@ func (handler *InitHandler) addViewers(c Community, r Repository, mapViewers, ma
 				glog.Errorf("fail to create viewers: %v", err)
 				continue
 			}
+			// create privilege
+			ps := database.Privileges{
+				Owner: *c.Name,
+				Repo:  *r.Name,
+				User:  listOfAddViewers[j],
+				Type:  PrivilegeViewer,
+			}
+			err = database.DBConnection.Create(&ps).Error
+			if err != nil {
+				glog.Errorf("fail to create viewers in database: %v", err)
+			}
 		}
 		glog.Infof("end to create viewers for: %s", *r.Name)
 	}
@@ -610,7 +660,7 @@ func (handler *InitHandler) addViewers(c Community, r Repository, mapViewers, ma
 func (handler *InitHandler) removeViewers(c Community, r Repository, mapViewers, mapViewersInDB map[string]string) error {
 	// viewers removed
 	listOfRemoveViewers := make([]string, 0)
-	for _, v := range mapViewersInDB {
+	for v := range mapViewersInDB {
 		_, okinViewers := mapViewers[v]
 		if !okinViewers {
 			listOfRemoveViewers = append(listOfRemoveViewers, v)
@@ -630,6 +680,14 @@ func (handler *InitHandler) removeViewers(c Community, r Repository, mapViewers,
 				glog.Errorf("fail to remove viewers: %v", err)
 				continue
 			}
+			// delete privilege
+			id, _ := strconv.Atoi(mapViewersInDB[listOfRemoveViewers[j]])
+			ps := database.Privileges{}
+			ps.ID = uint(id)
+			err = database.DBConnection.Delete(&ps).Error
+			if err != nil {
+				glog.Errorf("fail to remove viewers in database: %v", err)
+			}
 		}
 		glog.Infof("end to remove viewers for: %s", *r.Name)
 	}
@@ -640,14 +698,41 @@ func (handler *InitHandler) removeViewers(c Community, r Repository, mapViewers,
 func (handler *InitHandler) addReporters(c Community, r Repository, mapReporters, mapReportersInDB map[string]string) error {
 	// reporters added
 	listOfAddReporters := make([]string, 0)
-	for _, rt := range mapReporters {
+	for rt := range mapReporters {
 		_, okinReporters := mapReportersInDB[rt]
 		if !okinReporters {
 			listOfAddReporters = append(listOfAddReporters, rt)
 		}
 	}
 	glog.Infof("list of add reporters: %v", listOfAddReporters)
+	if len(listOfAddReporters) > 0 {
+		// build create project member param
+		memberbody := gitee.ProjectMemberPutParam{}
+		memberbody.AccessToken = handler.Config.GiteeToken
+		// memberbody.Permission = PermissionPull
 
+		glog.Infof("begin to create reporters for: %s", *r.Name)
+		for j := 0; j < len(listOfAddReporters); j++ {
+			_, _, err := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, *c.Name, *r.Name, listOfAddReporters[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to create reporters: %v", err)
+				continue
+			}
+			// create privilege
+			ps := database.Privileges{
+				Owner: *c.Name,
+				Repo:  *r.Name,
+				User:  listOfAddReporters[j],
+				Type:  PrivilegeViewer,
+			}
+			err = database.DBConnection.Create(&ps).Error
+			if err != nil {
+				glog.Errorf("fail to create reporters in database: %v", err)
+			}
+		}
+		glog.Infof("end to create reporters for: %s", *r.Name)
+	}
 	return nil
 }
 
@@ -655,7 +740,7 @@ func (handler *InitHandler) addReporters(c Community, r Repository, mapReporters
 func (handler *InitHandler) removeReporters(c Community, r Repository, mapReporters, mapReportersInDB map[string]string) error {
 	// reporters removed
 	listOfRemoveReporters := make([]string, 0)
-	for _, rt := range mapReportersInDB {
+	for rt := range mapReportersInDB {
 		_, okinReporters := mapReporters[rt]
 		if !okinReporters {
 			listOfRemoveReporters = append(listOfRemoveReporters, rt)
@@ -674,6 +759,14 @@ func (handler *InitHandler) removeReporters(c Community, r Repository, mapReport
 			if err != nil {
 				glog.Errorf("fail to remove reporters: %v", err)
 				continue
+			}
+			// delete privilege
+			id, _ := strconv.Atoi(mapReportersInDB[listOfRemoveReporters[j]])
+			ps := database.Privileges{}
+			ps.ID = uint(id)
+			err = database.DBConnection.Delete(&ps).Error
+			if err != nil {
+				glog.Errorf("fail to remove reporters in database: %v", err)
 			}
 		}
 		glog.Infof("end to remove reporters for: %s", *r.Name)
