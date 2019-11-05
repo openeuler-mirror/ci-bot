@@ -6,8 +6,6 @@ community:
     - jimmy_hero
   viewers:
     - jimmy_hero
-  reporters:
-    - jimmy_hero
 repositories:
   - name: openEuler-indexhtml
     description: ""
@@ -17,6 +15,4 @@ repositories:
     developers:
       - jimmy_hero
     viewers:
-      - jimmy_hero
-    reporters:
       - jimmy_hero

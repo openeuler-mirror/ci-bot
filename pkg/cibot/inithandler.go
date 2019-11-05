@@ -48,6 +48,10 @@ var (
 	PrivilegeDeveloper = "developer"
 	PrivilegeViewer    = "viewer"
 	PrivilegeReporter  = "reporter"
+
+	PermissionAdmin = "admin"
+	PermissionPush  = "push"
+	PermissionPull  = "pull"
 )
 
 // Serve
@@ -334,42 +338,42 @@ func (handler *InitHandler) handleMembers(c Community, r Repository) error {
 	}
 	membersinDB := handler.getMembersMapByDB(ps)
 
-	// reporters
-	err = handler.addReporters(members[PrivilegeReporter], membersinDB[PrivilegeReporter])
+	/* currently reporters are not supported by gitee api
+	err = handler.addReporters(c, r, members[PrivilegeReporter], membersinDB[PrivilegeReporter])
 	if err != nil {
 		glog.Errorf("unable to add reporters: %v", err)
 	}
-	err = handler.removeReporters(members[PrivilegeReporter], membersinDB[PrivilegeReporter])
+	err = handler.removeReporters(c, r, members[PrivilegeReporter], membersinDB[PrivilegeReporter])
 	if err != nil {
 		glog.Errorf("unable to remove reporters: %v", err)
-	}
+	}*/
 
 	// viewers
-	err = handler.addViewers(members[PrivilegeViewer], membersinDB[PrivilegeViewer])
+	err = handler.addViewers(c, r, members[PrivilegeViewer], membersinDB[PrivilegeViewer])
 	if err != nil {
 		glog.Errorf("unable to add viewers: %v", err)
 	}
-	err = handler.removeViewers(members[PrivilegeViewer], membersinDB[PrivilegeViewer])
+	err = handler.removeViewers(c, r, members[PrivilegeViewer], membersinDB[PrivilegeViewer])
 	if err != nil {
 		glog.Errorf("unable to remove viewers: %v", err)
 	}
 
 	// developers
-	err = handler.addDevelopers(members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
+	err = handler.addDevelopers(c, r, members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
 	if err != nil {
 		glog.Errorf("unable to add developers: %v", err)
 	}
-	err = handler.removeDevelopers(members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
+	err = handler.removeDevelopers(c, r, members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
 	if err != nil {
 		glog.Errorf("unable to remove developers: %v", err)
 	}
 
 	// managers
-	err = handler.addManagers(members[PrivilegeManager], membersinDB[PrivilegeManager])
+	err = handler.addManagers(c, r, members[PrivilegeManager], membersinDB[PrivilegeManager])
 	if err != nil {
 		glog.Errorf("unable to add managers: %v", err)
 	}
-	err = handler.removeManagers(members[PrivilegeManager], membersinDB[PrivilegeManager])
+	err = handler.removeManagers(c, r, members[PrivilegeManager], membersinDB[PrivilegeManager])
 	if err != nil {
 		glog.Errorf("unable to remove managers: %v", err)
 	}
@@ -450,7 +454,7 @@ func (handler *InitHandler) getMembersMapByDB(ps []database.Privileges) map[stri
 }
 
 // addManagers add managers
-func (handler *InitHandler) addManagers(mapManagers, mapManagersInDB map[string]string) error {
+func (handler *InitHandler) addManagers(c Community, r Repository, mapManagers, mapManagersInDB map[string]string) error {
 	// managers added
 	listOfAddManagers := make([]string, 0)
 	for _, m := range mapManagers {
@@ -460,53 +464,28 @@ func (handler *InitHandler) addManagers(mapManagers, mapManagersInDB map[string]
 		}
 	}
 	glog.Infof("list of add managers: %v", listOfAddManagers)
-	return nil
-}
+	if len(listOfAddManagers) > 0 {
+		// build create project member param
+		memberbody := gitee.ProjectMemberPutParam{}
+		memberbody.AccessToken = handler.Config.GiteeToken
+		memberbody.Permission = PermissionAdmin
 
-// addDevelopers add developers
-func (handler *InitHandler) addDevelopers(mapDevelopers, mapDevelopersInDB map[string]string) error {
-	// developers added
-	listOfAddDevelopers := make([]string, 0)
-	for _, d := range mapDevelopers {
-		_, okinDevelopers := mapDevelopersInDB[d]
-		if !okinDevelopers {
-			listOfAddDevelopers = append(listOfAddDevelopers, d)
+		glog.Infof("begin to create manager for: %s", *r.Name)
+		for j := 0; j < len(listOfAddManagers); j++ {
+			_, _, err := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, *c.Name, *r.Name, listOfAddManagers[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to create manager: %v", err)
+				continue
+			}
 		}
+		glog.Infof("end to create manager for: %s", *r.Name)
 	}
-	glog.Infof("list of add developers: %v", listOfAddDevelopers)
-	return nil
-}
-
-// addViewers add viewers
-func (handler *InitHandler) addViewers(mapViewers, mapViewersInDB map[string]string) error {
-	// viewers added
-	listOfAddViewers := make([]string, 0)
-	for _, v := range mapViewers {
-		_, okinViewers := mapViewersInDB[v]
-		if !okinViewers {
-			listOfAddViewers = append(listOfAddViewers, v)
-		}
-	}
-	glog.Infof("list of add viewers: %v", listOfAddViewers)
-	return nil
-}
-
-// addReporters add reporters
-func (handler *InitHandler) addReporters(mapReporters, mapReportersInDB map[string]string) error {
-	// reporters added
-	listOfAddReporters := make([]string, 0)
-	for _, rt := range mapReporters {
-		_, okinReporters := mapReportersInDB[rt]
-		if !okinReporters {
-			listOfAddReporters = append(listOfAddReporters, rt)
-		}
-	}
-	glog.Infof("list of add reporters: %v", listOfAddReporters)
 	return nil
 }
 
 // removeManagers remove managers
-func (handler *InitHandler) removeManagers(mapManagers, mapManagersInDB map[string]string) error {
+func (handler *InitHandler) removeManagers(c Community, r Repository, mapManagers, mapManagersInDB map[string]string) error {
 	// managers removed
 	listOfRemoveManagers := make([]string, 0)
 	for _, m := range mapManagersInDB {
@@ -516,11 +495,58 @@ func (handler *InitHandler) removeManagers(mapManagers, mapManagersInDB map[stri
 		}
 	}
 	glog.Infof("list of removed managers: %v", listOfRemoveManagers)
+	if len(listOfRemoveManagers) > 0 {
+		// build remove project member param
+		memberbody := &gitee.DeleteV5ReposOwnerRepoCollaboratorsUsernameOpts{}
+		memberbody.AccessToken = optional.NewString(handler.Config.GiteeToken)
+
+		glog.Infof("begin to remove managers for: %s", *r.Name)
+		for j := 0; j < len(listOfRemoveManagers); j++ {
+			_, err := handler.GiteeClient.RepositoriesApi.DeleteV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, *c.Name, *r.Name, listOfRemoveManagers[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to remove managers: %v", err)
+				continue
+			}
+		}
+		glog.Infof("end to remove managers for: %s", *r.Name)
+	}
+	return nil
+}
+
+// addDevelopers add developers
+func (handler *InitHandler) addDevelopers(c Community, r Repository, mapDevelopers, mapDevelopersInDB map[string]string) error {
+	// developers added
+	listOfAddDevelopers := make([]string, 0)
+	for _, d := range mapDevelopers {
+		_, okinDevelopers := mapDevelopersInDB[d]
+		if !okinDevelopers {
+			listOfAddDevelopers = append(listOfAddDevelopers, d)
+		}
+	}
+	glog.Infof("list of add developers: %v", listOfAddDevelopers)
+	if len(listOfAddDevelopers) > 0 {
+		// build create project member param
+		memberbody := gitee.ProjectMemberPutParam{}
+		memberbody.AccessToken = handler.Config.GiteeToken
+		memberbody.Permission = PermissionPush
+
+		glog.Infof("begin to create developers for: %s", *r.Name)
+		for j := 0; j < len(listOfAddDevelopers); j++ {
+			_, _, err := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, *c.Name, *r.Name, listOfAddDevelopers[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to create developers: %v", err)
+				continue
+			}
+		}
+		glog.Infof("end to create developers for: %s", *r.Name)
+	}
 	return nil
 }
 
 // removeDevelopers remove developers
-func (handler *InitHandler) removeDevelopers(mapDevelopers, mapDevelopersInDB map[string]string) error {
+func (handler *InitHandler) removeDevelopers(c Community, r Repository, mapDevelopers, mapDevelopersInDB map[string]string) error {
 	// developers removed
 	listOfRemoveDevelopers := make([]string, 0)
 	for _, d := range mapDevelopersInDB {
@@ -530,11 +556,58 @@ func (handler *InitHandler) removeDevelopers(mapDevelopers, mapDevelopersInDB ma
 		}
 	}
 	glog.Infof("list of removed developers: %v", listOfRemoveDevelopers)
+	if len(listOfRemoveDevelopers) > 0 {
+		// build remove project member param
+		memberbody := &gitee.DeleteV5ReposOwnerRepoCollaboratorsUsernameOpts{}
+		memberbody.AccessToken = optional.NewString(handler.Config.GiteeToken)
+
+		glog.Infof("begin to remove developers for: %s", *r.Name)
+		for j := 0; j < len(listOfRemoveDevelopers); j++ {
+			_, err := handler.GiteeClient.RepositoriesApi.DeleteV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, *c.Name, *r.Name, listOfRemoveDevelopers[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to remove developers: %v", err)
+				continue
+			}
+		}
+		glog.Infof("end to remove developers for: %s", *r.Name)
+	}
+	return nil
+}
+
+// addViewers add viewers
+func (handler *InitHandler) addViewers(c Community, r Repository, mapViewers, mapViewersInDB map[string]string) error {
+	// viewers added
+	listOfAddViewers := make([]string, 0)
+	for _, v := range mapViewers {
+		_, okinViewers := mapViewersInDB[v]
+		if !okinViewers {
+			listOfAddViewers = append(listOfAddViewers, v)
+		}
+	}
+	glog.Infof("list of add viewers: %v", listOfAddViewers)
+	if len(listOfAddViewers) > 0 {
+		// build create project member param
+		memberbody := gitee.ProjectMemberPutParam{}
+		memberbody.AccessToken = handler.Config.GiteeToken
+		memberbody.Permission = PermissionPull
+
+		glog.Infof("begin to create viewers for: %s", *r.Name)
+		for j := 0; j < len(listOfAddViewers); j++ {
+			_, _, err := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, *c.Name, *r.Name, listOfAddViewers[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to create viewers: %v", err)
+				continue
+			}
+		}
+		glog.Infof("end to create viewers for: %s", *r.Name)
+	}
 	return nil
 }
 
 // removeViewers remove viewers
-func (handler *InitHandler) removeViewers(mapViewers, mapViewersInDB map[string]string) error {
+func (handler *InitHandler) removeViewers(c Community, r Repository, mapViewers, mapViewersInDB map[string]string) error {
 	// viewers removed
 	listOfRemoveViewers := make([]string, 0)
 	for _, v := range mapViewersInDB {
@@ -544,11 +617,42 @@ func (handler *InitHandler) removeViewers(mapViewers, mapViewersInDB map[string]
 		}
 	}
 	glog.Infof("list of removed viewers: %v", listOfRemoveViewers)
+	if len(listOfRemoveViewers) > 0 {
+		// build remove project member param
+		memberbody := &gitee.DeleteV5ReposOwnerRepoCollaboratorsUsernameOpts{}
+		memberbody.AccessToken = optional.NewString(handler.Config.GiteeToken)
+
+		glog.Infof("begin to remove viewers for: %s", *r.Name)
+		for j := 0; j < len(listOfRemoveViewers); j++ {
+			_, err := handler.GiteeClient.RepositoriesApi.DeleteV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, *c.Name, *r.Name, listOfRemoveViewers[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to remove viewers: %v", err)
+				continue
+			}
+		}
+		glog.Infof("end to remove viewers for: %s", *r.Name)
+	}
+	return nil
+}
+
+// addReporters add reporters
+func (handler *InitHandler) addReporters(c Community, r Repository, mapReporters, mapReportersInDB map[string]string) error {
+	// reporters added
+	listOfAddReporters := make([]string, 0)
+	for _, rt := range mapReporters {
+		_, okinReporters := mapReportersInDB[rt]
+		if !okinReporters {
+			listOfAddReporters = append(listOfAddReporters, rt)
+		}
+	}
+	glog.Infof("list of add reporters: %v", listOfAddReporters)
+
 	return nil
 }
 
 // removeReporters remove reporters
-func (handler *InitHandler) removeReporters(mapReporters, mapReportersInDB map[string]string) error {
+func (handler *InitHandler) removeReporters(c Community, r Repository, mapReporters, mapReportersInDB map[string]string) error {
 	// reporters removed
 	listOfRemoveReporters := make([]string, 0)
 	for _, rt := range mapReportersInDB {
@@ -558,5 +662,21 @@ func (handler *InitHandler) removeReporters(mapReporters, mapReportersInDB map[s
 		}
 	}
 	glog.Infof("list of removed reporters: %v", listOfRemoveReporters)
+	if len(listOfRemoveReporters) > 0 {
+		// build remove project member param
+		memberbody := &gitee.DeleteV5ReposOwnerRepoCollaboratorsUsernameOpts{}
+		memberbody.AccessToken = optional.NewString(handler.Config.GiteeToken)
+
+		glog.Infof("begin to remove reporters for: %s", *r.Name)
+		for j := 0; j < len(listOfRemoveReporters); j++ {
+			_, err := handler.GiteeClient.RepositoriesApi.DeleteV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, *c.Name, *r.Name, listOfRemoveReporters[j], memberbody)
+			if err != nil {
+				glog.Errorf("fail to remove reporters: %v", err)
+				continue
+			}
+		}
+		glog.Infof("end to remove reporters for: %s", *r.Name)
+	}
 	return nil
 }
