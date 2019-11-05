@@ -334,21 +334,45 @@ func (handler *InitHandler) handleMembers(c Community, r Repository) error {
 	}
 	membersinDB := handler.getMembersMapByDB(ps)
 
-	// managers
-	handler.addManagers(members[PrivilegeManager], membersinDB[PrivilegeManager])
-	handler.removeManagers(members[PrivilegeManager], membersinDB[PrivilegeManager])
-
-	// developers
-	handler.addDevelopers(members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
-	handler.removeDevelopers(members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
+	// reporters
+	err = handler.addReporters(members[PrivilegeReporter], membersinDB[PrivilegeReporter])
+	if err != nil {
+		glog.Errorf("unable to add reporters: %v", err)
+	}
+	err = handler.removeReporters(members[PrivilegeReporter], membersinDB[PrivilegeReporter])
+	if err != nil {
+		glog.Errorf("unable to remove reporters: %v", err)
+	}
 
 	// viewers
-	handler.addViewers(members[PrivilegeViewer], membersinDB[PrivilegeViewer])
-	handler.removeViewers(members[PrivilegeViewer], membersinDB[PrivilegeViewer])
+	err = handler.addViewers(members[PrivilegeViewer], membersinDB[PrivilegeViewer])
+	if err != nil {
+		glog.Errorf("unable to add viewers: %v", err)
+	}
+	err = handler.removeViewers(members[PrivilegeViewer], membersinDB[PrivilegeViewer])
+	if err != nil {
+		glog.Errorf("unable to remove viewers: %v", err)
+	}
 
-	// reporters
-	handler.addReporters(members[PrivilegeReporter], membersinDB[PrivilegeReporter])
-	handler.removeReporters(members[PrivilegeReporter], membersinDB[PrivilegeReporter])
+	// developers
+	err = handler.addDevelopers(members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
+	if err != nil {
+		glog.Errorf("unable to add developers: %v", err)
+	}
+	err = handler.removeDevelopers(members[PrivilegeDeveloper], membersinDB[PrivilegeDeveloper])
+	if err != nil {
+		glog.Errorf("unable to remove developers: %v", err)
+	}
+
+	// managers
+	err = handler.addManagers(members[PrivilegeManager], membersinDB[PrivilegeManager])
+	if err != nil {
+		glog.Errorf("unable to add managers: %v", err)
+	}
+	err = handler.removeManagers(members[PrivilegeManager], membersinDB[PrivilegeManager])
+	if err != nil {
+		glog.Errorf("unable to remove managers: %v", err)
+	}
 
 	return nil
 }
