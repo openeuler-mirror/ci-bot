@@ -194,11 +194,13 @@ func (handler *InitHandler) watch() {
 									glog.Errorf("failed to unmarshal projects: %v", err)
 								} else {
 									glog.Infof("get blob result: %v", ps)
+									result := true
 									for i := 0; i < len(ps.Repositories); i++ {
 										// get repositories length
 										lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repositories[i].Name, pf.ID)
 										if err != nil {
 											glog.Errorf("failed to get repositories length: %v", err)
+											result = false
 											continue
 										}
 										if lenRepositories > 0 {
@@ -209,14 +211,30 @@ func (handler *InitHandler) watch() {
 												*ps.Repositories[i].Description, *ps.Repositories[i].Type, pf.ID)
 											if err != nil {
 												glog.Errorf("failed to add repositories: %v", err)
+												result = false
+												continue
 											}
 										}
 										// add members
 										err = handler.handleMembers(ps.Community, ps.Repositories[i])
 										if err != nil {
 											glog.Errorf("failed to add members: %v", err)
+											result = false
 										}
 									}
+									glog.Infof("running result: %v", result)
+									updatepf := &database.ProjectFiles{}
+									if result {
+										err = database.DBConnection.Model(updatepf).Update("CurrentSha", pf.TargetSha).Error
+										if err != nil {
+											glog.Errorf("unable to update current sha: %v", err)
+										}
+									}
+									err = database.DBConnection.Model(updatepf).Update("TargetSha", "").Error
+									if err != nil {
+										glog.Errorf("unable to update target sha: %v", err)
+									}
+									glog.Info("update sha successfully")
 								}
 							}
 						}

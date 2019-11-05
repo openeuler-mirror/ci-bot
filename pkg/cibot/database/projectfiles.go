@@ -23,7 +23,6 @@ var ProjectFilesTableSQL = fmt.Sprintf(`CREATE TABLE %s (
 	current_sha varchar(255) DEFAULT NULL,
 	target_sha varchar(255) DEFAULT NULL,
 	waiting_sha varchar(255) DEFAULT NULL,
-	current_status varchar(255) DEFAULT NULL,
 	additional_info text,
 	PRIMARY KEY (id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8`, ProjectFilesTableName)
@@ -38,7 +37,6 @@ type ProjectFiles struct {
 	CurrentSha     string
 	TargetSha      string
 	WaitingSha     string
-	CurrentStatus  string
 	AdditionalInfo string `sql:"type:text"`
 }
 
