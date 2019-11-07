@@ -8,7 +8,7 @@ import (
 )
 
 // ProjectFilesTableName defines
-var ProjectFilesTableName = "projectfiles"
+var ProjectFilesTableName = "project_files"
 
 // ProjectFilesTableSQL matches with ProjectFiles Object
 var ProjectFilesTableSQL = fmt.Sprintf(`CREATE TABLE %s (
