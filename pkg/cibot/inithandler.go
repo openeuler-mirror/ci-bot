@@ -15,10 +15,9 @@ import (
 )
 
 type InitHandler struct {
-	Config       config.Config
-	Context      context.Context
-	GiteeClient  *gitee.APIClient
-	ProjectsFile string
+	Config      config.Config
+	Context     context.Context
+	GiteeClient *gitee.APIClient
 }
 
 type Projects struct {

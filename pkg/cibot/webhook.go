@@ -16,18 +16,16 @@ import (
 )
 
 type Webhook struct {
-	Address      string
-	Port         int64
-	ConfigFile   string
-	ProjectsFile string
+	Address    string
+	Port       int64
+	ConfigFile string
 }
 
 func NewWebHook() *Webhook {
 	return &Webhook{
-		Address:      "0.0.0.0",
-		Port:         8888,
-		ConfigFile:   "config.yaml",
-		ProjectsFile: "projects.yaml",
+		Address:    "0.0.0.0",
+		Port:       8888,
+		ConfigFile: "config.yaml",
 	}
 }
 
@@ -35,7 +33,6 @@ func (s *Webhook) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&s.Address, "address", s.Address, "ip address to serve, 0.0.0.0 by default.")
 	fs.Int64Var(&s.Port, "port", s.Port, "port to listen on, 8888 by default.")
 	fs.StringVar(&s.ConfigFile, "configfile", s.ConfigFile, "config file.")
-	fs.StringVar(&s.ProjectsFile, "projectsfile", s.ProjectsFile, "config file.")
 }
 
 func (s *Webhook) Run() {
@@ -66,19 +63,18 @@ func (s *Webhook) Run() {
 	// git client
 	giteeClient := gitee.NewAPIClient(giteeConf)
 
-	// setting init handler
-	initHandler := InitHandler{
-		Config:       config,
-		Context:      ctx,
-		GiteeClient:  giteeClient,
-		ProjectsFile: s.ProjectsFile,
-	}
-	go initHandler.Serve()
-
 	err = database.New(config)
 	if err != nil {
 		glog.Errorf("init back database error: %v", err)
 	}
+
+	// setting init handler
+	initHandler := InitHandler{
+		Config:      config,
+		Context:     ctx,
+		GiteeClient: giteeClient,
+	}
+	go initHandler.Serve()
 
 	// return 200 for health check
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {})
