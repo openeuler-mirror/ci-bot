@@ -20,7 +20,6 @@ var RepositoriesTableSQL = fmt.Sprintf(`CREATE TABLE %s (
 	repo varchar(255) DEFAULT NULL,
 	description varchar(255) DEFAULT NULL,
 	type varchar(255) DEFAULT NULL,
-	project_file_id int(10) unsigned DEFAULT NULL,
 	additional_info text,
 	PRIMARY KEY (id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8`, RepositoriesTableName)

@@ -197,7 +197,7 @@ func (handler *InitHandler) watch() {
 									result := true
 									for i := 0; i < len(ps.Repositories); i++ {
 										// get repositories length
-										lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repositories[i].Name, pf.ID)
+										lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repositories[i].Name)
 										if err != nil {
 											glog.Errorf("failed to get repositories length: %v", err)
 											result = false
@@ -208,7 +208,7 @@ func (handler *InitHandler) watch() {
 										} else {
 											// add repository
 											err = handler.addRepositories(*ps.Community.Name, *ps.Repositories[i].Name,
-												*ps.Repositories[i].Description, *ps.Repositories[i].Type, pf.ID)
+												*ps.Repositories[i].Description, *ps.Repositories[i].Type)
 											if err != nil {
 												glog.Errorf("failed to add repositories: %v", err)
 												result = false
@@ -252,11 +252,11 @@ func (handler *InitHandler) watch() {
 }
 
 // GetRepositoriesLength get repositories length
-func (handler *InitHandler) getRepositoriesLength(owner string, repo string, id uint) (int, error) {
+func (handler *InitHandler) getRepositoriesLength(owner string, repo string) (int, error) {
 	// Check repositories file
 	var lenRepositories int
 	err := database.DBConnection.Model(&database.Repositories{}).
-		Where("owner = ? and repo = ? and project_file_id = ?", owner, repo, id).
+		Where("owner = ? and repo = ?", owner, repo).
 		Count(&lenRepositories).Error
 	if err != nil {
 		glog.Errorf("unable to get repositories files: %v", err)
@@ -265,7 +265,7 @@ func (handler *InitHandler) getRepositoriesLength(owner string, repo string, id 
 }
 
 // addRepositories add repository
-func (handler *InitHandler) addRepositories(owner, repo, description, t string, id uint) error {
+func (handler *InitHandler) addRepositories(owner, repo, description, t string) error {
 	// add repository in gitee
 	err := handler.addRepositoriesinGitee(owner, repo, description, t)
 	if err != nil {
@@ -274,7 +274,7 @@ func (handler *InitHandler) addRepositories(owner, repo, description, t string, 
 	}
 
 	// add repository in database
-	err = handler.addRepositoriesinDB(owner, repo, description, t, id)
+	err = handler.addRepositoriesinDB(owner, repo, description, t)
 	if err != nil {
 		glog.Errorf("failed to add repositories: %v", err)
 		return err
@@ -283,14 +283,13 @@ func (handler *InitHandler) addRepositories(owner, repo, description, t string, 
 }
 
 // addRepositoriesinDB add repository in database
-func (handler *InitHandler) addRepositoriesinDB(owner, repo, description, t string, id uint) error {
+func (handler *InitHandler) addRepositoriesinDB(owner, repo, description, t string) error {
 	// add repository
 	addrepo := database.Repositories{
-		Owner:         owner,
-		Repo:          repo,
-		Description:   description,
-		Type:          t,
-		ProjectFileID: id,
+		Owner:       owner,
+		Repo:        repo,
+		Description: description,
+		Type:        t,
 	}
 
 	// create repository
