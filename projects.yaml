@@ -1,18 +1,19 @@
 community:
   name: openeuler
   managers:
-    - jimmy_hero
+    - edisontest
   developers:
-    - jimmy_hero
+    - edisontest
   viewers:
-    - jimmy_hero
+    - edisontest
 repositories:
-  - name: openEuler-indexhtml
-    description: ""
+  - name: edisontest
+    description: "this is test from edison"
     type: private
     managers:
-      - jimmy_hero
+      - edisontest
     developers:
-      - jimmy_hero
+      - edisontest
     viewers:
-      - jimmy_hero
+      - edisontest
+
