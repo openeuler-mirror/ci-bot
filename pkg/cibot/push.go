@@ -66,11 +66,17 @@ func (s *Server) HandlePushEvent(event *gitee.PushEvent) {
 					glog.Infof("project file current sha: %v target sha: %v waiting sha: %v", updatepf.CurrentSha, updatepf.TargetSha, updatepf.WaitingSha)
 					if (updatepf.CurrentSha != contents.Sha) && (updatepf.TargetSha != contents.Sha) && (updatepf.WaitingSha != contents.Sha) {
 						// write sha in waitingsha
-						updatepf.WaitingSha = contents.Sha
+						/*updatepf.WaitingSha = contents.Sha
 						err = database.DBConnection.Save(&updatepf).Error
 						if err != nil {
 							glog.Errorf("unable to save project files in database: %v", err)
 							return
+						}*/
+						pf := &database.ProjectFiles{}
+						pf.ID = updatepf.ID
+						err = database.DBConnection.Model(pf).Update("WaitingSha", contents.Sha).Error
+						if err != nil {
+							glog.Errorf("unable to update waiting sha: %v", err)
 						}
 						glog.Infof("update waiting sha successfully. triggered sha: %s", contents.Sha)
 					}

@@ -223,6 +223,7 @@ func (handler *InitHandler) watch() {
 									}
 									glog.Infof("running result: %v", result)
 									updatepf := &database.ProjectFiles{}
+									updatepf.ID = pf.ID
 									if result {
 										err = database.DBConnection.Model(updatepf).Update("CurrentSha", pf.TargetSha).Error
 										if err != nil {
@@ -350,10 +351,12 @@ func (handler *InitHandler) handleMembers(c Community, r Repository) error {
 	members := make(map[string]map[string]string)
 	if handler.isUsingRepositoryMember(r) {
 		// using repositories members
+		glog.Infof("using repository members: %s", *r.Name)
 		members = handler.getMembersMap(r.Managers, r.Developers, r.Viewers, r.Reporters)
 
 	} else {
 		// using community members
+		glog.Infof("using community members: %s", *r.Name)
 		members = handler.getMembersMap(c.Managers, c.Developers, c.Viewers, c.Reporters)
 	}
 
