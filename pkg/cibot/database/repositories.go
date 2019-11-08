@@ -31,7 +31,6 @@ type Repositories struct {
 	Repo           string
 	Description    string
 	Type           string
-	ProjectFileID  uint
 	AdditionalInfo string `sql:"type:text"`
 }
 
