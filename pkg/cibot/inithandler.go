@@ -315,6 +315,18 @@ func (handler *InitHandler) addRepositoriesinGitee(owner, repo, description, t s
 		repobody.Private = false
 	}
 
+	// invoke query repository
+	glog.Infof("begin to query repository: %s", repo)
+	localVarOptionals := &gitee.GetV5ReposOwnerRepoOpts{}
+	localVarOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
+	_, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepo(handler.Context, owner, repo, localVarOptionals)
+	if response.StatusCode == 404 {
+		glog.Infof("repository is not exist: %s", repo)
+	} else {
+		glog.Infof("repository is already exist: %s", repo)
+		return nil
+	}
+
 	// invoke create repository
 	glog.Infof("begin to create repository: %s", repo)
 	_, _, err := handler.GiteeClient.RepositoriesApi.PostV5OrgsOrgRepos(handler.Context, owner, repobody)
