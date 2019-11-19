@@ -170,6 +170,10 @@ func (handler *InitHandler) watch() {
 					if err != nil {
 						glog.Errorf("unable to save project files: %v", err)
 					} else {
+						// define update pf
+						updatepf := &database.ProjectFiles{}
+						updatepf.ID = pf.ID
+
 						// get file content from target sha
 						glog.Infof("get target sha blob: %v", pf.TargetSha)
 						localVarOptionals := &gitee.GetV5ReposOwnerRepoGitBlobsShaOpts{}
@@ -222,22 +226,22 @@ func (handler *InitHandler) watch() {
 										}
 									}
 									glog.Infof("running result: %v", result)
-									updatepf := &database.ProjectFiles{}
-									updatepf.ID = pf.ID
 									if result {
 										err = database.DBConnection.Model(updatepf).Update("CurrentSha", pf.TargetSha).Error
 										if err != nil {
 											glog.Errorf("unable to update current sha: %v", err)
 										}
 									}
-									err = database.DBConnection.Model(updatepf).Update("TargetSha", "").Error
-									if err != nil {
-										glog.Errorf("unable to update target sha: %v", err)
-									}
-									glog.Info("update sha successfully")
 								}
 							}
 						}
+
+						// at last update target sha
+						err = database.DBConnection.Model(updatepf).Update("TargetSha", "").Error
+						if err != nil {
+							glog.Errorf("unable to update target sha: %v", err)
+						}
+						glog.Info("update sha successfully")
 					}
 				} else {
 					glog.Infof("no waiting sha: %v", pf.WaitingSha)
