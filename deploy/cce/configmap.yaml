@@ -6,8 +6,6 @@ metadata:
   namespace: bot
 data:
   config.yaml: |
-    owner: "openeuler-ci-bot"
-    repository: "https://gitee.com/openeuler/website"
     giteeToken: "******"
     webhookSecret: "123456789"
     databaseType: "mysql"
