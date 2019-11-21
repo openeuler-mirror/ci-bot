@@ -68,183 +68,195 @@ func (handler *InitHandler) Serve() {
 
 // initWaitingSha init waiting sha
 func (handler *InitHandler) initWaitingSha() error {
-	// get params
-	watchOwner := handler.Config.WatchProjectFileOwner
-	watchRepo := handler.Config.WatchprojectFileRepo
-	watchPath := handler.Config.WatchprojectFilePath
-	watchRef := handler.Config.WatchProjectFileRef
-
-	// invoke api to get file contents
-	localVarOptionals := &gitee.GetV5ReposOwnerRepoContentsPathOpts{}
-	localVarOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
-	localVarOptionals.Ref = optional.NewString(watchRef)
-
-	// get contents
-	contents, _, err := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoContentsPath(
-		handler.Context, watchOwner, watchRepo, watchPath, localVarOptionals)
-	if err != nil {
-		glog.Errorf("unable to get repository content: %v", err)
-		return err
+	if len(handler.Config.WatchProjectFiles) == 0 {
+		return nil
 	}
-	// Check project file
-	var lenProjectFiles int
-	err = database.DBConnection.Model(&database.ProjectFiles{}).
-		Where("owner = ? and repo = ? and path = ? and ref = ?", watchOwner, watchRepo, watchPath, watchRef).
-		Count(&lenProjectFiles).Error
-	if err != nil {
-		glog.Errorf("unable to get project files: %v", err)
-		return err
-	}
-	if lenProjectFiles > 0 {
-		glog.Infof("project file is exist: %s", contents.Sha)
-		// Check sha in database
-		updatepf := database.ProjectFiles{}
-		err = database.DBConnection.
+
+	for _, wf := range handler.Config.WatchProjectFiles {
+		// get params
+		watchOwner := wf.WatchProjectFileOwner
+		watchRepo := wf.WatchprojectFileRepo
+		watchPath := wf.WatchprojectFilePath
+		watchRef := wf.WatchProjectFileRef
+
+		// invoke api to get file contents
+		localVarOptionals := &gitee.GetV5ReposOwnerRepoContentsPathOpts{}
+		localVarOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
+		localVarOptionals.Ref = optional.NewString(watchRef)
+
+		// get contents
+		contents, _, err := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoContentsPath(
+			handler.Context, watchOwner, watchRepo, watchPath, localVarOptionals)
+		if err != nil {
+			glog.Errorf("unable to get repository content: %v", err)
+			return err
+		}
+		// Check project file
+		var lenProjectFiles int
+		err = database.DBConnection.Model(&database.ProjectFiles{}).
 			Where("owner = ? and repo = ? and path = ? and ref = ?", watchOwner, watchRepo, watchPath, watchRef).
-			First(&updatepf).Error
+			Count(&lenProjectFiles).Error
 		if err != nil {
 			glog.Errorf("unable to get project files: %v", err)
 			return err
 		}
-		// write sha in waitingsha
-		updatepf.WaitingSha = contents.Sha
-		err = database.DBConnection.Save(&updatepf).Error
-		if err != nil {
-			glog.Errorf("unable to get project files: %v", err)
-			return err
-		}
+		if lenProjectFiles > 0 {
+			glog.Infof("project file is exist: %s", contents.Sha)
+			// Check sha in database
+			updatepf := database.ProjectFiles{}
+			err = database.DBConnection.
+				Where("owner = ? and repo = ? and path = ? and ref = ?", watchOwner, watchRepo, watchPath, watchRef).
+				First(&updatepf).Error
+			if err != nil {
+				glog.Errorf("unable to get project files: %v", err)
+				return err
+			}
+			// write sha in waitingsha
+			updatepf.WaitingSha = contents.Sha
+			err = database.DBConnection.Save(&updatepf).Error
+			if err != nil {
+				glog.Errorf("unable to get project files: %v", err)
+				return err
+			}
 
-	} else {
-		glog.Infof("project file is non-exist: %s", contents.Sha)
-		// add project file
-		addpf := database.ProjectFiles{
-			Owner:      watchOwner,
-			Repo:       watchRepo,
-			Path:       watchPath,
-			Ref:        watchRef,
-			WaitingSha: contents.Sha,
-		}
+		} else {
+			glog.Infof("project file is non-exist: %s", contents.Sha)
+			// add project file
+			addpf := database.ProjectFiles{
+				Owner:      watchOwner,
+				Repo:       watchRepo,
+				Path:       watchPath,
+				Ref:        watchRef,
+				WaitingSha: contents.Sha,
+			}
 
-		// create project file
-		err = database.DBConnection.Create(&addpf).Error
-		if err != nil {
-			glog.Errorf("unable to create project files: %v", err)
-			return err
+			// create project file
+			err = database.DBConnection.Create(&addpf).Error
+			if err != nil {
+				glog.Errorf("unable to create project files: %v", err)
+				return err
+			}
+			glog.Infof("add project file successfully: %s", contents.Sha)
 		}
-		glog.Infof("add project file successfully: %s", contents.Sha)
 	}
 	return nil
 }
 
 // watch database
 func (handler *InitHandler) watch() {
-	// get params
-	watchOwner := handler.Config.WatchProjectFileOwner
-	watchRepo := handler.Config.WatchprojectFileRepo
-	watchPath := handler.Config.WatchprojectFilePath
-	watchRef := handler.Config.WatchProjectFileRef
-	watchDuration := handler.Config.WatchProjectFileDuration
+	if len(handler.Config.WatchProjectFiles) == 0 {
+		return
+	}
 
 	for {
-		glog.Infof("begin to serve. watchOwner: %s watchRepo: %s watchPath: %s watchRef: %s watchDuration: %d",
-			watchOwner, watchRepo, watchPath, watchRef, watchDuration)
+		watchDuration := handler.Config.WatchProjectFileDuration
+		for _, wf := range handler.Config.WatchProjectFiles {
+			// get params
+			watchOwner := wf.WatchProjectFileOwner
+			watchRepo := wf.WatchprojectFileRepo
+			watchPath := wf.WatchprojectFilePath
+			watchRef := wf.WatchProjectFileRef
 
-		// get project file
-		pf := database.ProjectFiles{}
-		err := database.DBConnection.
-			Where("owner = ? and repo = ? and path = ? and ref = ?", watchOwner, watchRepo, watchPath, watchRef).
-			First(&pf).Error
-		if err != nil {
-			glog.Errorf("unable to get project files: %v", err)
-		} else {
-			glog.Infof("init handler current sha: %v target sha: %v waiting sha: %v",
-				pf.CurrentSha, pf.TargetSha, pf.WaitingSha)
-			if pf.TargetSha != "" {
-				// skip when there is executing target sha
-				glog.Infof("there is executing target sha: %v", pf.TargetSha)
+			glog.Infof("begin to serve. watchOwner: %s watchRepo: %s watchPath: %s watchRef: %s watchDuration: %d",
+				watchOwner, watchRepo, watchPath, watchRef, watchDuration)
+
+			// get project file
+			pf := database.ProjectFiles{}
+			err := database.DBConnection.
+				Where("owner = ? and repo = ? and path = ? and ref = ?", watchOwner, watchRepo, watchPath, watchRef).
+				First(&pf).Error
+			if err != nil {
+				glog.Errorf("unable to get project files: %v", err)
 			} else {
-				if pf.WaitingSha != "" && pf.CurrentSha != pf.WaitingSha {
-					// waiting -> target
-					pf.TargetSha = pf.WaitingSha
-					err = database.DBConnection.Save(&pf).Error
-					if err != nil {
-						glog.Errorf("unable to save project files: %v", err)
-					} else {
-						// define update pf
-						updatepf := &database.ProjectFiles{}
-						updatepf.ID = pf.ID
-
-						// get file content from target sha
-						glog.Infof("get target sha blob: %v", pf.TargetSha)
-						localVarOptionals := &gitee.GetV5ReposOwnerRepoGitBlobsShaOpts{}
-						localVarOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
-						blob, _, err := handler.GiteeClient.GitDataApi.GetV5ReposOwnerRepoGitBlobsSha(
-							handler.Context, watchOwner, watchRepo, pf.TargetSha, localVarOptionals)
+				glog.Infof("init handler current sha: %v target sha: %v waiting sha: %v",
+					pf.CurrentSha, pf.TargetSha, pf.WaitingSha)
+				if pf.TargetSha != "" {
+					// skip when there is executing target sha
+					glog.Infof("there is executing target sha: %v", pf.TargetSha)
+				} else {
+					if pf.WaitingSha != "" && pf.CurrentSha != pf.WaitingSha {
+						// waiting -> target
+						pf.TargetSha = pf.WaitingSha
+						err = database.DBConnection.Save(&pf).Error
 						if err != nil {
-							glog.Errorf("unable to get blob: %v", err)
+							glog.Errorf("unable to save project files: %v", err)
 						} else {
-							// base64 decode
-							glog.Infof("decode target sha blob: %v", pf.TargetSha)
-							decodeBytes, err := base64.StdEncoding.DecodeString(blob.Content)
+							// define update pf
+							updatepf := &database.ProjectFiles{}
+							updatepf.ID = pf.ID
+
+							// get file content from target sha
+							glog.Infof("get target sha blob: %v", pf.TargetSha)
+							localVarOptionals := &gitee.GetV5ReposOwnerRepoGitBlobsShaOpts{}
+							localVarOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
+							blob, _, err := handler.GiteeClient.GitDataApi.GetV5ReposOwnerRepoGitBlobsSha(
+								handler.Context, watchOwner, watchRepo, pf.TargetSha, localVarOptionals)
 							if err != nil {
-								glog.Errorf("decode content with error: %v", err)
+								glog.Errorf("unable to get blob: %v", err)
 							} else {
-								// unmarshal owners file
-								glog.Infof("unmarshal target sha blob: %v", pf.TargetSha)
-								var ps Projects
-								err = yaml.Unmarshal(decodeBytes, &ps)
+								// base64 decode
+								glog.Infof("decode target sha blob: %v", pf.TargetSha)
+								decodeBytes, err := base64.StdEncoding.DecodeString(blob.Content)
 								if err != nil {
-									glog.Errorf("failed to unmarshal projects: %v", err)
+									glog.Errorf("decode content with error: %v", err)
 								} else {
-									glog.Infof("get blob result: %v", ps)
-									result := true
-									for i := 0; i < len(ps.Repositories); i++ {
-										// get repositories length
-										lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repositories[i].Name)
-										if err != nil {
-											glog.Errorf("failed to get repositories length: %v", err)
-											result = false
-											continue
-										}
-										if lenRepositories > 0 {
-											glog.Infof("repository: %s is exist. no action.", *ps.Repositories[i].Name)
-										} else {
-											// add repository
-											err = handler.addRepositories(*ps.Community.Name, *ps.Repositories[i].Name,
-												*ps.Repositories[i].Description, *ps.Repositories[i].Type)
+									// unmarshal owners file
+									glog.Infof("unmarshal target sha blob: %v", pf.TargetSha)
+									var ps Projects
+									err = yaml.Unmarshal(decodeBytes, &ps)
+									if err != nil {
+										glog.Errorf("failed to unmarshal projects: %v", err)
+									} else {
+										glog.Infof("get blob result: %v", ps)
+										result := true
+										for i := 0; i < len(ps.Repositories); i++ {
+											// get repositories length
+											lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repositories[i].Name)
 											if err != nil {
-												glog.Errorf("failed to add repositories: %v", err)
+												glog.Errorf("failed to get repositories length: %v", err)
 												result = false
 												continue
 											}
+											if lenRepositories > 0 {
+												glog.Infof("repository: %s is exist. no action.", *ps.Repositories[i].Name)
+											} else {
+												// add repository
+												err = handler.addRepositories(*ps.Community.Name, *ps.Repositories[i].Name,
+													*ps.Repositories[i].Description, *ps.Repositories[i].Type)
+												if err != nil {
+													glog.Errorf("failed to add repositories: %v", err)
+													result = false
+													continue
+												}
+											}
+											// add members
+											err = handler.handleMembers(ps.Community, ps.Repositories[i])
+											if err != nil {
+												glog.Errorf("failed to add members: %v", err)
+												result = false
+											}
 										}
-										// add members
-										err = handler.handleMembers(ps.Community, ps.Repositories[i])
-										if err != nil {
-											glog.Errorf("failed to add members: %v", err)
-											result = false
-										}
-									}
-									glog.Infof("running result: %v", result)
-									if result {
-										err = database.DBConnection.Model(updatepf).Update("CurrentSha", pf.TargetSha).Error
-										if err != nil {
-											glog.Errorf("unable to update current sha: %v", err)
+										glog.Infof("running result: %v", result)
+										if result {
+											err = database.DBConnection.Model(updatepf).Update("CurrentSha", pf.TargetSha).Error
+											if err != nil {
+												glog.Errorf("unable to update current sha: %v", err)
+											}
 										}
 									}
 								}
 							}
-						}
 
-						// at last update target sha
-						err = database.DBConnection.Model(updatepf).Update("TargetSha", "").Error
-						if err != nil {
-							glog.Errorf("unable to update target sha: %v", err)
+							// at last update target sha
+							err = database.DBConnection.Model(updatepf).Update("TargetSha", "").Error
+							if err != nil {
+								glog.Errorf("unable to update target sha: %v", err)
+							}
+							glog.Info("update sha successfully")
 						}
-						glog.Info("update sha successfully")
+					} else {
+						glog.Infof("no waiting sha: %v", pf.WaitingSha)
 					}
-				} else {
-					glog.Infof("no waiting sha: %v", pf.WaitingSha)
 				}
 			}
 		}
