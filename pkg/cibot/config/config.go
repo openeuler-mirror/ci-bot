@@ -1,8 +1,6 @@
 package config
 
 type Config struct {
-	Owner                    string `yaml:"owner"`
-	Repo                     string `yaml:"repository"`
 	GiteeToken               string `yaml:"giteeToken"`
 	WebhookSecret            string `yaml:"webhookSecret"`
 	DataBaseType             string `yaml:"databaseType"`
