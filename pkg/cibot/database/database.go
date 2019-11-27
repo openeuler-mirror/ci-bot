@@ -56,7 +56,7 @@ func ConnectDataBase(config config.Config) (*gorm.DB, error) {
 func UpgradeDataBase(db *gorm.DB) error {
 
 	// upgrades defines
-	upgrades := make([]func() error, 2)
+	upgrades := make([]func() error, 3)
 	upgrades[0] = func() error {
 		// table upgrades
 		if err := db.Exec(UpgradesTableSQL).Error; err != nil {
@@ -81,7 +81,13 @@ func UpgradeDataBase(db *gorm.DB) error {
 		if err := db.Exec(PrivilegesTableSQL).Error; err != nil {
 			return err
 		}
-
+		return nil
+	}
+	upgrades[2] = func() error {
+		// table branches
+		if err := db.Exec(BranchesTableSQL).Error; err != nil {
+			return err
+		}
 		return nil
 	}
 

@@ -5349,17 +5349,11 @@ RepositoriesApiService 设置分支保护
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param branch 分支名称
- * @param optional nil or *PutV5ReposOwnerRepoBranchesBranchProtectionOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ * @param body 设置分支保护参数
 
 @return CompleteBranch
 */
-
-type PutV5ReposOwnerRepoBranchesBranchProtectionOpts struct {
-	AccessToken optional.String
-}
-
-func (a *RepositoriesApiService) PutV5ReposOwnerRepoBranchesBranchProtection(ctx context.Context, owner string, repo string, branch string, localVarOptionals *PutV5ReposOwnerRepoBranchesBranchProtectionOpts) (CompleteBranch, *http.Response, error) {
+func (a *RepositoriesApiService) PutV5ReposOwnerRepoBranchesBranchProtection(ctx context.Context, owner string, repo string, branch string, body BranchProtectionPutParam) (CompleteBranch, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Put")
 		localVarPostBody    interface{}
@@ -5395,9 +5389,8 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoBranchesBranchProtection(ctx
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
