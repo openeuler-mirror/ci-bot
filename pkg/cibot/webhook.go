@@ -2,6 +2,7 @@ package cibot
 
 import (
 	"context"
+	goflag "flag"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -33,6 +34,12 @@ func (s *Webhook) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&s.Address, "address", s.Address, "ip address to serve, 0.0.0.0 by default.")
 	fs.Int64Var(&s.Port, "port", s.Port, "port to listen on, 8888 by default.")
 	fs.StringVar(&s.ConfigFile, "configfile", s.ConfigFile, "config file.")
+
+	// Supress the warning: ERROR: logging before flag.Parse
+	// See https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
+	fs.AddGoFlagSet(goflag.CommandLine)
+	pflag.Parse()
+	goflag.CommandLine.Parse([]string{})
 }
 
 func (s *Webhook) Run() {
