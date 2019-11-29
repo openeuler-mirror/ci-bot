@@ -7,7 +7,7 @@ build:ci-bot
 build-image:ci-bot-image
 
 ci-bot:
-	go build -o ci-bot ./cmd/cibot
+	GOFLAGS=-mod=vendor go build -o ci-bot ./cmd/cibot
 
 ci-bot-image:
 	docker build -t openeuler/cibot:latest ./	
