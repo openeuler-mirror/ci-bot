@@ -3851,30 +3851,11 @@ RepositoriesApiService 更新仓库设置
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
- * @param name 仓库名称
- * @param optional nil or *PatchV5ReposOwnerRepoOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Description" (optional.String) -  仓库描述
-     * @param "Homepage" (optional.String) -  主页(eg: https://gitee.com)
-     * @param "HasIssues" (optional.Bool) -  允许提Issue与否。默认: 允许(true)
-     * @param "HasWiki" (optional.Bool) -  提供Wiki与否。默认: 提供(true)
-     * @param "Private" (optional.Bool) -  仓库公开或私有。
-     * @param "DefaultBranch" (optional.String) -  更新默认分支
+ * @param body repo patch param
 
 @return Project
 */
-
-type PatchV5ReposOwnerRepoOpts struct {
-	AccessToken   optional.String
-	Description   optional.String
-	Homepage      optional.String
-	HasIssues     optional.Bool
-	HasWiki       optional.Bool
-	Private       optional.Bool
-	DefaultBranch optional.String
-}
-
-func (a *RepositoriesApiService) PatchV5ReposOwnerRepo(ctx context.Context, owner string, repo string, name string, localVarOptionals *PatchV5ReposOwnerRepoOpts) (Project, *http.Response, error) {
+func (a *RepositoriesApiService) PatchV5ReposOwnerRepo(ctx context.Context, owner string, repo string, body RepoPatchParam) (Project, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Patch")
 		localVarPostBody    interface{}
@@ -3909,28 +3890,8 @@ func (a *RepositoriesApiService) PatchV5ReposOwnerRepo(ctx context.Context, owne
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("name", parameterToString(name, ""))
-	if localVarOptionals != nil && localVarOptionals.Description.IsSet() {
-		localVarFormParams.Add("description", parameterToString(localVarOptionals.Description.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Homepage.IsSet() {
-		localVarFormParams.Add("homepage", parameterToString(localVarOptionals.Homepage.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.HasIssues.IsSet() {
-		localVarFormParams.Add("has_issues", parameterToString(localVarOptionals.HasIssues.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.HasWiki.IsSet() {
-		localVarFormParams.Add("has_wiki", parameterToString(localVarOptionals.HasWiki.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Private.IsSet() {
-		localVarFormParams.Add("private", parameterToString(localVarOptionals.Private.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.DefaultBranch.IsSet() {
-		localVarFormParams.Add("default_branch", parameterToString(localVarOptionals.DefaultBranch.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err

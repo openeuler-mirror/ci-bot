@@ -244,7 +244,13 @@ func (handler *InitHandler) watch() {
 											// handle branches
 											err = handler.handleBranches(ps.Community, ps.Repositories[i])
 											if err != nil {
-												glog.Error("failed to handle branches: %v", err)
+												glog.Errorf("failed to handle branches: %v", err)
+												result = false
+											}
+											// handle repository type
+											err = handler.handleRepositoryTypes(ps.Community, ps.Repositories[i])
+											if err != nil {
+												glog.Errorf("failed to handle repository types: %v", err)
 												result = false
 											}
 										}
@@ -981,6 +987,61 @@ func (handler *InitHandler) addBranchProtections(c Community, r Repository, mapB
 			}
 		}
 		glog.Infof("end to add branch protections for %s", *r.Name)
+	}
+
+	return nil
+}
+
+// handleRepositoryTypes handles that the repo is private or public
+func (handler *InitHandler) handleRepositoryTypes(c Community, r Repository) error {
+	// get repos from DB
+	var rs database.Repositories
+	err := database.DBConnection.Model(&database.Repositories{}).
+		Where("owner = ? and repo = ?", c.Name, r.Name).First(&rs).Error
+	if err != nil {
+		glog.Errorf("unable to get repositories files: %v", err)
+		return err
+	}
+
+	// the type is changed
+	if rs.Type != *r.Type {
+		// set value
+		isSetPrivate := false
+		if *r.Type == "private" {
+			isSetPrivate = true
+		}
+
+		// invoke query repository
+		glog.Infof("begin to query repository: %s", *r.Name)
+		localVarOptionals := &gitee.GetV5ReposOwnerRepoOpts{}
+		localVarOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
+		pj, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepo(
+			handler.Context, *c.Name, *r.Name, localVarOptionals)
+		if response.StatusCode == 404 {
+			glog.Infof("repository is not exist: %s", *r.Name)
+			return nil
+		}
+		if pj.Private == isSetPrivate {
+			glog.Infof("repository type is already: %s", *r.Type)
+			return nil
+		}
+
+		// build patch repository param
+		patchBody := gitee.RepoPatchParam{}
+		patchBody.AccessToken = handler.Config.GiteeToken
+		patchBody.Name = pj.Name
+		patchBody.Description = pj.Description
+		patchBody.Homepage = pj.Homepage
+		patchBody.HasIssues = pj.HasIssues
+		patchBody.HasWiki = pj.HasWiki
+		patchBody.Description = pj.DefaultBranch
+		patchBody.Private = isSetPrivate
+		// invoke set type
+		_, _, err = handler.GiteeClient.RepositoriesApi.PatchV5ReposOwnerRepo(handler.Context, *c.Name, *r.Name, patchBody)
+		if err != nil {
+			glog.Errorf("unable to set repository type: %v", err)
+			return err
+		}
 	}
 
 	return nil
