@@ -960,7 +960,7 @@ func (handler *InitHandler) addBranchProtections(c Community, r Repository, mapB
 		protectBody := gitee.BranchProtectionPutParam{}
 		protectBody.AccessToken = handler.Config.GiteeToken
 
-		glog.Infof("begin to add branch protections for %s", *r.Name)
+		glog.Errorf("begin to add branch protections for %s", *r.Name)
 		for _, v := range listOfProtectedBranches {
 			// check if protected branch exists
 			branchObj, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoBranchesBranch(
