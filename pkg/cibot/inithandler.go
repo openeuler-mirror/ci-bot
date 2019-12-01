@@ -14,6 +14,21 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	PrivilegeManager   = "manager"
+	PrivilegeDeveloper = "developer"
+	PrivilegeViewer    = "viewer"
+	PrivilegeReporter  = "reporter"
+
+	PermissionAdmin = "admin"
+	PermissionPush  = "push"
+	PermissionPull  = "pull"
+
+	BranchProtected = "protected"
+	// not supported yet
+	BranchReadonly = "readonly"
+)
+
 type InitHandler struct {
 	Config      config.Config
 	Context     context.Context
@@ -44,21 +59,6 @@ type Repository struct {
 	Viewers           []string `yaml:"viewers"`
 	Reporters         []string `yaml:"reporters"`
 }
-
-var (
-	PrivilegeManager   = "manager"
-	PrivilegeDeveloper = "developer"
-	PrivilegeViewer    = "viewer"
-	PrivilegeReporter  = "reporter"
-
-	PermissionAdmin = "admin"
-	PermissionPush  = "push"
-	PermissionPull  = "pull"
-
-	BranchProtected = "protected"
-	// not supported yet
-	BranchReadonly = "readonly"
-)
 
 // Serve
 func (handler *InitHandler) Serve() {
