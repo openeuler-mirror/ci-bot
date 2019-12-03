@@ -253,7 +253,7 @@ func (s *Server) CheckLgtmByPullRequestUpdate(event *gitee.PullRequestEvent) err
 				// add comment
 				body := gitee.PullRequestCommentPostParam{}
 				body.AccessToken = s.Config.GiteeToken
-				body.Body = fmt.Sprintf(lgtmRemovePullRequestChangeMessage, BotName)
+				body.Body = fmt.Sprintf(lgtmRemovePullRequestChangeMessage, s.Config.BotName)
 				_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, body)
 				if err != nil {
 					glog.Errorf("unable to add comment in pull request: %v", err)

@@ -25,7 +25,8 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		// add comment
 		body := gitee.PullRequestCommentPostParam{}
 		body.AccessToken = s.Config.GiteeToken
-		body.Body = fmt.Sprintf(tipBotMessage, event.Sender.Login)
+		body.Body = fmt.Sprintf(tipBotMessage, event.Sender.Login, s.Config.CommunityName, s.Config.CommunityName,
+			s.Config.BotName, s.Config.CommandLink)
 		owner := event.Repository.Namespace
 		repo := event.Repository.Name
 		number := event.PullRequest.Number

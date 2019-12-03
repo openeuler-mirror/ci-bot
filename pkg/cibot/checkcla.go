@@ -1,6 +1,9 @@
 package cibot
 
 import (
+	"fmt"
+	"strings"
+
 	"gitee.com/openeuler/ci-bot/pkg/cibot/database"
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
@@ -9,15 +12,15 @@ import (
 const (
 	claNotFoundMessage = `Thanks for your pull request.
 **Before we can look at your pull request, you'll need to sign a Contributor License Agreement (CLA).**
-**Please follow instructions at <https://openeuler.org/en/cla.html> to sign the CLA.**
+**Please follow instructions at <%s> to sign the CLA.**
 It may take a couple minutes for the CLA signature to be fully registered;
 after that, please reply here with a new comment **/check-cla** and we'll verify.
 - If you've already signed a CLA, it's possible we don't have your Gitee username or you're using a different email address.
   Check your existing CLA data and verify that your email at <https://gitee.com/profile/emails>.
 - If you have done the above and are still having issues with the CLA being reported as unsigned,
-  send a message to the backup e-mail support address at: contact@openeuler.org
+  send a message to the backup e-mail support address at: %s
 `
-	claFoundMessage = `Thanks for your pull request. you've already signed openEuler CLA successfully. :wave: `
+	claFoundMessage = `Thanks for your pull request. you've already signed %s CLA successfully. :wave: `
 )
 
 // CheckCLAByNoteEvent check cla by NoteEvent
@@ -39,7 +42,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			addlabel.PullRequest = event.PullRequest
 			addlabel.Repository = event.Repository
 			addlabel.Comment = &gitee.Note{}
-			addlabel.Comment.Body = AddClaYes
+			addlabel.Comment.Body = fmt.Sprintf(AddClaYes, strings.ToLower(s.Config.CommunityName))
 			err = s.AddLabelInPulRequest(addlabel)
 			if err != nil {
 				return err
@@ -50,7 +53,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			removelabel.PullRequest = event.PullRequest
 			removelabel.Repository = event.Repository
 			removelabel.Comment = &gitee.Note{}
-			removelabel.Comment.Body = RemoveClaNo
+			removelabel.Comment.Body = fmt.Sprintf(RemoveClaNo, strings.ToLower(s.Config.CommunityName))
 			err = s.RemoveLabelInPullRequest(removelabel)
 			if err != nil {
 				return err
@@ -59,7 +62,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			// add comment
 			body := gitee.PullRequestCommentPostParam{}
 			body.AccessToken = s.Config.GiteeToken
-			body.Body = claFoundMessage
+			body.Body = fmt.Sprintf(claFoundMessage, s.Config.CommunityName)
 			owner := event.Repository.Namespace
 			repo := event.Repository.Name
 			number := event.PullRequest.Number
@@ -74,7 +77,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			addlabel.PullRequest = event.PullRequest
 			addlabel.Repository = event.Repository
 			addlabel.Comment = &gitee.Note{}
-			addlabel.Comment.Body = AddClaNo
+			addlabel.Comment.Body = fmt.Sprintf(AddClaNo, strings.ToLower(s.Config.CommunityName))
 			err = s.AddLabelInPulRequest(addlabel)
 			if err != nil {
 				return err
@@ -85,7 +88,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			removelabel.PullRequest = event.PullRequest
 			removelabel.Repository = event.Repository
 			removelabel.Comment = &gitee.Note{}
-			removelabel.Comment.Body = RemoveClaYes
+			removelabel.Comment.Body = fmt.Sprintf(RemoveClaYes, strings.ToLower(s.Config.CommunityName))
 			err = s.RemoveLabelInPullRequest(removelabel)
 			if err != nil {
 				return err
@@ -94,7 +97,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			// add comment
 			body := gitee.PullRequestCommentPostParam{}
 			body.AccessToken = s.Config.GiteeToken
-			body.Body = claNotFoundMessage
+			body.Body = fmt.Sprintf(claNotFoundMessage, s.Config.ClaLink, s.Config.ContactEmail)
 			owner := event.Repository.Namespace
 			repo := event.Repository.Name
 			number := event.PullRequest.Number
@@ -124,7 +127,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		addlabel.PullRequest = event.PullRequest
 		addlabel.Repository = event.Repository
 		addlabel.Comment = &gitee.Note{}
-		addlabel.Comment.Body = AddClaYes
+		addlabel.Comment.Body = fmt.Sprintf(AddClaYes, strings.ToLower(s.Config.CommunityName))
 		err = s.AddLabelInPulRequest(addlabel)
 		if err != nil {
 			return err
@@ -135,7 +138,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		removelabel.PullRequest = event.PullRequest
 		removelabel.Repository = event.Repository
 		removelabel.Comment = &gitee.Note{}
-		removelabel.Comment.Body = RemoveClaNo
+		removelabel.Comment.Body = fmt.Sprintf(RemoveClaNo, strings.ToLower(s.Config.CommunityName))
 		err = s.RemoveLabelInPullRequest(removelabel)
 		if err != nil {
 			return err
@@ -144,7 +147,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		// add comment
 		body := gitee.PullRequestCommentPostParam{}
 		body.AccessToken = s.Config.GiteeToken
-		body.Body = claFoundMessage
+		body.Body = fmt.Sprintf(claFoundMessage, s.Config.CommunityName)
 		owner := event.Repository.Namespace
 		repo := event.Repository.Name
 		number := event.PullRequest.Number
@@ -159,7 +162,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		addlabel.PullRequest = event.PullRequest
 		addlabel.Repository = event.Repository
 		addlabel.Comment = &gitee.Note{}
-		addlabel.Comment.Body = AddClaNo
+		addlabel.Comment.Body = fmt.Sprintf(AddClaNo, strings.ToLower(s.Config.CommunityName))
 		err = s.AddLabelInPulRequest(addlabel)
 		if err != nil {
 			return err
@@ -170,7 +173,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		removelabel.PullRequest = event.PullRequest
 		removelabel.Repository = event.Repository
 		removelabel.Comment = &gitee.Note{}
-		removelabel.Comment.Body = RemoveClaYes
+		removelabel.Comment.Body = fmt.Sprintf(RemoveClaYes, strings.ToLower(s.Config.CommunityName))
 		err = s.RemoveLabelInPullRequest(removelabel)
 		if err != nil {
 			return err
@@ -179,7 +182,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		// add comment
 		body := gitee.PullRequestCommentPostParam{}
 		body.AccessToken = s.Config.GiteeToken
-		body.Body = claNotFoundMessage
+		body.Body = fmt.Sprintf(claNotFoundMessage, s.Config.ClaLink, s.Config.ContactEmail)
 		owner := event.Repository.Namespace
 		repo := event.Repository.Name
 		number := event.PullRequest.Number
