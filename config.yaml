@@ -16,3 +16,8 @@ watchProjectFiles:
     watchprojectFilePath: repository/src-openeuler.yaml
     watchProjectFileRef: master
 watchProjectFileDuration: 60
+botName: openeuler-ci-bot
+communityName: openEuler
+claLink: https://openeuler.org/en/cla.html
+commandLink: https://gitee.com/openeuler/community/blob/master/en/command.md
+contactEmail: contact@openeuler.org

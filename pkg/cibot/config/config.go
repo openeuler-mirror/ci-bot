@@ -11,6 +11,11 @@ type Config struct {
 	DataBasePassword         string             `yaml:"databasePassword"`
 	WatchProjectFiles        []WatchProjectFile `yaml:"watchProjectFiles"`
 	WatchProjectFileDuration int                `yaml:"watchProjectFileDuration"`
+	BotName                  string             `yaml:"botName"`
+	CommunityName            string             `yaml:"communityName"`
+	ClaLink                  string             `yaml:"claLink"`
+	CommandLink              string             `yaml:"commandLink"`
+	ContactEmail             string             `yaml:"contactEmail"`
 }
 
 type WatchProjectFile struct {
