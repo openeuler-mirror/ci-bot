@@ -19,8 +19,8 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 
 	// handle events
 	switch *event.Action {
-	case "create":
-		glog.Info("received a pull request create event")
+	case "open":
+		glog.Info("received a pull request open event")
 
 		// add comment
 		body := gitee.PullRequestCommentPostParam{}
