@@ -18,7 +18,6 @@ const (
 func (s *Server) Close(event *gitee.NoteEvent) error {
 	// handle PullRequest
 	if *event.NoteableType == "PullRequest" {
-		/* when gitee support to close pr by api
 		// handle open
 		if event.PullRequest.State == "open" {
 			// get basic params
@@ -62,7 +61,7 @@ func (s *Server) Close(event *gitee.NoteEvent) error {
 					glog.Infof("close successfully: %v", prNumber)
 				}
 			}
-		}*/
+		}
 	} else if *event.NoteableType == "Issue" {
 		// handle open
 		if event.Issue.State == "open" {
