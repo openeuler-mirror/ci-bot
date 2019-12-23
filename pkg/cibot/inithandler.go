@@ -1023,24 +1023,43 @@ func (handler *InitHandler) handleRepositoryTypes(c Community, r Repository) err
 		}
 		if pj.Private == isSetPrivate {
 			glog.Infof("repository type is already: %s", *r.Type)
-			return nil
+		} else {
+			// build patch repository param
+			patchBody := gitee.RepoPatchParam{}
+			patchBody.AccessToken = handler.Config.GiteeToken
+			patchBody.Name = pj.Name
+			patchBody.Description = pj.Description
+			patchBody.Homepage = pj.Homepage
+			if pj.HasIssues {
+				patchBody.HasIssues = "true"
+			} else {
+				patchBody.HasIssues = "false"
+			}
+			if pj.HasWiki {
+				patchBody.HasWiki = "true"
+			} else {
+				patchBody.HasWiki = "false"
+			}
+			if isSetPrivate {
+				patchBody.Private = "true"
+			} else {
+				patchBody.Private = "false"
+			}
+
+			// invoke set type
+			_, _, err = handler.GiteeClient.RepositoriesApi.PatchV5ReposOwnerRepo(handler.Context, *c.Name, *r.Name, patchBody)
+			if err != nil {
+				glog.Errorf("unable to set repository type: %v", err)
+				return err
+			}
 		}
 
-		// build patch repository param
-		patchBody := gitee.RepoPatchParam{}
-		patchBody.AccessToken = handler.Config.GiteeToken
-		patchBody.Name = pj.Name
-		patchBody.Description = pj.Description
-		patchBody.Homepage = pj.Homepage
-		patchBody.HasIssues = pj.HasIssues
-		patchBody.HasWiki = pj.HasWiki
-		patchBody.Description = pj.DefaultBranch
-		patchBody.Private = isSetPrivate
-		// invoke set type
-		_, _, err = handler.GiteeClient.RepositoriesApi.PatchV5ReposOwnerRepo(handler.Context, *c.Name, *r.Name, patchBody)
+		// define update repository
+		updaterepo := &database.Repositories{}
+		updaterepo.ID = rs.ID
+		err = database.DBConnection.Model(updaterepo).Update("Type", *r.Type).Error
 		if err != nil {
-			glog.Errorf("unable to set repository type: %v", err)
-			return err
+			glog.Errorf("unable to update type: %v", err)
 		}
 	}
 

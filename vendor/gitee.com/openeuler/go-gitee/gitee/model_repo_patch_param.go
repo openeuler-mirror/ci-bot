@@ -20,11 +20,11 @@ type RepoPatchParam struct {
 	// 主页(eg: https://gitee.com)
 	Homepage string `json:"homepage,omitempty"`
 	// 允许提Issue与否。默认: 允许(true)
-	HasIssues bool `json:"has_issues,omitempty"`
+	HasIssues string `json:"has_issues,omitempty"`
 	// 提供Wiki与否。默认: 提供(true)
-	HasWiki bool `json:"has_wiki,omitempty"`
+	HasWiki string `json:"has_wiki,omitempty"`
 	// 仓库公开或私有。
-	Private bool `json:"private,omitempty"`
+	Private string `json:"private,omitempty"`
 	// 更新默认分支
 	DefaultBranch string `json:"default_branch,omitempty"`
 }
