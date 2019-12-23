@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	closeIssueMessage = `this issue is closed by: ***@%s***.`
+	closeIssueMessage       = `this issue is closed by: ***@%s***.`
+	closePullRequestMessage = `this pull request is closed by: ***@%s***.`
 )
 
 // Close closes pr or issue
@@ -60,6 +61,17 @@ func (s *Server) Close(event *gitee.NoteEvent) error {
 				} else {
 					glog.Infof("close successfully: %v", prNumber)
 				}
+
+				// add comment
+				bodyComment := gitee.PullRequestCommentPostParam{}
+				bodyComment.AccessToken = s.Config.GiteeToken
+				bodyComment.Body = fmt.Sprintf(closePullRequestMessage, commentAuthor)
+				_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, bodyComment)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
+					return err
+				}
+				return nil
 			}
 		}
 	} else if *event.NoteableType == "Issue" {
