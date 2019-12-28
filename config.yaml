@@ -16,6 +16,18 @@ watchProjectFiles:
     watchprojectFilePath: repository/src-openeuler.yaml
     watchProjectFileRef: master
 watchProjectFileDuration: 60
+watchSigFiles:
+  - watchSigFileOwner: openeuler
+    watchSigFileRepo: community
+    watchSigFilePath: sig/sigs.yaml
+    watchSigFileRef: master
+watchSigFileDuration: 60
+watchOwnerFiles:
+  - watchOwnerFileOwner: openeuler
+    watchOwnerFileRepo: community
+    watchOwnerFilePath: sig/*/OWNERS
+    watchOwnerFileRef: master
+watchOwnerFileDuration: 300
 botName: openeuler-ci-bot
 communityName: openEuler
 claLink: https://openeuler.org/en/cla.html

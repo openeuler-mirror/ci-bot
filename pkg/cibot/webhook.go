@@ -2,7 +2,6 @@ package cibot
 
 import (
 	"context"
-	goflag "flag"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -37,9 +36,9 @@ func (s *Webhook) AddFlags(fs *pflag.FlagSet) {
 
 	// Supress the warning: ERROR: logging before flag.Parse
 	// See https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
-	fs.AddGoFlagSet(goflag.CommandLine)
-	pflag.Parse()
-	goflag.CommandLine.Parse([]string{})
+	// fs.AddGoFlagSet(goflag.CommandLine)
+	// pflag.Parse()
+	// goflag.CommandLine.Parse([]string{})
 }
 
 func (s *Webhook) Run() {
@@ -75,13 +74,37 @@ func (s *Webhook) Run() {
 		glog.Errorf("init back database error: %v", err)
 	}
 
-	// setting init handler
+	/* setting init handler
 	initHandler := InitHandler{
 		Config:      config,
 		Context:     ctx,
 		GiteeClient: giteeClient,
 	}
-	go initHandler.Serve()
+	go initHandler.Serve()*/
+
+	// setting repo handler
+	repoHandler := RepoHandler{
+		Config:      config,
+		Context:     ctx,
+		GiteeClient: giteeClient,
+	}
+	go repoHandler.Serve()
+
+	// setting sig handler
+	sigHandler := SigHandler{
+		Config:      config,
+		Context:     ctx,
+		GiteeClient: giteeClient,
+	}
+	go sigHandler.Serve()
+
+	// setting owner handler
+	ownerHandler := OwnerHandler{
+		Config:      config,
+		Context:     ctx,
+		GiteeClient: giteeClient,
+	}
+	go ownerHandler.Serve()
 
 	// return 200 for health check
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {})
