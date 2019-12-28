@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	"gitee.com/openeuler/go-gitee/gitee"
+	"github.com/antihax/optional"
 )
 
 const (
@@ -53,4 +56,48 @@ var (
 func UrlEncode(str string) string {
 	str = strings.Replace(str, "/", "%2F", -1)
 	return str
+}
+
+func canCommentPrIncludingSigDirectory(server *Server, owner string, repo string, prNumber int32, commentUser string) (int32, error) {
+	files, _, err := server.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumberFiles(
+		server.Context, owner, repo, prNumber, &gitee.GetV5ReposOwnerRepoPullsNumberFilesOpts{
+			AccessToken: optional.NewString(server.Config.GiteeToken),
+		})
+	if err != nil {
+		return -1, err
+	}
+
+	sigFilePathHeadPattern, err := regexp.Compile("^[a-zA-Z0-9_-]+/sig/[a-zA-Z0-9_-]+/")
+	if err != nil {
+		return -1, err
+	}
+
+	sigFilePathPattern, _ := regexp.Compile(sigFilePathHeadPattern.String() + ".+")
+
+	targetSigPath := make(map[string]bool)
+
+	for _, file := range files {
+		// TODO test: use file.RawUrl instead?
+		if !sigFilePathPattern.MatchString(file.Filename) {
+			return -1, nil
+		}
+
+		targetSigPath[sigFilePathHeadPattern.FindString(file.Filename)] = true
+	}
+
+	for path, _ := range targetSigPath {
+		content, _, err := server.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoContentsPath(
+			server.Context, owner, repo, path+"OWNERS", &gitee.GetV5ReposOwnerRepoContentsPathOpts{
+				AccessToken: optional.NewString(server.Config.GiteeToken),
+			})
+		// TODO the file is not exist. for example: thie pr create OWNERS.
+		if err != nil {
+			return -1, err
+		}
+
+		if !strings.Contains(content.Content, commentUser) {
+			return 0, nil
+		}
+	}
+	return 1, nil
 }
