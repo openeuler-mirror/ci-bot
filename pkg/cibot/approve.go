@@ -33,6 +33,15 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 			glog.Infof("add approve started. comment: %s prAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
 				comment, prAuthor, commentAuthor, owner, repo, prNumber)
 
+			r, err := canCommentPrIncludingSigDirectory(s, owner, repo, prNumber, commentAuthor)
+			if err != nil {
+				return err
+			}
+			if r == 0 {
+				// can not comment for this pr
+				return nil
+			}
+
 			// check if current author has write permission
 			localVarOptionals := &gitee.GetV5ReposOwnerRepoCollaboratorsUsernamePermissionOpts{}
 			localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)

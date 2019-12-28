@@ -56,8 +56,12 @@ func (s *Server) GetOwners(event *gitee.NoteEvent) []string {
 		return nil
 	}
 
+	return DecodeOwners(contents.Content)
+}
+
+func DecodeOwners(content string) []string {
 	// base64 decode
-	decodeBytes, err := base64.StdEncoding.DecodeString(contents.Content)
+	decodeBytes, err := base64.StdEncoding.DecodeString(content)
 	if err != nil {
 		glog.Errorf("decode content with error: %v", err)
 		return nil
@@ -67,6 +71,7 @@ func (s *Server) GetOwners(event *gitee.NoteEvent) []string {
 	err = yaml.Unmarshal(decodeBytes, &owners)
 	if err != nil {
 		glog.Errorf("fail to unmarshal owners: %v", err)
+		return nil
 	}
 
 	// return owners

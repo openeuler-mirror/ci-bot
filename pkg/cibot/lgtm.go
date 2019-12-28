@@ -54,6 +54,14 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				return nil
 			}
 
+			r, err := canCommentPrIncludingSigDirectory(s, owner, repo, prNumber, commentAuthor)
+			if err != nil {
+				return err
+			}
+			if r == 0 {
+				// can not comment for this pr
+				return nil
+			}
 			// check if current author has write permission
 			localVarOptionals := &gitee.GetV5ReposOwnerRepoCollaboratorsUsernamePermissionOpts{}
 			localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
@@ -164,6 +172,15 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 				}
 			}
 
+			r, err := canCommentPrIncludingSigDirectory(s, owner, repo, prNumber, commentAuthor)
+			if err != nil {
+				return err
+			}
+			if r == 0 {
+				// can not comment for this pr
+				return nil
+			}
+
 			// remove lgtm label
 			removelabel := &gitee.NoteEvent{}
 			removelabel.PullRequest = event.PullRequest
@@ -171,7 +188,7 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 			removelabel.Comment = &gitee.Note{}
 			mapOfRemoveLabels := map[string]string{}
 			mapOfRemoveLabels[LabelNameLgtm] = LabelNameLgtm
-			err := s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
+			err = s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
 			if err != nil {
 				return err
 			}
