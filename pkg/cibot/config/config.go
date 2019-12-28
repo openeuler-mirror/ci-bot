@@ -11,6 +11,10 @@ type Config struct {
 	DataBasePassword         string             `yaml:"databasePassword"`
 	WatchProjectFiles        []WatchProjectFile `yaml:"watchProjectFiles"`
 	WatchProjectFileDuration int                `yaml:"watchProjectFileDuration"`
+	WatchSigFiles            []WatchSigFile     `yaml:"watchSigFiles"`
+	WatchSigFileDuration     int                `yaml:"watchSigFileDuration"`
+	WatchOwnerFiles          []WatchOwnerFile   `yaml:"watchOwnerFiles"`
+	WatchOwnerFileDuration   int                `yaml:"watchOwnerFileDuration"`
 	BotName                  string             `yaml:"botName"`
 	CommunityName            string             `yaml:"communityName"`
 	ClaLink                  string             `yaml:"claLink"`
@@ -23,4 +27,18 @@ type WatchProjectFile struct {
 	WatchprojectFileRepo  string `yaml:"watchprojectFileRepo"`
 	WatchprojectFilePath  string `yaml:"watchprojectFilePath"`
 	WatchProjectFileRef   string `yaml:"watchProjectFileRef"`
+}
+
+type WatchSigFile struct {
+	WatchSigFileOwner string `yaml:"watchSigFileOwner"`
+	WatchSigFileRepo  string `yaml:"watchSigFileRepo"`
+	WatchSigFilePath  string `yaml:"watchSigFilePath"`
+	WatchSigFileRef   string `yaml:"watchSigFileRef"`
+}
+
+type WatchOwnerFile struct {
+	WatchOwnerFileOwner string `yaml:"watchOwnerFileOwner"`
+	WatchOwnerFileRepo  string `yaml:"watchOwnerFileRepo"`
+	WatchOwnerFilePath  string `yaml:"watchOwnerFilePath"`
+	WatchOwnerFileRef   string `yaml:"watchOwnerFileRef"`
 }
