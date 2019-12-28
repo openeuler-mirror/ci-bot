@@ -33,15 +33,6 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 			glog.Infof("add approve started. comment: %s prAuthor: %s commentAuthor: %s owner: %s repo: %s number: %d",
 				comment, prAuthor, commentAuthor, owner, repo, prNumber)
 
-			r, err := canCommentPrIncludingSigDirectory(s, owner, repo, prNumber, commentAuthor)
-			if err != nil {
-				return err
-			}
-			if r == 0 {
-				// can not comment for this pr
-				return nil
-			}
-
 			// check if current author has write permission
 			localVarOptionals := &gitee.GetV5ReposOwnerRepoCollaboratorsUsernamePermissionOpts{}
 			localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
@@ -54,8 +45,17 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 			}
 			// check author is owner
 			isOwner := s.CheckIsOwner(event, commentAuthor)
+
+			// check sigs
+			r, err := canCommentPrIncludingSigDirectory(s, owner, repo, prNumber, commentAuthor)
+			glog.Infof("sig owners check: can comment, r=%v, err=%v\n", r, err)
+			if err != nil {
+				glog.Errorf("unable to check sigs permission: %v", err)
+				return err
+			}
+
 			// permission: admin, write, read, none
-			if permission.Permission == "admin" || permission.Permission == "write" || isOwner {
+			if permission.Permission == "admin" || permission.Permission == "write" || isOwner || r == 1 {
 				// add approved label
 				addlabel := &gitee.NoteEvent{}
 				addlabel.PullRequest = event.PullRequest
@@ -131,8 +131,17 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 			}
 			// check author is owner
 			isOwner := s.CheckIsOwner(event, commentAuthor)
+
+			// check sigs
+			r, err := canCommentPrIncludingSigDirectory(s, owner, repo, prNumber, commentAuthor)
+			glog.Infof("sig owners check: can comment, r=%v, err=%v\n", r, err)
+			if err != nil {
+				glog.Errorf("unable to check sigs permission: %v", err)
+				return err
+			}
+
 			// permission: admin, write, read, none
-			if permission.Permission == "admin" || permission.Permission == "write" || isOwner {
+			if permission.Permission == "admin" || permission.Permission == "write" || isOwner || r == 1 {
 				// remove approved label
 				removelabel := &gitee.NoteEvent{}
 				removelabel.PullRequest = event.PullRequest

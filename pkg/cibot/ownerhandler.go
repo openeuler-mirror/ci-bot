@@ -207,7 +207,7 @@ func (handler *OwnerHandler) removeOwners(repo database.Repositories, expectedMe
 				glog.Errorf("failed to remove privilege in database: %v", err)
 			}
 		}
-		glog.Info("end to remove privileges for %s/%s", repo.Owner, repo.Repo)
+		glog.Infof("end to remove privileges for %s/%s", repo.Owner, repo.Repo)
 	}
 
 	return nil
@@ -229,7 +229,7 @@ func (handler *OwnerHandler) addOwners(repo database.Repositories, expectedMembe
 		memberbody.AccessToken = handler.Config.GiteeToken
 		memberbody.Permission = PermissionPush
 
-		glog.Info("begin to add privileges for %s/%s", repo.Owner, repo.Repo)
+		glog.Infof("begin to add privileges for %s/%s", repo.Owner, repo.Repo)
 		for _, v := range listOfAdd {
 			_, _, err := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoCollaboratorsUsername(
 				handler.Context, repo.Owner, repo.Repo, v, memberbody)
@@ -249,7 +249,7 @@ func (handler *OwnerHandler) addOwners(repo database.Repositories, expectedMembe
 				glog.Errorf("failed to add privileges in database: %v", err)
 			}
 		}
-		glog.Info("end to add privileges for %s/%s", repo.Owner, repo.Repo)
+		glog.Infof("end to add privileges for %s/%s", repo.Owner, repo.Repo)
 	}
 
 	return nil
