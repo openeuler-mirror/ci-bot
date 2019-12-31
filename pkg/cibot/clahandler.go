@@ -44,6 +44,11 @@ const (
 func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	glog.Info("received a cla request")
 	if r.Method == "POST" {
+		// add logs
+		glog.Infof("CLA Request Header: %v", r.Header)
+		glog.Infof("CLA Request Host: %v", r.Host)
+		glog.Infof("CLA Request RemoteAddr: %v", r.RemoteAddr)
+
 		// read body
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {

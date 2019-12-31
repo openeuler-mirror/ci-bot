@@ -98,13 +98,13 @@ func (s *Webhook) Run() {
 	}
 	go sigHandler.Serve()
 
-	/* setting owner handler
+	// setting owner handler
 	ownerHandler := OwnerHandler{
 		Config:      config,
 		Context:     ctx,
 		GiteeClient: giteeClient,
 	}
-	go ownerHandler.Serve()*/
+	go ownerHandler.Serve()
 
 	// return 200 for health check
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {})
