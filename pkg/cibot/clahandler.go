@@ -8,7 +8,9 @@ import (
 	"net/http"
 
 	"gitee.com/openeuler/ci-bot/pkg/cibot/database"
+	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
+	"golang.org/x/oauth2"
 )
 
 type CLAHandler struct {
@@ -25,6 +27,9 @@ type CLARequest struct {
 	Email       *string `json:"email,omitempty"`
 	Telephone   *string `json:"telephone,omitempty"`
 	Fax         *string `json:"fax,omitempty"`
+	Code        *string `json:"code,omitempty"`
+	Lang        *string `json:"lang,omitempty"`
+	Client      *string `json:"client,omitempty"`
 }
 
 type CLAResult struct {
@@ -111,6 +116,44 @@ func (s *CLAHandler) HandleResult(w http.ResponseWriter, r CLAResult) {
 // HandleRequest handles the cla request
 func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 	// build model object
+	if *request.Code == "" || *request.Client == "" || *request.Lang == "" {
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("request parameter error"),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
+	}
+	token, err := GetToken(*request.Code, *request.Client, *request.Lang)
+
+	if err != nil {
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("request gitee user error: %v", err),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
+	}
+
+	user, err := GetUser(token.AccessToken)
+	if err != nil {
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("request parameter error: %v", err),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
+	}
+
+	if user.Email == "" || user.Email != *request.Email {
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: "email is already registered",
+			ErrorCode:   ErrorCode_EmailError,
+		})
+		return
+	}
+
 	cds := database.CLADetails{
 		Type: request.Type,
 	}
@@ -209,4 +252,22 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 		IsSuccess: true,
 		ErrorCode: ErrorCode_OK,
 	})
+}
+
+func GetUser(ak string) (gitee.User, error) {
+
+	ctx2 := context.Background()
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: ak},
+	)
+
+	// configuration
+	giteeConf := gitee.NewConfiguration()
+	giteeConf.HTTPClient = oauth2.NewClient(ctx2, ts)
+
+	// git client
+	giteeClient := gitee.NewAPIClient(giteeConf)
+
+	user, _, err := giteeClient.UsersApi.GetV5User(ctx2, nil)
+	return user, err
 }
