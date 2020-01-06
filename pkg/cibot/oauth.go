@@ -16,6 +16,12 @@ func GetToken(code, client, lang string) (*oauth2.Token, error) {
 		url = "https://openeuler.org"
 	}
 
+	secret := os.Getenv("GITEE_OAUTH2_SECRET_EN")
+
+	if lang == "zh" {
+		secret = os.Getenv("GITEE_OAUTH2_SECRET_ZH")
+	}
+
 	if !strings.HasSuffix(url, "/") {
 		url = fmt.Sprintf("%s/", url)
 	}
@@ -23,7 +29,7 @@ func GetToken(code, client, lang string) (*oauth2.Token, error) {
 	redirect := fmt.Sprintf("%s%s/cla.html", strings.Trim(url, " "), strings.Trim(lang, " "))
 
 	ctx := context.Background()
-	config := Setup(client, redirect)
+	config := Setup(client, redirect, secret)
 
 	return config.Exchange(ctx, code)
 
@@ -34,10 +40,10 @@ var Endpoint = oauth2.Endpoint{
 	TokenURL: "https://gitee.com/oauth/token",
 }
 
-func Setup(client, redirect string) *oauth2.Config {
+func Setup(client, redirect, secret string) *oauth2.Config {
 	return &oauth2.Config{
 		ClientID:     client,
-		ClientSecret: os.Getenv("GITEE_SECRET"),
+		ClientSecret: secret,
 		Scopes:       []string{"emails", "user_info"},
 		Endpoint:     Endpoint,
 		RedirectURL:  redirect,
