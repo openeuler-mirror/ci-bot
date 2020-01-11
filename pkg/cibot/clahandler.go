@@ -30,6 +30,7 @@ type CLARequest struct {
 	Code        *string `json:"code,omitempty"`
 	Lang        *string `json:"lang,omitempty"`
 	Client      *string `json:"client,omitempty"`
+	AccessKey   string  `json:"-"`
 }
 
 type CLAResult struct {
@@ -39,11 +40,14 @@ type CLAResult struct {
 }
 
 const (
-	ErrorCode_OK                = 0
-	ErrorCode_ServerHandleError = 1
-	ErrorCode_EmailError        = 2
-	ErrorCode_TelephoneError    = 3
+	ErrorCode_OK = iota
+	ErrorCode_ServerHandleError
+	ErrorCode_EmailError
+	ErrorCode_TelephoneError
+	ErrorCode_EmailNotTheSameError
 )
+
+const COOKIE_KEY string = "cla-info"
 
 // ServeHTTP validates an incoming cla request.
 func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -75,6 +79,13 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				ErrorCode:   ErrorCode_ServerHandleError,
 			})
 			return
+		}
+
+		cookie, err := r.Cookie(COOKIE_KEY)
+		if err == nil {
+			clarequest.AccessKey = cookie.Value
+		} else {
+			glog.Infof("Get cookie err: %v", err)
 		}
 
 		glog.Infof("cla request content: %v", clarequest)
@@ -124,18 +135,29 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 		})
 		return
 	}
-	token, err := GetToken(*request.Code, *request.Client, *request.Lang)
 
-	if err != nil {
-		s.HandleResult(w, CLAResult{
-			IsSuccess:   false,
-			Description: fmt.Sprintf("request gitee user error: %v", err),
-			ErrorCode:   ErrorCode_ServerHandleError,
-		})
-		return
+	accesskey := request.AccessKey
+
+	if accesskey == "" {
+		token, err := GetToken(*request.Code, *request.Client, *request.Lang)
+
+		if err != nil {
+			s.HandleResult(w, CLAResult{
+				IsSuccess:   false,
+				Description: fmt.Sprintf("request gitee user error: %v", err),
+				ErrorCode:   ErrorCode_ServerHandleError,
+			})
+			return
+		}
+		accesskey = token.AccessToken
+		glog.Infof("access key get successfully.")
+
 	}
 
-	user, err := GetUser(token.AccessToken)
+	cookie := http.Cookie{Name: COOKIE_KEY, Value: accesskey, Path: "/", MaxAge: 86400}
+	http.SetCookie(w, &cookie)
+
+	user, err := GetUser(accesskey)
 	if err != nil {
 		s.HandleResult(w, CLAResult{
 			IsSuccess:   false,
@@ -148,8 +170,8 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 	if user.Email == "" || user.Email != *request.Email {
 		s.HandleResult(w, CLAResult{
 			IsSuccess:   false,
-			Description: "email is already registered",
-			ErrorCode:   ErrorCode_EmailError,
+			Description: "The email is not the same as gitee account email.",
+			ErrorCode:   ErrorCode_EmailNotTheSameError,
 		})
 		return
 	}
