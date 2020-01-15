@@ -157,7 +157,7 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 	cookie := http.Cookie{Name: COOKIE_KEY, Value: accesskey, Path: "/", MaxAge: 86400}
 	http.SetCookie(w, &cookie)
 
-	user, err := GetUser(accesskey)
+	emails, err := GetEmails(accesskey)
 	if err != nil {
 		s.HandleResult(w, CLAResult{
 			IsSuccess:   false,
@@ -167,7 +167,21 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 		return
 	}
 
-	if user.Email == "" || user.Email != *request.Email {
+
+        primaryEmail := ""
+
+        for _, email := range emails {
+               if email.State == "confirmed"  {
+                       for _, t := range email.Scope {
+                              if t == "primary" {
+                                      primaryEmail = email.Email
+                                      break
+                              } 
+                       } 
+               } 
+        } 
+
+	if primaryEmail == "" || primaryEmail != *request.Email {
 		s.HandleResult(w, CLAResult{
 			IsSuccess:   false,
 			Description: "The email is not the same as gitee account email.",
@@ -292,4 +306,23 @@ func GetUser(ak string) (gitee.User, error) {
 
 	user, _, err := giteeClient.UsersApi.GetV5User(ctx2, nil)
 	return user, err
+}
+
+func GetEmails(ak string) ([]gitee.Email, error) {
+        ctx2 := context.Background()
+        ts := oauth2.StaticTokenSource(
+                &oauth2.Token{AccessToken: ak},
+        )
+
+        // configuration
+        giteeConf := gitee.NewConfiguration()
+        giteeConf.HTTPClient = oauth2.NewClient(ctx2, ts)
+
+        // git client
+        giteeClient := gitee.NewAPIClient(giteeConf)
+
+        emails, _, err := giteeClient.EmailsApi.GetV5Emails(ctx2, nil)
+        return emails, err
+
+
 }
