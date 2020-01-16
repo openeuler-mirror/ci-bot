@@ -8,7 +8,9 @@ import (
 	"net/http"
 
 	"gitee.com/openeuler/ci-bot/pkg/cibot/database"
+	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
+	"golang.org/x/oauth2"
 )
 
 type CLAHandler struct {
@@ -25,6 +27,10 @@ type CLARequest struct {
 	Email       *string `json:"email,omitempty"`
 	Telephone   *string `json:"telephone,omitempty"`
 	Fax         *string `json:"fax,omitempty"`
+	Code        *string `json:"code,omitempty"`
+	Lang        *string `json:"lang,omitempty"`
+	Client      *string `json:"client,omitempty"`
+	AccessKey   string  `json:"-"`
 }
 
 type CLAResult struct {
@@ -34,11 +40,14 @@ type CLAResult struct {
 }
 
 const (
-	ErrorCode_OK                = 0
-	ErrorCode_ServerHandleError = 1
-	ErrorCode_EmailError        = 2
-	ErrorCode_TelephoneError    = 3
+	ErrorCode_OK = iota
+	ErrorCode_ServerHandleError
+	ErrorCode_EmailError
+	ErrorCode_TelephoneError
+	ErrorCode_EmailNotTheSameError
 )
+
+const COOKIE_KEY string = "cla-info"
 
 // ServeHTTP validates an incoming cla request.
 func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -70,6 +79,13 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				ErrorCode:   ErrorCode_ServerHandleError,
 			})
 			return
+		}
+
+		cookie, err := r.Cookie(COOKIE_KEY)
+		if err == nil {
+			clarequest.AccessKey = cookie.Value
+		} else {
+			glog.Infof("Get cookie err: %v", err)
 		}
 
 		glog.Infof("cla request content: %v", clarequest)
@@ -111,6 +127,69 @@ func (s *CLAHandler) HandleResult(w http.ResponseWriter, r CLAResult) {
 // HandleRequest handles the cla request
 func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 	// build model object
+	if *request.Code == "" || *request.Client == "" || *request.Lang == "" {
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("request parameter error"),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
+	}
+
+	accesskey := request.AccessKey
+
+	if accesskey == "" {
+		token, err := GetToken(*request.Code, *request.Client, *request.Lang)
+
+		if err != nil {
+			s.HandleResult(w, CLAResult{
+				IsSuccess:   false,
+				Description: fmt.Sprintf("request gitee user error: %v", err),
+				ErrorCode:   ErrorCode_ServerHandleError,
+			})
+			return
+		}
+		accesskey = token.AccessToken
+		glog.Infof("access key get successfully.")
+
+	}
+
+	cookie := http.Cookie{Name: COOKIE_KEY, Value: accesskey, Path: "/", MaxAge: 86400}
+	http.SetCookie(w, &cookie)
+
+	emails, err := GetEmails(accesskey)
+	if err != nil {
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: fmt.Sprintf("request parameter error: %v", err),
+			ErrorCode:   ErrorCode_ServerHandleError,
+		})
+		return
+	}
+
+
+        primaryEmail := ""
+
+        for _, email := range emails {
+               if email.State == "confirmed"  {
+                       for _, t := range email.Scope {
+                              if t == "primary" {
+                                      primaryEmail = email.Email
+                                      break
+                              } 
+                       } 
+               } 
+        } 
+
+	if primaryEmail == "" || primaryEmail != *request.Email {
+		s.HandleResult(w, CLAResult{
+			IsSuccess:   false,
+			Description: "The email is not the same as gitee account email.",
+			ErrorCode:   ErrorCode_EmailNotTheSameError,
+		})
+		return
+	}
+
 	cds := database.CLADetails{
 		Type: request.Type,
 	}
@@ -209,4 +288,41 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest) {
 		IsSuccess: true,
 		ErrorCode: ErrorCode_OK,
 	})
+}
+
+func GetUser(ak string) (gitee.User, error) {
+
+	ctx2 := context.Background()
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: ak},
+	)
+
+	// configuration
+	giteeConf := gitee.NewConfiguration()
+	giteeConf.HTTPClient = oauth2.NewClient(ctx2, ts)
+
+	// git client
+	giteeClient := gitee.NewAPIClient(giteeConf)
+
+	user, _, err := giteeClient.UsersApi.GetV5User(ctx2, nil)
+	return user, err
+}
+
+func GetEmails(ak string) ([]gitee.Email, error) {
+        ctx2 := context.Background()
+        ts := oauth2.StaticTokenSource(
+                &oauth2.Token{AccessToken: ak},
+        )
+
+        // configuration
+        giteeConf := gitee.NewConfiguration()
+        giteeConf.HTTPClient = oauth2.NewClient(ctx2, ts)
+
+        // git client
+        giteeClient := gitee.NewAPIClient(giteeConf)
+
+        emails, _, err := giteeClient.EmailsApi.GetV5Emails(ctx2, nil)
+        return emails, err
+
+
 }
