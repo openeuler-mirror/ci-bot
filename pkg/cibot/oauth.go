@@ -6,30 +6,31 @@ import (
 	"os"
 	"strings"
 
+	"github.com/golang/glog"
 	"golang.org/x/oauth2"
 )
 
-func GetToken(code, client, lang string) (*oauth2.Token, error) {
+func GetToken(code string) (*oauth2.Token, error) {
 
 	url := os.Getenv("WEBSITE_URL")
 	if url == "" {
 		url = "https://openeuler.org"
 	}
 
-	secret := os.Getenv("GITEE_OAUTH2_SECRET_EN")
+	secret := os.Getenv("GITEE_OAUTH2_SECRET")
 
-	if lang == "zh" {
-		secret = os.Getenv("GITEE_OAUTH2_SECRET_ZH")
-	}
+	client := os.Getenv("GITEE_OAUTH2_CLIENT_CODE")
 
 	if !strings.HasSuffix(url, "/") {
 		url = fmt.Sprintf("%s/", url)
 	}
 
-	redirect := fmt.Sprintf("%s%s/cla.html", strings.Trim(url, " "), strings.Trim(lang, " "))
+	redirect := fmt.Sprintf("%scla", strings.TrimSpace(url))
 
 	ctx := context.Background()
 	config := Setup(client, redirect, secret)
+
+	glog.Infof("Token request config : %v, code:", config, code)
 
 	return config.Exchange(ctx, code)
 
