@@ -46,12 +46,15 @@ func (handler *OwnerHandler) watch() {
 				} else {
 					if len(srs) > 0 {
 						// get owner from files
+						getOwnersResult := true
 						mapSigOwners := make(map[string]map[string]string)
 						for _, sr := range srs {
 							for _, wf := range handler.Config.WatchOwnerFiles {
 								mapOwners := make(map[string]string)
 								owners, err := handler.getOwners(wf, sr.Name)
 								if err != nil {
+									// set result into false
+									getOwnersResult = false
 									glog.Errorf("unable to getOwners: %v", err)
 								}
 								if len(owners) > 0 {
@@ -65,10 +68,12 @@ func (handler *OwnerHandler) watch() {
 						}
 
 						// based on repository
-						for _, repo := range rs {
-							err = handler.handleOwners(repo, mapSigOwners)
-							if err != nil {
-								glog.Errorf("unable to handle owners: %v", err)
+						if getOwnersResult {
+							for _, repo := range rs {
+								err = handler.handleOwners(repo, mapSigOwners)
+								if err != nil {
+									glog.Errorf("unable to handle owners: %v", err)
+								}
 							}
 						}
 					} else {
