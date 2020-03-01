@@ -31,5 +31,5 @@ watchOwnerFileDuration: 300
 botName: openeuler-ci-bot
 communityName: openEuler
 claLink: https://openeuler.org/en/cla.html
-commandLink: https://gitee.com/openeuler/community/blob/master/en/command.md
+commandLink: https://gitee.com/openeuler/community/blob/master/en/sig-infrastructure/command.md
 contactEmail: contact@openeuler.org
