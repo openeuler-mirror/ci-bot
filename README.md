@@ -28,7 +28,8 @@ The information of database instance will be used in the following Installation.
 
 ## Command Help
 
-See the [Command Help](https://gitee.com/openeuler/community/blob/master/en/command.md) file for details.
+See the [Command Help](https://gitee.com/openeuler/community/blob/master/en/sig-infrastructure/command.md) file for details.
+> For Chinese version, please refer to [命令帮助](https://gitee.com/openeuler/community/blob/master/zh/sig-infrastructure/command.md).
 
 ## License
 
