@@ -56,7 +56,7 @@ func ConnectDataBase(config config.Config) (*gorm.DB, error) {
 func UpgradeDataBase(db *gorm.DB) error {
 
 	// upgrades defines
-	upgrades := make([]func() error, 4)
+	upgrades := make([]func() error, 5)
 	upgrades[0] = func() error {
 		// table upgrades
 		if err := db.Exec(UpgradesTableSQL).Error; err != nil {
@@ -101,6 +101,13 @@ func UpgradeDataBase(db *gorm.DB) error {
 		}
 		// table sig_repositories
 		if err := db.Exec(SigRepositoriesTableSQL).Error; err != nil {
+			return err
+		}
+		return nil
+	}
+	upgrades[4] = func() error {
+		// add commentable column for table repositories
+		if err := db.Exec(AddCommentableColumnRepositoriesTableSQL).Error; err != nil {
 			return err
 		}
 		return nil
