@@ -23,8 +23,12 @@ type RepoPatchParam struct {
 	HasIssues string `json:"has_issues,omitempty"`
 	// 提供Wiki与否。默认: 提供(true)
 	HasWiki string `json:"has_wiki,omitempty"`
+	// 允许用户对仓库进行评论
+	CanComment string `json:"can_comment,omitempty"`
 	// 仓库公开或私有。
 	Private string `json:"private,omitempty"`
+	// 更新仓库路径
+	Path string `json:"path,omitempty"`
 	// 更新默认分支
 	DefaultBranch string `json:"default_branch,omitempty"`
 }

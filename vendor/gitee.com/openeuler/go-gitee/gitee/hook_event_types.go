@@ -3,8 +3,8 @@ package gitee
 type NoteEvent struct {
 	Action        *string          `json:"action,omitempty"`
 	Comment       *Note            `json:"comment,omitempty"`
-	Repository    *Project         `json:"repository,omitempty"`
-	Project       *Project         `json:"project,omitempty"`
+	Repository    *ProjectHook     `json:"repository,omitempty"`
+	Project       *ProjectHook     `json:"project,omitempty"`
 	Author        *User            `json:"author,omitempty"`
 	Sender        *User            `json:"sender,omitempty"`
 	URL           *string          `json:"url,omitempty"`
@@ -32,8 +32,8 @@ type PushEvent struct {
 	Compare            *string          `json:"compare,omitempty"`
 	Commits            []Commit         `json:"commits,omitempty"`
 	HeadCommit         *Commit          `json:"head_commit,omitempty"`
-	Repository         *Project         `json:"repository,omitempty"`
-	Project            *Project         `json:"project,omitempty"`
+	Repository         *ProjectHook     `json:"repository,omitempty"`
+	Project            *ProjectHook     `json:"project,omitempty"`
 	UserID             int64            `json:"user_id,omitempty"`
 	UserName           *string          `json:"user_name,omitempty"`
 	User               *User            `json:"user,omitempty"`
@@ -47,8 +47,8 @@ type PushEvent struct {
 type IssueEvent struct {
 	Action      *string          `json:"action,omitempty"`
 	Issue       *Issue           `json:"issue,omitempty"`
-	Repository  *Project         `json:"repository,omitempty"`
-	Project     *Project         `json:"project,omitempty"`
+	Repository  *ProjectHook     `json:"repository,omitempty"`
+	Project     *ProjectHook     `json:"project,omitempty"`
 	Sender      *User            `json:"sender,omitempty"`
 	TargetUser  *User            `json:"target_user,omitempty"`
 	User        *User            `json:"user,omitempty"`
@@ -66,8 +66,8 @@ type IssueEvent struct {
 }
 
 type RepoInfo struct {
-	Project    *Project `json:"project,omitempty"`
-	Repository *Project `json:"repository,omitempty"`
+	Project    *ProjectHook `json:"project,omitempty"`
+	Repository *ProjectHook `json:"repository,omitempty"`
 }
 
 type PullRequestEvent struct {
@@ -85,8 +85,8 @@ type PullRequestEvent struct {
 	SourceRepo     *RepoInfo        `json:"source_repo,omitempty"`
 	TargetBranch   *string          `json:"target_branch,omitempty"`
 	TargetRepo     *RepoInfo        `json:"target_repo,omitempty"`
-	Project        *Project         `json:"project,omitempty"`
-	Repository     *Project         `json:"repository,omitempty"`
+	Project        *ProjectHook     `json:"project,omitempty"`
+	Repository     *ProjectHook     `json:"repository,omitempty"`
 	Author         *User            `json:"author,omitempty"`
 	UpdatedBy      *User            `json:"updated_by,omitempty"`
 	Sender         *User            `json:"sender,omitempty"`

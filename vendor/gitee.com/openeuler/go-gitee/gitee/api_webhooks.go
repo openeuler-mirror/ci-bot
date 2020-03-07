@@ -29,14 +29,14 @@ var (
 type WebhooksApiService service
 
 /*
-WebhooksApiService 删除一个仓库WebHook
-删除一个仓库WebHook
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
- * @param repo 仓库路径(path)
- * @param id Webhook的ID
- * @param optional nil or *DeleteV5ReposOwnerRepoHooksIdOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ WebhooksApiService 删除一个仓库WebHook
+ 删除一个仓库WebHook
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+  * @param repo 仓库路径(path)
+  * @param id Webhook的ID
+  * @param optional nil or *DeleteV5ReposOwnerRepoHooksIdOpts - Optional Parameters:
+	  * @param "AccessToken" (optional.String) -  用户授权码
 
 
 */
@@ -112,17 +112,17 @@ func (a *WebhooksApiService) DeleteV5ReposOwnerRepoHooksId(ctx context.Context, 
 }
 
 /*
-WebhooksApiService 列出仓库的WebHooks
-列出仓库的WebHooks
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
- * @param repo 仓库路径(path)
- * @param optional nil or *GetV5ReposOwnerRepoHooksOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Page" (optional.Int32) -  当前的页码
-     * @param "PerPage" (optional.Int32) -  每页的数量，最大为 100
+ WebhooksApiService 列出仓库的WebHooks
+ 列出仓库的WebHooks
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+  * @param repo 仓库路径(path)
+  * @param optional nil or *GetV5ReposOwnerRepoHooksOpts - Optional Parameters:
+	  * @param "AccessToken" (optional.String) -  用户授权码
+	  * @param "Page" (optional.Int32) -  当前的页码
+	  * @param "PerPage" (optional.Int32) -  每页的数量，最大为 100
 
-@return []Hook
+ @return []Hook
 */
 
 type GetV5ReposOwnerRepoHooksOpts struct {
@@ -223,16 +223,16 @@ func (a *WebhooksApiService) GetV5ReposOwnerRepoHooks(ctx context.Context, owner
 }
 
 /*
-WebhooksApiService 获取仓库单个WebHook
-获取仓库单个WebHook
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
- * @param repo 仓库路径(path)
- * @param id Webhook的ID
- * @param optional nil or *GetV5ReposOwnerRepoHooksIdOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ WebhooksApiService 获取仓库单个WebHook
+ 获取仓库单个WebHook
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+  * @param repo 仓库路径(path)
+  * @param id Webhook的ID
+  * @param optional nil or *GetV5ReposOwnerRepoHooksIdOpts - Optional Parameters:
+	  * @param "AccessToken" (optional.String) -  用户授权码
 
-@return Hook
+ @return Hook
 */
 
 type GetV5ReposOwnerRepoHooksIdOpts struct {
@@ -326,23 +326,23 @@ func (a *WebhooksApiService) GetV5ReposOwnerRepoHooksId(ctx context.Context, own
 }
 
 /*
-WebhooksApiService 更新一个仓库WebHook
-更新一个仓库WebHook
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
- * @param repo 仓库路径(path)
- * @param id Webhook的ID
- * @param url 远程HTTP URL
- * @param optional nil or *PatchV5ReposOwnerRepoHooksIdOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Password" (optional.String) -  请求URL时会带上该密码，防止URL被恶意请求
-     * @param "PushEvents" (optional.Bool) -  Push代码到仓库
-     * @param "TagPushEvents" (optional.Bool) -  提交Tag到仓库
-     * @param "IssuesEvents" (optional.Bool) -  创建/关闭Issue
-     * @param "NoteEvents" (optional.Bool) -  评论了Issue/代码等等
-     * @param "MergeRequestsEvents" (optional.Bool) -  合并请求和合并后
+ WebhooksApiService 更新一个仓库WebHook
+ 更新一个仓库WebHook
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+  * @param repo 仓库路径(path)
+  * @param id Webhook的ID
+  * @param url 远程HTTP URL
+  * @param optional nil or *PatchV5ReposOwnerRepoHooksIdOpts - Optional Parameters:
+	  * @param "AccessToken" (optional.String) -  用户授权码
+	  * @param "Password" (optional.String) -  请求URL时会带上该密码，防止URL被恶意请求
+	  * @param "PushEvents" (optional.Bool) -  Push代码到仓库
+	  * @param "TagPushEvents" (optional.Bool) -  提交Tag到仓库
+	  * @param "IssuesEvents" (optional.Bool) -  创建/关闭Issue
+	  * @param "NoteEvents" (optional.Bool) -  评论了Issue/代码等等
+	  * @param "MergeRequestsEvents" (optional.Bool) -  合并请求和合并后
 
-@return Hook
+ @return Hook
 */
 
 type PatchV5ReposOwnerRepoHooksIdOpts struct {
@@ -461,22 +461,22 @@ func (a *WebhooksApiService) PatchV5ReposOwnerRepoHooksId(ctx context.Context, o
 }
 
 /*
-WebhooksApiService 创建一个仓库WebHook
-创建一个仓库WebHook
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
- * @param repo 仓库路径(path)
- * @param url 远程HTTP URL
- * @param optional nil or *PostV5ReposOwnerRepoHooksOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Password" (optional.String) -  请求URL时会带上该密码，防止URL被恶意请求
-     * @param "PushEvents" (optional.Bool) -  Push代码到仓库
-     * @param "TagPushEvents" (optional.Bool) -  提交Tag到仓库
-     * @param "IssuesEvents" (optional.Bool) -  创建/关闭Issue
-     * @param "NoteEvents" (optional.Bool) -  评论了Issue/代码等等
-     * @param "MergeRequestsEvents" (optional.Bool) -  合并请求和合并后
+ WebhooksApiService 创建一个仓库WebHook
+ 创建一个仓库WebHook
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+  * @param repo 仓库路径(path)
+  * @param url 远程HTTP URL
+  * @param optional nil or *PostV5ReposOwnerRepoHooksOpts - Optional Parameters:
+	  * @param "AccessToken" (optional.String) -  用户授权码
+	  * @param "Password" (optional.String) -  请求URL时会带上该密码，防止URL被恶意请求
+	  * @param "PushEvents" (optional.Bool) -  Push代码到仓库
+	  * @param "TagPushEvents" (optional.Bool) -  提交Tag到仓库
+	  * @param "IssuesEvents" (optional.Bool) -  创建/关闭Issue
+	  * @param "NoteEvents" (optional.Bool) -  评论了Issue/代码等等
+	  * @param "MergeRequestsEvents" (optional.Bool) -  合并请求和合并后
 
-@return Hook
+ @return Hook
 */
 
 type PostV5ReposOwnerRepoHooksOpts struct {
@@ -594,14 +594,14 @@ func (a *WebhooksApiService) PostV5ReposOwnerRepoHooks(ctx context.Context, owne
 }
 
 /*
-WebhooksApiService 测试WebHook是否发送成功
-测试WebHook是否发送成功
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
- * @param repo 仓库路径(path)
- * @param id Webhook的ID
- * @param optional nil or *PostV5ReposOwnerRepoHooksIdTestsOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ WebhooksApiService 测试WebHook是否发送成功
+ 测试WebHook是否发送成功
+  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+  * @param repo 仓库路径(path)
+  * @param id Webhook的ID
+  * @param optional nil or *PostV5ReposOwnerRepoHooksIdTestsOpts - Optional Parameters:
+	  * @param "AccessToken" (optional.String) -  用户授权码
 
 
 */
