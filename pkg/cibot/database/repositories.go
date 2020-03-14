@@ -24,6 +24,10 @@ var RepositoriesTableSQL = fmt.Sprintf(`CREATE TABLE %s (
 	PRIMARY KEY (id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8`, RepositoriesTableName)
 
+// AddCommentableColumnRepositoriesTableSQL adds a new column: commmentable
+var AddCommentableColumnRepositoriesTableSQL = fmt.Sprintf(`ALTER TABLE %s
+	ADD commentable BOOLEAN NOT NULL DEFAULT 1`, RepositoriesTableName)
+
 // Repositories defines
 type Repositories struct {
 	gorm.Model
@@ -31,6 +35,7 @@ type Repositories struct {
 	Repo           string
 	Description    string
 	Type           string
+	Commentable    bool
 	AdditionalInfo string `sql:"type:text"`
 }
 

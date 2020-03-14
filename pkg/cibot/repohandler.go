@@ -194,8 +194,7 @@ func (handler *RepoHandler) watch() {
 												glog.Infof("repository: %s is exist. no action.", *ps.Repositories[i].Name)
 											} else {
 												// add repository
-												err = handler.addRepositories(ps.Community, *ps.Repositories[i].Name,
-													*ps.Repositories[i].Description, *ps.Repositories[i].Type)
+												err = handler.addRepositories(ps.Community, ps.Repositories[i])
 												if err != nil {
 													glog.Errorf("failed to add repositories: %v", err)
 													result = false
@@ -208,10 +207,10 @@ func (handler *RepoHandler) watch() {
 												glog.Errorf("failed to handle branches: %v", err)
 												result = false
 											}
-											// handle repository type
-											err = handler.handleRepositoryTypes(ps.Community, ps.Repositories[i])
+											// handle repository settings, currently type and can_comment are supported
+											err = handler.handleRepositorySetting(ps.Community, ps.Repositories[i])
 											if err != nil {
-												glog.Errorf("failed to handle repository types: %v", err)
+												glog.Errorf("failed to handle repository setting: %v", err)
 												result = false
 											}
 										}
@@ -260,16 +259,16 @@ func (handler *RepoHandler) getRepositoriesLength(owner string, repo string) (in
 }
 
 // addRepositories add repository
-func (handler *RepoHandler) addRepositories(owner, repo, description, t string) error {
+func (handler *RepoHandler) addRepositories(owner string, repo Repository) error {
 	// add repository in gitee
-	err := handler.addRepositoriesinGitee(owner, repo, description, t)
+	err := handler.addRepositoriesinGitee(owner, repo)
 	if err != nil {
 		glog.Errorf("failed to add repositories: %v", err)
 		return err
 	}
 
 	// add repository in database
-	err = handler.addRepositoriesinDB(owner, repo, description, t)
+	err = handler.addRepositoriesinDB(owner, repo)
 	if err != nil {
 		glog.Errorf("failed to add repositories: %v", err)
 		return err
@@ -278,13 +277,14 @@ func (handler *RepoHandler) addRepositories(owner, repo, description, t string) 
 }
 
 // addRepositoriesinDB add repository in database
-func (handler *RepoHandler) addRepositoriesinDB(owner, repo, description, t string) error {
+func (handler *RepoHandler) addRepositoriesinDB(owner string, repo Repository) error {
 	// add repository
 	addrepo := database.Repositories{
 		Owner:       owner,
-		Repo:        repo,
-		Description: description,
-		Type:        t,
+		Repo:        *repo.Name,
+		Description: *repo.Description,
+		Type:        *repo.Type,
+		Commentable: repo.IsCommentable(),
 	}
 
 	// create repository
@@ -297,27 +297,24 @@ func (handler *RepoHandler) addRepositoriesinDB(owner, repo, description, t stri
 }
 
 // addRepositoriesinGitee add repository in giteee
-func (handler *RepoHandler) addRepositoriesinGitee(owner, repo, description, t string) error {
+func (handler *RepoHandler) addRepositoriesinGitee(owner string, repo Repository) error {
 	// build create repository param
 	repobody := gitee.RepositoryPostParam{}
 	repobody.AccessToken = handler.Config.GiteeToken
-	repobody.Name = repo
-	repobody.Description = description
+	repobody.Name = *repo.Name
+	repobody.Description = *repo.Description
 	repobody.HasIssues = true
 	repobody.HasWiki = true
 	// set `auto_init` as true to initialize `master` branch with README after repo creation
 	repobody.AutoInit = true
-	if t == "private" {
-		repobody.Private = true
-	} else {
-		repobody.Private = false
-	}
+	repobody.CanComment = repo.IsCommentable()
+	repobody.Private = *repo.Type == "private"
 
 	// invoke query repository
-	glog.Infof("begin to query repository: %s", repo)
+	glog.Infof("begin to query repository: %s", *repo.Name)
 	localVarOptionals := &gitee.GetV5ReposOwnerRepoOpts{}
 	localVarOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
-	_, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepo(handler.Context, owner, repo, localVarOptionals)
+	_, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepo(handler.Context, owner, *repo.Name, localVarOptionals)
 	if response.StatusCode == 404 {
 		glog.Infof("repository is not exist: %s", repo)
 	} else {
@@ -479,25 +476,28 @@ func (handler *RepoHandler) addBranchProtections(community string, r Repository,
 	return nil
 }
 
-// handleRepositoryTypes handles that the repo is private or public
-func (handler *RepoHandler) handleRepositoryTypes(community string, r Repository) error {
+// handleRepositorySetting handles that the repo settings, including:
+//   1. type is private or public
+//   2. commentable is true or false
+func (handler *RepoHandler) handleRepositorySetting(community string, r Repository) error {
 	// get repos from DB
 	var rs database.Repositories
 	err := database.DBConnection.Model(&database.Repositories{}).
 		Where("owner = ? and repo = ?", community, r.Name).First(&rs).Error
 	if err != nil {
-		glog.Errorf("unable to get repositories files: %v", err)
+		glog.Errorf("unable to get repositories: %v", err)
 		return err
 	}
 
-	// the type is changed
-	if rs.Type != *r.Type {
-		// set value
-		isSetPrivate := false
-		if *r.Type == "private" {
-			isSetPrivate = true
-		}
+	typePrivateExpected := (*r.Type == "private")
+	// mark type as changed if the type from DB is NOT identical to yaml
+	typeChanged := (rs.Type != *r.Type)
 
+	commentableExpected := r.IsCommentable()
+	// mark commentable as changed if the commentable from DB is NOT identical to yaml
+	commentableChanged := (rs.Commentable != commentableExpected)
+
+	if typeChanged || commentableChanged {
 		// invoke query repository
 		glog.Infof("begin to query repository: %s", *r.Name)
 		localVarOptionals := &gitee.GetV5ReposOwnerRepoOpts{}
@@ -508,35 +508,47 @@ func (handler *RepoHandler) handleRepositoryTypes(community string, r Repository
 			glog.Infof("repository is not exist: %s", *r.Name)
 			return nil
 		}
-		if pj.Private == isSetPrivate {
-			glog.Infof("repository type is already: %s", *r.Type)
-		} else {
+
+		// do we need to invoke the gitee patch api to change the setting of the repository
+		needInvokeRepoPatchAPI := false
+		// handle the change of type
+		if typeChanged {
+			// if the repo type from gitee is identical to yaml
+			if pj.Private == typePrivateExpected {
+				glog.Infof("repository type is already: %s", *r.Type)
+			} else {
+				needInvokeRepoPatchAPI = true
+				glog.Infof("going to change repo type via gitee API")
+			}
+		}
+		// handle the change of commentable
+		if commentableChanged {
+			// if the repo commentable from gitee is identical to yaml
+			if pj.CanComment == commentableExpected {
+				glog.Infof("repository commentable is already: %t", pj.CanComment)
+			} else {
+				needInvokeRepoPatchAPI = true
+				glog.Infof("going to change repo commentable via gitee API")
+			}
+		}
+
+		// now to invoke gitee api to change the repo settings
+		if needInvokeRepoPatchAPI {
 			// build patch repository param
 			patchBody := gitee.RepoPatchParam{}
 			patchBody.AccessToken = handler.Config.GiteeToken
 			patchBody.Name = pj.Name
 			patchBody.Description = pj.Description
 			patchBody.Homepage = pj.Homepage
-			if pj.HasIssues {
-				patchBody.HasIssues = "true"
-			} else {
-				patchBody.HasIssues = "false"
-			}
-			if pj.HasWiki {
-				patchBody.HasWiki = "true"
-			} else {
-				patchBody.HasWiki = "false"
-			}
-			if isSetPrivate {
-				patchBody.Private = "true"
-			} else {
-				patchBody.Private = "false"
-			}
+			patchBody.HasIssues = strconv.FormatBool(pj.HasIssues)
+			patchBody.HasWiki = strconv.FormatBool(pj.HasWiki)
+			patchBody.Private = strconv.FormatBool(typePrivateExpected)
+			patchBody.CanComment = strconv.FormatBool(commentableExpected)
 
 			// invoke set type
 			_, _, err = handler.GiteeClient.RepositoriesApi.PatchV5ReposOwnerRepo(handler.Context, community, *r.Name, patchBody)
 			if err != nil {
-				glog.Errorf("unable to set repository type: %v", err)
+				glog.Errorf("unable to set repository settings: %v", err)
 				return err
 			}
 		}
@@ -544,9 +556,12 @@ func (handler *RepoHandler) handleRepositoryTypes(community string, r Repository
 		// define update repository
 		updaterepo := &database.Repositories{}
 		updaterepo.ID = rs.ID
-		err = database.DBConnection.Model(updaterepo).Update("Type", *r.Type).Error
+		err = database.DBConnection.Model(updaterepo).
+			Update("Type", *r.Type).
+			Update("Commentable", commentableExpected).
+			Error
 		if err != nil {
-			glog.Errorf("unable to update type: %v", err)
+			glog.Errorf("unable to update repository settings: %v", err)
 		}
 	}
 

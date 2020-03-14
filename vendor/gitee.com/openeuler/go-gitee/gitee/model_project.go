@@ -15,7 +15,7 @@ type Project struct {
 	FullName            string     `json:"full_name,omitempty"`
 	HumanName           string     `json:"human_name,omitempty"`
 	Url                 string     `json:"url,omitempty"`
-	Namespace           string     `json:"namespace,omitempty"`
+	Namespace           *Namespace `json:"namespace,omitempty"`
 	Path                string     `json:"path,omitempty"`
 	Name                string     `json:"name,omitempty"`
 	Owner               *UserBasic `json:"owner,omitempty"`
@@ -54,12 +54,13 @@ type Project struct {
 	OpenIssuesCount     int32      `json:"open_issues_count,omitempty"`
 	HasIssues           bool       `json:"has_issues,omitempty"`
 	HasWiki             bool       `json:"has_wiki,omitempty"`
+	CanComment          bool       `json:"can_comment,omitempty"`
 	PullRequestsEnabled bool       `json:"pull_requests_enabled,omitempty"`
 	HasPage             bool       `json:"has_page,omitempty"`
 	License             string     `json:"license,omitempty"`
 	Outsourced          bool       `json:"outsourced,omitempty"`
 	ProjectCreator      string     `json:"project_creator,omitempty"`
-	Members             string     `json:"members,omitempty"`
+	Members             []string   `json:"members,omitempty"`
 	PushedAt            string     `json:"pushed_at,omitempty"`
 	CreatedAt           string     `json:"created_at,omitempty"`
 	UpdatedAt           string     `json:"updated_at,omitempty"`

@@ -9,10 +9,11 @@
 
 package gitee
 
-// 获取目录Tree
-type Tree struct {
-	Sha       string      `json:"sha,omitempty"`
-	Url       string      `json:"url,omitempty"`
-	Tree      []TreeBasic `json:"tree,omitempty"`
-	Truncated string      `json:"truncated,omitempty"`
+type TreeBasic struct {
+	Path  string `json:"path,omitempty"`
+	Mode  string `json:"mode,omitempty"`
+	Type_ string `json:"type,omitempty"`
+	Sha   string `json:"sha,omitempty"`
+	Size  int32  `json:"size,omitempty"`
+	Url   string `json:"url,omitempty"`
 }

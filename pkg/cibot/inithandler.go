@@ -53,11 +53,19 @@ type Repository struct {
 	Name              *string  `yaml:"name"`
 	Description       *string  `yaml:"description"`
 	ProtectedBranches []string `yaml:"protected_branches"`
+	Commentable       *bool    `yaml:"commentable"`
 	Type              *string  `yaml:"type"`
 	Managers          []string `yaml:"managers"`
 	Developers        []string `yaml:"developers"`
 	Viewers           []string `yaml:"viewers"`
 	Reporters         []string `yaml:"reporters"`
+}
+
+// IsCommentable returns if contributors are able to comment
+// to the repository.
+// It will be true only if Commentable is explicitly sepecified as true
+func (r Repository) IsCommentable() bool {
+	return (r.Commentable != nil && *r.Commentable)
 }
 
 // Serve

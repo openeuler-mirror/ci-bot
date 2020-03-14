@@ -4170,6 +4170,7 @@ RepositoriesApiService 创建企业仓库
      * @param "Homepage" (optional.String) -  主页(eg: https://gitee.com)
      * @param "HasIssues" (optional.Bool) -  允许提Issue与否。默认: 允许(true)
      * @param "HasWiki" (optional.Bool) -  提供Wiki与否。默认: 提供(true)
+     * @param "CanComment" (optional.Bool) -  允许用户对仓库进行评论。默认： 允许(true)
      * @param "AutoInit" (optional.Bool) -  值为true时则会用README初始化仓库。默认: 不初始化(false)
      * @param "GitignoreTemplate" (optional.String) -  Git Ingore模版
      * @param "LicenseTemplate" (optional.String) -  License模版
@@ -4187,6 +4188,7 @@ type PostV5EnterprisesEnterpriseReposOpts struct {
 	Homepage          optional.String
 	HasIssues         optional.Bool
 	HasWiki           optional.Bool
+	CanComment        optional.Bool
 	AutoInit          optional.Bool
 	GitignoreTemplate optional.String
 	LicenseTemplate   optional.String
@@ -4245,6 +4247,9 @@ func (a *RepositoriesApiService) PostV5EnterprisesEnterpriseRepos(ctx context.Co
 	}
 	if localVarOptionals != nil && localVarOptionals.HasWiki.IsSet() {
 		localVarFormParams.Add("has_wiki", parameterToString(localVarOptionals.HasWiki.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.CanComment.IsSet() {
+		localVarFormParams.Add("can_comment", parameterToString(localVarOptionals.CanComment.Value(), ""))
 	}
 	if localVarOptionals != nil && localVarOptionals.AutoInit.IsSet() {
 		localVarFormParams.Add("auto_init", parameterToString(localVarOptionals.AutoInit.Value(), ""))
@@ -5175,6 +5180,7 @@ RepositoriesApiService 创建一个仓库
      * @param "Homepage" (optional.String) -  主页(eg: https://gitee.com)
      * @param "HasIssues" (optional.Bool) -  允许提Issue与否。默认: 允许(true)
      * @param "HasWiki" (optional.Bool) -  提供Wiki与否。默认: 提供(true)
+     * @param "CanComment" (optional.Bool) -  允许用户对仓库进行评论。默认: 允许(true)
      * @param "AutoInit" (optional.Bool) -  值为true时则会用README初始化仓库。默认: 不初始化(false)
      * @param "GitignoreTemplate" (optional.String) -  Git Ingore模版
      * @param "LicenseTemplate" (optional.String) -  License模版
@@ -5189,6 +5195,7 @@ type PostV5UserReposOpts struct {
 	Homepage          optional.String
 	HasIssues         optional.Bool
 	HasWiki           optional.Bool
+	CanComment        optional.Bool
 	AutoInit          optional.Bool
 	GitignoreTemplate optional.String
 	LicenseTemplate   optional.String
@@ -5243,6 +5250,9 @@ func (a *RepositoriesApiService) PostV5UserRepos(ctx context.Context, name strin
 	}
 	if localVarOptionals != nil && localVarOptionals.HasWiki.IsSet() {
 		localVarFormParams.Add("has_wiki", parameterToString(localVarOptionals.HasWiki.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.CanComment.IsSet() {
+		localVarFormParams.Add("can_comment", parameterToString(localVarOptionals.CanComment.Value(), ""))
 	}
 	if localVarOptionals != nil && localVarOptionals.AutoInit.IsSet() {
 		localVarFormParams.Add("auto_init", parameterToString(localVarOptionals.AutoInit.Value(), ""))

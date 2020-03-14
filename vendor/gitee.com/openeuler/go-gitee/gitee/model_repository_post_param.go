@@ -23,6 +23,8 @@ type RepositoryPostParam struct {
 	HasIssues bool `json:"has_issues,omitempty"`
 	// 提供Wiki与否。默认: 提供(true)
 	HasWiki bool `json:"has_wiki,omitempty"`
+	// 允许用户对仓库进行评论。默认： 允许(true)
+	CanComment bool `json:"can_comment,omitempty"`
 	// 仓库开源类型。0(私有), 1(外部开源), 2(内部开源)，注：与private互斥，以public为主。
 	Public int32 `json:"public,omitempty"`
 	// 仓库公开或私有。默认: 公开(false)，注：与public互斥，以public为主。
