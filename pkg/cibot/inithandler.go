@@ -55,6 +55,7 @@ type Repository struct {
 	ProtectedBranches []string `yaml:"protected_branches"`
 	Commentable       *bool    `yaml:"commentable"`
 	Type              *string  `yaml:"type"`
+	RenameFrom        *string  `yaml:"rename_from"`
 	Managers          []string `yaml:"managers"`
 	Developers        []string `yaml:"developers"`
 	Viewers           []string `yaml:"viewers"`
