@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"gitee.com/openeuler/ci-bot/pkg/cibot/database"
 	"gitee.com/openeuler/go-gitee/gitee"
@@ -159,6 +160,11 @@ func (s *CLAHandler) HandleClaCheck(w http.ResponseWriter, r *http.Request, code
 		}
 	}
 
+	redirectUrl := os.Getenv("CLA_REDIRECT_URL")
+	if len(redirectUrl) == 0 {
+		redirectUrl = "/en/cla.html"
+	}
+
 	if primaryEmail != "" {
 
 		setCookie(w, "email", primaryEmail)
@@ -178,12 +184,12 @@ func (s *CLAHandler) HandleClaCheck(w http.ResponseWriter, r *http.Request, code
 			setCookie(w, "telephone", clainfo.Telephone)
 			setCookie(w, "fax", clainfo.Fax)
 
-			http.Redirect(w, r, "/en/cla.html", http.StatusFound)
+			http.Redirect(w, r, redirectUrl, http.StatusFound)
 			return
 		}
 	}
 
-	http.Redirect(w, r, "/en/cla.html", http.StatusFound)
+	http.Redirect(w, r, redirectUrl, http.StatusFound)
 
 }
 
