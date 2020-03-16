@@ -23,6 +23,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	payload, err := gitee.ValidatePayload(r, []byte(s.Config.WebhookSecret))
 	if err != nil {
 		glog.Errorf("invalid payload: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprint(w, err.Error())
 		return
 	}
@@ -34,6 +35,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	event, err := gitee.ParseWebHook(messagetype, payload)
 	if err != nil {
 		glog.Errorf("failed to parse webhook event: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, err.Error())
 		return
 	}
