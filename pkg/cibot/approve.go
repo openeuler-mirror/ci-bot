@@ -60,7 +60,7 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 				addlabel := &gitee.NoteEvent{}
 				addlabel.PullRequest = event.PullRequest
 				addlabel.Repository = event.Repository
-				addlabel.Comment = &gitee.Note{}
+				addlabel.Comment = &gitee.NoteHook{}
 				mapOfAddLabels := map[string]string{}
 				mapOfAddLabels[LabelNameApproved] = LabelNameApproved
 				err = s.AddSpecifyLabelsInPulRequest(addlabel, mapOfAddLabels)
@@ -146,7 +146,7 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 				removelabel := &gitee.NoteEvent{}
 				removelabel.PullRequest = event.PullRequest
 				removelabel.Repository = event.Repository
-				removelabel.Comment = &gitee.Note{}
+				removelabel.Comment = &gitee.NoteHook{}
 				mapOfRemoveLabels := map[string]string{}
 				mapOfRemoveLabels[LabelNameApproved] = LabelNameApproved
 				err = s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)

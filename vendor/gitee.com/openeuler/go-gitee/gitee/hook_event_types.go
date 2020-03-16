@@ -2,11 +2,11 @@ package gitee
 
 type NoteEvent struct {
 	Action        *string          `json:"action,omitempty"`
-	Comment       *Note            `json:"comment,omitempty"`
+	Comment       *NoteHook        `json:"comment,omitempty"`
 	Repository    *ProjectHook     `json:"repository,omitempty"`
 	Project       *ProjectHook     `json:"project,omitempty"`
-	Author        *User            `json:"author,omitempty"`
-	Sender        *User            `json:"sender,omitempty"`
+	Author        *UserHook        `json:"author,omitempty"`
+	Sender        *UserHook        `json:"sender,omitempty"`
 	URL           *string          `json:"url,omitempty"`
 	Note          *string          `json:"note,omitempty"`
 	NoteableType  *string          `json:"noteable_type,omitempty"`
@@ -14,55 +14,55 @@ type NoteEvent struct {
 	Title         *string          `json:"title,omitempty"`
 	PerIID        *string          `json:"per_iid,omitempty"`
 	ShortCommitID *string          `json:"short_commit_id,omitempty"`
-	Enterprise    *EnterpriseBasic `json:"enterprise,omitempty"`
-	PullRequest   *PullRequest     `json:"pull_request,omitempty"`
-	Issue         *Issue           `json:"issue,omitempty"`
+	Enterprise    *EnterpriseHook  `json:"enterprise,omitempty"`
+	PullRequest   *PullRequestHook `json:"pull_request,omitempty"`
+	Issue         *IssueHook       `json:"issue,omitempty"`
 	HookName      *string          `json:"hook_name,omitempty"`
 	Password      *string          `json:"password,omitempty"`
 }
 
 type PushEvent struct {
-	Ref                *string          `json:"ref,omitempty"`
-	Before             *string          `json:"before,omitempty"`
-	After              *string          `json:"after,omitempty"`
-	TotalCommitsCount  int64            `json:"total_commits_count,omitempty"`
-	CommitsMoreThanTen *bool            `json:"commits_more_than_ten,omitempty"`
-	Created            *bool            `json:"created,omitempty"`
-	Deleted            *bool            `json:"deleted,omitempty"`
-	Compare            *string          `json:"compare,omitempty"`
-	Commits            []Commit         `json:"commits,omitempty"`
-	HeadCommit         *Commit          `json:"head_commit,omitempty"`
-	Repository         *ProjectHook     `json:"repository,omitempty"`
-	Project            *ProjectHook     `json:"project,omitempty"`
-	UserID             int64            `json:"user_id,omitempty"`
-	UserName           *string          `json:"user_name,omitempty"`
-	User               *User            `json:"user,omitempty"`
-	Pusher             *User            `json:"pusher,omitempty"`
-	Sender             *User            `json:"sender,omitempty"`
-	Enterprise         *EnterpriseBasic `json:"enterprise,omitempty"`
-	HookName           *string          `json:"hook_name,omitempty"`
-	Password           *string          `json:"password,omitempty"`
+	Ref                *string         `json:"ref,omitempty"`
+	Before             *string         `json:"before,omitempty"`
+	After              *string         `json:"after,omitempty"`
+	TotalCommitsCount  int64           `json:"total_commits_count,omitempty"`
+	CommitsMoreThanTen *bool           `json:"commits_more_than_ten,omitempty"`
+	Created            *bool           `json:"created,omitempty"`
+	Deleted            *bool           `json:"deleted,omitempty"`
+	Compare            *string         `json:"compare,omitempty"`
+	Commits            []CommitHook    `json:"commits,omitempty"`
+	HeadCommit         *CommitHook     `json:"head_commit,omitempty"`
+	Repository         *ProjectHook    `json:"repository,omitempty"`
+	Project            *ProjectHook    `json:"project,omitempty"`
+	UserID             int64           `json:"user_id,omitempty"`
+	UserName           *string         `json:"user_name,omitempty"`
+	User               *UserHook       `json:"user,omitempty"`
+	Pusher             *UserHook       `json:"pusher,omitempty"`
+	Sender             *UserHook       `json:"sender,omitempty"`
+	Enterprise         *EnterpriseHook `json:"enterprise,omitempty"`
+	HookName           *string         `json:"hook_name,omitempty"`
+	Password           *string         `json:"password,omitempty"`
 }
 
 type IssueEvent struct {
-	Action      *string          `json:"action,omitempty"`
-	Issue       *Issue           `json:"issue,omitempty"`
-	Repository  *ProjectHook     `json:"repository,omitempty"`
-	Project     *ProjectHook     `json:"project,omitempty"`
-	Sender      *User            `json:"sender,omitempty"`
-	TargetUser  *User            `json:"target_user,omitempty"`
-	User        *User            `json:"user,omitempty"`
-	Assignee    *UserBasic       `json:"assignee,omitempty"`
-	UpdatedBy   *User            `json:"updated_by,omitempty"`
-	IID         string           `json:"iid,omitempty"`
-	Title       *string          `json:"title,omitempty"`
-	Description *string          `json:"description,omitempty"`
-	State       *string          `json:"state,omitempty"`
-	Milestone   *Milestone       `json:"milestone,omitempty"`
-	URL         *string          `json:"url,omitempty"`
-	Enterprise  *EnterpriseBasic `json:"enterprise,omitempty"`
-	HookName    *string          `json:"hook_name,omitempty"`
-	Password    *string          `json:"password,omitempty"`
+	Action      *string         `json:"action,omitempty"`
+	Issue       *IssueHook      `json:"issue,omitempty"`
+	Repository  *ProjectHook    `json:"repository,omitempty"`
+	Project     *ProjectHook    `json:"project,omitempty"`
+	Sender      *UserHook       `json:"sender,omitempty"`
+	TargetUser  *UserHook       `json:"target_user,omitempty"`
+	User        *UserHook       `json:"user,omitempty"`
+	Assignee    *UserHook       `json:"assignee,omitempty"`
+	UpdatedBy   *UserHook       `json:"updated_by,omitempty"`
+	IID         string          `json:"iid,omitempty"`
+	Title       *string         `json:"title,omitempty"`
+	Description *string         `json:"description,omitempty"`
+	State       *string         `json:"state,omitempty"`
+	Milestone   *MilestoneHook  `json:"milestone,omitempty"`
+	URL         *string         `json:"url,omitempty"`
+	Enterprise  *EnterpriseHook `json:"enterprise,omitempty"`
+	HookName    *string         `json:"hook_name,omitempty"`
+	Password    *string         `json:"password,omitempty"`
 }
 
 type RepoInfo struct {
@@ -72,7 +72,7 @@ type RepoInfo struct {
 
 type PullRequestEvent struct {
 	Action         *string          `json:"action,omitempty"`
-	PullRequest    *PullRequest     `json:"pull_request,omitempty"`
+	PullRequest    *PullRequestHook `json:"pull_request,omitempty"`
 	Number         int64            `json:"number,omitempty"`
 	IID            int64            `json:"iid,omitempty"`
 	Title          *string          `json:"title,omitempty"`
@@ -82,16 +82,16 @@ type PullRequestEvent struct {
 	MergeCommitSha *string          `json:"merge_commit_sha,omitempty"`
 	URL            *string          `json:"url,omitempty"`
 	SourceBranch   *string          `json:"source_branch,omitempty"`
-	SourceRepo     *RepoInfo        `json:"source_repo,omitempty"`
+	SourceRepo     *ProjectHook     `json:"source_repo,omitempty"`
 	TargetBranch   *string          `json:"target_branch,omitempty"`
-	TargetRepo     *RepoInfo        `json:"target_repo,omitempty"`
+	TargetRepo     *ProjectHook     `json:"target_repo,omitempty"`
 	Project        *ProjectHook     `json:"project,omitempty"`
 	Repository     *ProjectHook     `json:"repository,omitempty"`
-	Author         *User            `json:"author,omitempty"`
-	UpdatedBy      *User            `json:"updated_by,omitempty"`
-	Sender         *User            `json:"sender,omitempty"`
-	TargetUser     *User            `json:"target_user,omitempty"`
-	Enterprise     *EnterpriseBasic `json:"enterprise,omitempty"`
+	Author         *UserHook        `json:"author,omitempty"`
+	UpdatedBy      *UserHook        `json:"updated_by,omitempty"`
+	Sender         *UserHook        `json:"sender,omitempty"`
+	TargetUser     *UserHook        `json:"target_user,omitempty"`
+	Enterprise     *EnterpriseHook  `json:"enterprise,omitempty"`
 	HookName       *string          `json:"hook_name,omitempty"`
 	Password       *string          `json:"password,omitempty"`
 }

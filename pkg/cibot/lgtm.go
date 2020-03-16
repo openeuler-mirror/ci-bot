@@ -81,7 +81,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				addlabel := &gitee.NoteEvent{}
 				addlabel.PullRequest = event.PullRequest
 				addlabel.Repository = event.Repository
-				addlabel.Comment = &gitee.Note{}
+				addlabel.Comment = &gitee.NoteHook{}
 				mapOfAddLabels := map[string]string{}
 				mapOfAddLabels[LabelNameLgtm] = LabelNameLgtm
 				err = s.AddSpecifyLabelsInPulRequest(addlabel, mapOfAddLabels)
@@ -186,7 +186,7 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 			removelabel := &gitee.NoteEvent{}
 			removelabel.PullRequest = event.PullRequest
 			removelabel.Repository = event.Repository
-			removelabel.Comment = &gitee.Note{}
+			removelabel.Comment = &gitee.NoteHook{}
 			mapOfRemoveLabels := map[string]string{}
 			mapOfRemoveLabels[LabelNameLgtm] = LabelNameLgtm
 			err := s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
@@ -260,7 +260,7 @@ func (s *Server) CheckLgtmByPullRequestUpdate(event *gitee.PullRequestEvent) err
 				removelabel := &gitee.NoteEvent{}
 				removelabel.PullRequest = event.PullRequest
 				removelabel.Repository = event.Repository
-				removelabel.Comment = &gitee.Note{}
+				removelabel.Comment = &gitee.NoteHook{}
 				mapOfRemoveLabels := map[string]string{}
 				mapOfRemoveLabels[LabelNameLgtm] = LabelNameLgtm
 				err := s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
