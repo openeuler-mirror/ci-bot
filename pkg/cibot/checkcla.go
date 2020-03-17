@@ -41,7 +41,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			addlabel := &gitee.NoteEvent{}
 			addlabel.PullRequest = event.PullRequest
 			addlabel.Repository = event.Repository
-			addlabel.Comment = &gitee.Note{}
+			addlabel.Comment = &gitee.NoteHook{}
 			addlabel.Comment.Body = fmt.Sprintf(AddClaYes, strings.ToLower(s.Config.CommunityName))
 			err = s.AddLabelInPulRequest(addlabel)
 			if err != nil {
@@ -52,7 +52,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			removelabel := &gitee.NoteEvent{}
 			removelabel.PullRequest = event.PullRequest
 			removelabel.Repository = event.Repository
-			removelabel.Comment = &gitee.Note{}
+			removelabel.Comment = &gitee.NoteHook{}
 			removelabel.Comment.Body = fmt.Sprintf(RemoveClaNo, strings.ToLower(s.Config.CommunityName))
 			err = s.RemoveLabelInPullRequest(removelabel)
 			if err != nil {
@@ -76,7 +76,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			addlabel := &gitee.NoteEvent{}
 			addlabel.PullRequest = event.PullRequest
 			addlabel.Repository = event.Repository
-			addlabel.Comment = &gitee.Note{}
+			addlabel.Comment = &gitee.NoteHook{}
 			addlabel.Comment.Body = fmt.Sprintf(AddClaNo, strings.ToLower(s.Config.CommunityName))
 			err = s.AddLabelInPulRequest(addlabel)
 			if err != nil {
@@ -87,7 +87,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			removelabel := &gitee.NoteEvent{}
 			removelabel.PullRequest = event.PullRequest
 			removelabel.Repository = event.Repository
-			removelabel.Comment = &gitee.Note{}
+			removelabel.Comment = &gitee.NoteHook{}
 			removelabel.Comment.Body = fmt.Sprintf(RemoveClaYes, strings.ToLower(s.Config.CommunityName))
 			err = s.RemoveLabelInPullRequest(removelabel)
 			if err != nil {
@@ -126,7 +126,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		addlabel := &gitee.NoteEvent{}
 		addlabel.PullRequest = event.PullRequest
 		addlabel.Repository = event.Repository
-		addlabel.Comment = &gitee.Note{}
+		addlabel.Comment = &gitee.NoteHook{}
 		addlabel.Comment.Body = fmt.Sprintf(AddClaYes, strings.ToLower(s.Config.CommunityName))
 		err = s.AddLabelInPulRequest(addlabel)
 		if err != nil {
@@ -137,7 +137,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		removelabel := &gitee.NoteEvent{}
 		removelabel.PullRequest = event.PullRequest
 		removelabel.Repository = event.Repository
-		removelabel.Comment = &gitee.Note{}
+		removelabel.Comment = &gitee.NoteHook{}
 		removelabel.Comment.Body = fmt.Sprintf(RemoveClaNo, strings.ToLower(s.Config.CommunityName))
 		err = s.RemoveLabelInPullRequest(removelabel)
 		if err != nil {
@@ -161,7 +161,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		addlabel := &gitee.NoteEvent{}
 		addlabel.PullRequest = event.PullRequest
 		addlabel.Repository = event.Repository
-		addlabel.Comment = &gitee.Note{}
+		addlabel.Comment = &gitee.NoteHook{}
 		addlabel.Comment.Body = fmt.Sprintf(AddClaNo, strings.ToLower(s.Config.CommunityName))
 		err = s.AddLabelInPulRequest(addlabel)
 		if err != nil {
@@ -172,7 +172,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		removelabel := &gitee.NoteEvent{}
 		removelabel.PullRequest = event.PullRequest
 		removelabel.Repository = event.Repository
-		removelabel.Comment = &gitee.Note{}
+		removelabel.Comment = &gitee.NoteHook{}
 		removelabel.Comment.Body = fmt.Sprintf(RemoveClaYes, strings.ToLower(s.Config.CommunityName))
 		err = s.RemoveLabelInPullRequest(removelabel)
 		if err != nil {
