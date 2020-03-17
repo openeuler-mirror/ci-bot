@@ -218,7 +218,11 @@ func (s *CLAHandler) HandleResult(w http.ResponseWriter, r CLAResult) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	// Content type
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
+	if r.IsSuccess {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 	w.Write([]byte(result))
 }
 
