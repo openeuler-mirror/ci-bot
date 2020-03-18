@@ -2,6 +2,7 @@ package cibot
 
 import (
 	"context"
+	"flag"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -34,14 +35,15 @@ func (s *Webhook) AddFlags(fs *pflag.FlagSet) {
 	fs.Int64Var(&s.Port, "port", s.Port, "port to listen on, 8888 by default.")
 	fs.StringVar(&s.ConfigFile, "configfile", s.ConfigFile, "config file.")
 
-	// Supress the warning: ERROR: logging before flag.Parse
-	// See https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
-	// fs.AddGoFlagSet(goflag.CommandLine)
-	// pflag.Parse()
-	// goflag.CommandLine.Parse([]string{})
+	// See https://github.com/spf13/pflag#supporting-go-flags-when-using-pflag
+	fs.AddGoFlagSet(flag.CommandLine)
+	pflag.Parse()
 }
 
 func (s *Webhook) Run() {
+	// Flush flushes all pending log I/O.
+	defer glog.Flush()
+
 	// read file
 	configContent, err := ioutil.ReadFile(s.ConfigFile)
 	if err != nil {
