@@ -3,6 +3,7 @@ package cibot
 import (
 	"context"
 	"encoding/base64"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -72,7 +73,7 @@ func (handler *RepoHandler) initSha() error {
 			return err
 		}
 		if lenProjectFiles > 0 {
-			glog.Infof("project file is exist: %s", contents.Sha)
+			glog.Infof("project file exists: %s", contents.Sha)
 			// Check sha in database
 			updatepf := database.ProjectFiles{}
 			err = database.DBConnection.
@@ -93,7 +94,7 @@ func (handler *RepoHandler) initSha() error {
 			}
 
 		} else {
-			glog.Infof("project file is non-exist: %s", contents.Sha)
+			glog.Infof("project file does not exist: %s", contents.Sha)
 			// add project file
 			addpf := database.ProjectFiles{
 				Owner:      watchOwner,
@@ -191,7 +192,7 @@ func (handler *RepoHandler) watch() {
 												continue
 											}
 											if lenRepositories > 0 {
-												glog.Infof("repository: %s is exist. no action.", *ps.Repositories[i].Name)
+												glog.Infof("repository: %s exists. no action.", *ps.Repositories[i].Name)
 											} else {
 												// add repository
 												err = handler.addRepositories(ps.Community, ps.Repositories[i])
@@ -278,6 +279,31 @@ func (handler *RepoHandler) addRepositories(owner string, repo Repository) error
 
 // addRepositoriesinDB add repository in database
 func (handler *RepoHandler) addRepositoriesinDB(owner string, repo Repository) error {
+	// this is a rename instead of create operation,
+	// so only update existing repository in DB
+	if repo.RenameFrom != nil && len(*repo.RenameFrom) > 0 {
+		// Update the repositories and branches table in a single transactions
+		tx := database.DBConnection.Begin()
+		err := tx.Model(&database.Repositories{}).
+			Where("owner = ? and repo = ?", owner, *repo.RenameFrom).
+			Update("repo", *repo.Name).Error
+		if err != nil {
+			glog.Errorf("unable to rename repository: %v", err)
+			tx.Rollback()
+			return err
+		}
+		err = tx.Model(&database.Branches{}).
+			Where("owner = ? and repo = ?", owner, *repo.RenameFrom).
+			Update("repo", *repo.Name).Error
+		if err != nil {
+			glog.Errorf("unable to rename repository for relevant branches: %v", err)
+			tx.Rollback()
+			return err
+		}
+		tx.Commit()
+		return nil
+	}
+
 	// add repository
 	addrepo := database.Repositories{
 		Owner:       owner,
@@ -316,20 +342,46 @@ func (handler *RepoHandler) addRepositoriesinGitee(owner string, repo Repository
 	localVarOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
 	_, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepo(handler.Context, owner, *repo.Name, localVarOptionals)
 	if response.StatusCode == 404 {
-		glog.Infof("repository is not exist: %s", repo)
+		glog.Infof("repository does not exist: %s", *repo.Name)
 	} else {
-		glog.Infof("repository is already exist: %s", repo)
+		glog.Infof("repository has already existed: %s", *repo.Name)
+		return nil
+	}
+
+	// if rename_from does exist, now go to invoke rename repository
+	if repo.RenameFrom != nil && len(*repo.RenameFrom) > 0 {
+		// invoke query repoisitory with the name defined by rename_from
+		glog.Infof("begin to query repository: %s defined by rename_from ", *repo.RenameFrom)
+		localVarRenameOptionals := &gitee.GetV5ReposOwnerRepoOpts{}
+		localVarRenameOptionals.AccessToken = optional.NewString(handler.Config.GiteeToken)
+		_, response, _ = handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepo(handler.Context, owner, *repo.RenameFrom, localVarRenameOptionals)
+		if response.StatusCode == 404 {
+			errMsg := fmt.Sprintf("repository defined by rename_from does not exist: %s", *repo.RenameFrom)
+			glog.Errorf("failed to rename repository: %s", errMsg)
+			return fmt.Errorf(errMsg)
+		}
+		// everything seems fine, then build patch repository param
+		repoPatchParam := gitee.RepoPatchParam{}
+		repoPatchParam.AccessToken = handler.Config.GiteeToken
+		repoPatchParam.Name = *repo.Name
+		repoPatchParam.Path = *repo.Name
+		// invoke patching repository API to change *repo.RenameFrom to *repo.Name
+		_, _, err := handler.GiteeClient.RepositoriesApi.PatchV5ReposOwnerRepo(handler.Context, owner, *repo.RenameFrom, repoPatchParam)
+		if err != nil {
+			glog.Errorf("unable to rename the repository from %s to %s", *repo.RenameFrom, *repo.Name)
+			return err
+		}
 		return nil
 	}
 
 	// invoke create repository
-	glog.Infof("begin to create repository: %s", repo)
+	glog.Infof("begin to create repository: %s", *repo.Name)
 	_, _, err := handler.GiteeClient.RepositoriesApi.PostV5OrgsOrgRepos(handler.Context, owner, repobody)
 	if err != nil {
 		glog.Errorf("fail to create repository: %v", err)
 		return err
 	}
-	glog.Infof("end to create repository: %s", repo)
+	glog.Infof("end to create repository: %s", *repo.Name)
 	return nil
 }
 
@@ -441,7 +493,7 @@ func (handler *RepoHandler) addBranchProtections(community string, r Repository,
 			branchObj, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoBranchesBranch(
 				handler.Context, community, *r.Name, v, getOpts)
 			if response.StatusCode == 404 {
-				glog.Errorf("branch %s not exists, no need for protection", v)
+				glog.Errorf("branch %s does not exist, no need for protection", v)
 				continue
 			}
 
@@ -505,7 +557,7 @@ func (handler *RepoHandler) handleRepositorySetting(community string, r Reposito
 		pj, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepo(
 			handler.Context, community, *r.Name, localVarOptionals)
 		if response.StatusCode == 404 {
-			glog.Infof("repository is not exist: %s", *r.Name)
+			glog.Infof("repository dose not exist: %s", *r.Name)
 			return nil
 		}
 
