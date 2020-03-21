@@ -1,7 +1,10 @@
 package cibot
 
 import (
+	"fmt"
+	"math/rand"
 	"strings"
+	"time"
 
 	"github.com/antihax/optional"
 
@@ -193,6 +196,23 @@ func (s *Server) AddLabelInPulRequest(event *gitee.NoteEvent) error {
 	}
 
 	return nil
+}
+
+func (s *Server) labelDiffer(new []string, existing []gitee.Label) ([]string, []string) {
+	mb := make(map[string]struct{}, len(existing))
+	for _, x := range existing {
+		mb[x.Name] = struct{}{}
+	}
+	var diff []string
+	var same []string
+	for _, x := range new {
+		if _, found := mb[x]; !found {
+			diff = append(diff, x)
+		} else {
+			same = append(same, x)
+		}
+	}
+	return diff, same
 }
 
 // AddLabelInIssue adds label in issue
@@ -425,9 +445,101 @@ func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
 	return nil
 }
 
+func (s *Server) generateLabelLuckyColor() string {
+	cRand := rand.New(rand.NewSource(time.Now().Unix()))
+	return fmt.Sprintf("%02x%02x%02x", cRand.Intn(255), cRand.Intn(255), cRand.Intn(255))
+}
+
+func (s *Server) patchPRLabels(labels []string, owner, repo string, number int32) error {
+	// list labels in current pr
+	lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{
+		AccessToken: optional.NewString(s.Config.GiteeToken),
+	}
+	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
+	if err != nil {
+		glog.Errorf("unable to get pull request. err: %v", err)
+		return err
+	}
+	glog.Infof("list of pr labels: %v", pr.Labels)
+
+	// list of add labels
+	newLabels, _ := s.labelDiffer(labels, pr.Labels)
+	if len(newLabels) == 0 {
+		glog.Info("all labels existed in pr, skip updating.")
+		return nil
+	}
+	glog.Infof("list of add labels in pr: %v", newLabels)
+
+	// invoke gitee api to add labels
+	if len(newLabels) > 0 {
+		// build label string
+		var labelSlice []string
+		for _, l := range pr.Labels {
+			labelSlice = append(labelSlice, l.Name)
+		}
+		labelSlice = append(labelSlice, newLabels...)
+		body := gitee.PullRequestUpdateParam{}
+		body.AccessToken = s.Config.GiteeToken
+		body.Labels = strings.Join(labelSlice, ",")
+		glog.Infof("invoke api to add labels: %v", labelSlice)
+
+		// patch labels
+		_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
+		if err != nil {
+			if response.StatusCode == 400 {
+				glog.Infof("add labels successfully with status code %d: %v", response.StatusCode, newLabels)
+			} else {
+				glog.Errorf("unable to add labels: %v err: %v", newLabels, err)
+				return err
+			}
+		} else {
+			glog.Infof("add labels successfully: %v", newLabels)
+		}
+	} else {
+		glog.Infof("no label to add for this event")
+	}
+	return nil
+}
+
+func (s *Server) patchRepoLabels(labels []string, owner, repo string, createNew bool) ([]string, error) {
+	// list labels in current gitee repository
+	lvosRepo := &gitee.GetV5ReposOwnerRepoLabelsOpts{
+		AccessToken: optional.NewString(s.Config.GiteeToken),
+	}
+	listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, lvosRepo)
+	if err != nil {
+		glog.Errorf("unable to list repository labels. err: %v", err)
+		return []string{}, err
+	}
+	glog.Infof("list of repository labels: %v", listofRepoLabels)
+	newLabels, existlabel := s.labelDiffer(labels, listofRepoLabels)
+	if len(newLabels) == 0 {
+		glog.Info("all labels existed in repo, skip creating.")
+		return existlabel, nil
+	}
+	if !createNew {
+		glog.Info("'createNew' flag is false, skip creating.")
+		return existlabel,nil
+	}
+	createLabelParam := gitee.LabelPostParam{
+		AccessToken: s.Config.GiteeToken,
+	}
+	for _, label := range newLabels {
+		createLabelParam.Name = label
+		createLabelParam.Color = s.generateLabelLuckyColor()
+		result, httpResponse, err := s.GiteeClient.LabelsApi.PostV5ReposOwnerRepoLabels(
+			s.Context, owner, repo, createLabelParam)
+		if err != nil {
+			glog.Errorf("unable to create repository label. %v, err: %v and %v", result, err.Error(), *httpResponse)
+			return []string{}, err
+		}
+	}
+	return labels, nil
+}
+
 // AddSpecifyLabelInPulRequest adds specify labels in pull request
-func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfAddLabels map[string]string) error {
-	// get basic informations
+func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, newLabels []string, createNew bool) error {
+	// get basic information
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
 	repo := event.Repository.Name
@@ -438,69 +550,22 @@ func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfAddLa
 	glog.Infof("add specify label started. comment: %s owner: %s repo: %s number: %d",
 		comment, owner, repo, number)
 
-	// list labels in current gitee repository
-	lvosRepo := &gitee.GetV5ReposOwnerRepoLabelsOpts{}
-	lvosRepo.AccessToken = optional.NewString(s.Config.GiteeToken)
-	listofRepoLabels, _, err := s.GiteeClient.LabelsApi.GetV5ReposOwnerRepoLabels(s.Context, owner, repo, lvosRepo)
+	// patch repo labels
+	legalLabels, err := s.patchRepoLabels(newLabels, owner, repo, createNew)
 	if err != nil {
-		glog.Errorf("unable to list repository labels. err: %v", err)
 		return err
 	}
-	glog.Infof("list of repository labels: %v", listofRepoLabels)
 
-	// list labels in current item
-	lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
-	lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
-	pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
-	if err != nil {
-		glog.Errorf("unable to get pull request. err: %v", err)
+	// patch pr labels
+	if err := s.patchPRLabels(legalLabels, owner, repo, number); err != nil {
 		return err
 	}
-	listofItemLabels := pr.Labels
-	glog.Infof("list of item labels: %v", listofItemLabels)
-
-	// list of add labels
-	listOfAddLabels := GetListOfAddLabels(mapOfAddLabels, listofRepoLabels, listofItemLabels)
-	glog.Infof("list of add labels: %v", listOfAddLabels)
-
-	// invoke gitee api to add labels
-	if len(listOfAddLabels) > 0 {
-		// build label string
-		var strLabel string
-		for _, currentlabel := range listofItemLabels {
-			strLabel += currentlabel.Name + ","
-		}
-		for _, addedlabel := range listOfAddLabels {
-			strLabel += addedlabel + ","
-		}
-		strLabel = strings.TrimRight(strLabel, ",")
-		body := gitee.PullRequestUpdateParam{}
-		body.AccessToken = s.Config.GiteeToken
-		body.Labels = strLabel
-		glog.Infof("invoke api to add labels: %v", strLabel)
-
-		// patch labels
-		_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
-		if err != nil {
-			if response.StatusCode == 400 {
-				glog.Infof("add labels successfully with status code %d: %v", response.StatusCode, listOfAddLabels)
-			} else {
-				glog.Errorf("unable to add labels: %v err: %v", listOfAddLabels, err)
-				return err
-			}
-		} else {
-			glog.Infof("add labels successfully: %v", listOfAddLabels)
-		}
-	} else {
-		glog.Infof("no label to add for this event")
-	}
-
 	return nil
 }
 
 // RemoveSpecifyLabelsInPulRequest removes specify labels in pull request
 func (s *Server) RemoveSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfRemoveLabels map[string]string) error {
-	// get basic informations
+	// get basic information
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
 	repo := event.Repository.Name

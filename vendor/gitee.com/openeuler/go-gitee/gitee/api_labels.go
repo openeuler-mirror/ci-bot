@@ -1012,19 +1012,11 @@ LabelsApiService 创建仓库任务标签
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
- * @param name 标签名称
- * @param color 标签颜色。为6位的数字，如: 000000
- * @param optional nil or *PostV5ReposOwnerRepoLabelsOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ * @param body 必选，标签的内容
 
 @return Label
 */
-
-type PostV5ReposOwnerRepoLabelsOpts struct {
-	AccessToken optional.String
-}
-
-func (a *LabelsApiService) PostV5ReposOwnerRepoLabels(ctx context.Context, owner string, repo string, name string, color string, localVarOptionals *PostV5ReposOwnerRepoLabelsOpts) (Label, *http.Response, error) {
+func (a *LabelsApiService) PostV5ReposOwnerRepoLabels(ctx context.Context, owner string, repo string, body LabelPostParam) (Label, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -1059,11 +1051,8 @@ func (a *LabelsApiService) PostV5ReposOwnerRepoLabels(ctx context.Context, owner
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("name", parameterToString(name, ""))
-	localVarFormParams.Add("color", parameterToString(color, ""))
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err

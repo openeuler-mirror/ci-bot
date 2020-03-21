@@ -11,16 +11,17 @@ import (
 )
 
 const (
-	kind              = "/kind"
-	RemoveKind        = "/remove-kind"
-	AddClaYes         = "/%s-cla yes"
-	AddClaNo          = "/%s-cla no"
-	RemoveClaYes      = "/remove-%s-cla yes"
-	RemoveClaNo       = "/remove-%s-cla no"
-	LabelNameLgtm     = "lgtm"
-	LabelNameApproved = "approved"
-	LabelHiddenValue  = "<input type=hidden value=%s />"
-	tipBotMessage     = `Hey ***@%s***, Welcome to %s Community.
+	kind                   = "/kind"
+	RemoveKind             = "/remove-kind"
+	AddClaYes              = "/%s-cla yes"
+	AddClaNo               = "/%s-cla no"
+	RemoveClaYes           = "/remove-%s-cla yes"
+	RemoveClaNo            = "/remove-%s-cla no"
+	LabelNameLgtm          = "lgtm"
+	LabelLgtmWithCommenter = "lgtm-%s"
+	LabelNameApproved      = "approved"
+	LabelHiddenValue       = "<input type=hidden value=%s />"
+	tipBotMessage          = `Hey ***@%s***, Welcome to %s Community.
 All of the projects in %s Community are maintained by ***@%s***.
 That means the developpers can comment below every pull request or issue to trigger Bot Commands.
 Please follow instructions at <%s> to find the details.`

@@ -20,6 +20,7 @@ type Config struct {
 	ClaLink                  string             `yaml:"claLink"`
 	CommandLink              string             `yaml:"commandLink"`
 	ContactEmail             string             `yaml:"contactEmail"`
+	LgtmCountsRequired       int                `yaml:"lgtmCountsRequired"`
 }
 
 type WatchProjectFile struct {
