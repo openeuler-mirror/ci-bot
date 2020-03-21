@@ -2,6 +2,7 @@ package cibot
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/antihax/optional"
 
@@ -82,9 +83,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				addlabel.PullRequest = event.PullRequest
 				addlabel.Repository = event.Repository
 				addlabel.Comment = &gitee.NoteHook{}
-				mapOfAddLabels := map[string]string{}
-				mapOfAddLabels[LabelNameLgtm] = LabelNameLgtm
-				err = s.AddSpecifyLabelsInPulRequest(addlabel, mapOfAddLabels)
+				err = s.AddSpecifyLabelsInPulRequest(addlabel, []string{s.getLgtmLable(commentAuthor)}, true)
 				if err != nil {
 					return err
 				}
@@ -122,6 +121,13 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 		}
 	}
 	return nil
+}
+
+func (s *Server) getLgtmLable(commenter string) string {
+	if s.Config.LgtmCountsRequired > 1 {
+		return fmt.Sprintf(LabelLgtmWithCommenter, strings.ToLower(commenter))
+	}
+	return LabelNameLgtm
 }
 
 // RemoveLgtm removes lgtm label
@@ -188,7 +194,8 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 			removelabel.Repository = event.Repository
 			removelabel.Comment = &gitee.NoteHook{}
 			mapOfRemoveLabels := map[string]string{}
-			mapOfRemoveLabels[LabelNameLgtm] = LabelNameLgtm
+			lgtmLable := s.getLgtmLable(commentAuthor)
+			mapOfRemoveLabels[lgtmLable] = lgtmLable
 			err := s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
 			if err != nil {
 				return err
@@ -207,6 +214,29 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 		}
 	}
 	return nil
+}
+
+func (s *Server) collectExistingLgtmLabel(owner, repo string, number int32) (map[string]string, error) {
+	labels := make(map[string]string)
+	if s.Config.LgtmCountsRequired > 1 {
+		lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{
+			AccessToken: optional.NewString(s.Config.GiteeToken),
+		}
+		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
+		if err != nil {
+			glog.Errorf("unable to get pull request. err: %v", err)
+			return nil, err
+		}
+		glog.Infof("list of pr labels: %v", pr.Labels)
+		for _, label := range pr.Labels {
+			if strings.HasPrefix(label.Name, fmt.Sprintf(LabelLgtmWithCommenter, "")) {
+				labels[label.Name] = label.Name
+			}
+		}
+	} else {
+		labels[LabelNameLgtm] = LabelNameLgtm
+	}
+	return labels, nil
 }
 
 // CheckLgtmByPullRequestUpdate checks lgtm when received the pull request update event
@@ -261,9 +291,12 @@ func (s *Server) CheckLgtmByPullRequestUpdate(event *gitee.PullRequestEvent) err
 				removelabel.PullRequest = event.PullRequest
 				removelabel.Repository = event.Repository
 				removelabel.Comment = &gitee.NoteHook{}
-				mapOfRemoveLabels := map[string]string{}
-				mapOfRemoveLabels[LabelNameLgtm] = LabelNameLgtm
-				err := s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
+				labels, err := s.collectExistingLgtmLabel(owner, repo, prNumber)
+				if err != nil {
+					glog.Errorf("unable to pick lgtm label in pr: %v", err)
+					return err
+				}
+				err = s.RemoveSpecifyLabelsInPulRequest(removelabel, labels)
 				if err != nil {
 					return err
 				}

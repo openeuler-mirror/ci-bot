@@ -6,6 +6,7 @@ databasePort: 3306
 databaseName: "cibot"
 databaseUserName: "root"
 databasePassword: "******"
+lgtmCountsRequired: 1
 watchProjectFiles:
   - watchProjectFileOwner: openeuler
     watchprojectFileRepo: infrastructure

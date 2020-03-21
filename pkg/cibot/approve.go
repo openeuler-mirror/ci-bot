@@ -61,9 +61,7 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 				addlabel.PullRequest = event.PullRequest
 				addlabel.Repository = event.Repository
 				addlabel.Comment = &gitee.NoteHook{}
-				mapOfAddLabels := map[string]string{}
-				mapOfAddLabels[LabelNameApproved] = LabelNameApproved
-				err = s.AddSpecifyLabelsInPulRequest(addlabel, mapOfAddLabels)
+				err = s.AddSpecifyLabelsInPulRequest(addlabel, []string{LabelNameApproved}, false)
 				if err != nil {
 					return err
 				}

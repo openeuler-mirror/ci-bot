@@ -56,16 +56,8 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		listofPrLabels := pr.Labels
 		glog.Infof("List of pr labels: %v", listofPrLabels)
 
-		// check if it has lgtm label
-		hasLgtm := false
-		for _, l := range listofPrLabels {
-			if l.Name == LabelNameLgtm {
-				hasLgtm = true
-				break
-			}
-		}
 		// remove lgtm if changes happen
-		if hasLgtm {
+		if s.hasLgtmLabel(pr.Labels) {
 			err = s.CheckLgtmByPullRequestUpdate(event)
 			if err != nil {
 				glog.Errorf("check lgtm by pull request update. err: %v", err)
@@ -143,6 +135,38 @@ func (s *Server) RemoveTestersInPullRequest(event *gitee.NoteEvent) error {
 	return nil
 }
 
+func (s *Server) hasLgtmLabel(labels []gitee.Label) bool {
+	for _, l := range labels {
+		if strings.HasPrefix(l.Name, fmt.Sprintf(LabelLgtmWithCommenter, "")) || l.Name == LabelNameLgtm {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *Server) legalForMerge(labels []gitee.Label) bool {
+	aproveLabel := 0
+	lgtmLabel := 0
+	lgtmPrefix := ""
+	leastLgtm := 0
+	if s.Config.LgtmCountsRequired > 1 {
+		leastLgtm = s.Config.LgtmCountsRequired
+		lgtmPrefix =fmt.Sprintf(LabelLgtmWithCommenter, "")
+	} else {
+		leastLgtm = 1
+		lgtmPrefix = LabelNameLgtm
+	}
+	for _, l := range labels {
+		if strings.HasPrefix(l.Name, lgtmPrefix) {
+			lgtmLabel++
+		} else if l.Name == LabelNameApproved {
+			aproveLabel++
+		}
+	}
+	glog.Infof("Pr labels have approved: %d lgtm: %d, required (%d)", aproveLabel, lgtmLabel, leastLgtm)
+	return aproveLabel == 1 && lgtmLabel >= leastLgtm
+}
+
 // MergePullRequest with lgtm and approved label
 func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	// get basic params
@@ -162,20 +186,8 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	listofPrLabels := pr.Labels
 	glog.Infof("List of pr labels: %v", listofPrLabels)
 
-	// check if it has both lgtm and approved label
-	hasApproved := false
-	hasLgtm := false
-	for _, l := range listofPrLabels {
-		if l.Name == LabelNameLgtm {
-			hasLgtm = true
-		} else if l.Name == LabelNameApproved {
-			hasApproved = true
-		}
-	}
-	glog.Infof("Pr labels have approved: %t lgtm: %t", hasApproved, hasLgtm)
-
 	// ready to merge
-	if hasApproved && hasLgtm {
+	if s.legalForMerge(listofPrLabels) {
 		// current pr can be merged
 		if event.PullRequest.Mergeable {
 			// remove assignees
