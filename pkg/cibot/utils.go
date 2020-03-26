@@ -23,7 +23,7 @@ const (
 	LabelHiddenValue       = "<input type=hidden value=%s />"
 	tipBotMessage          = `Hey ***@%s***, Welcome to %s Community.
 All of the projects in %s Community are maintained by ***@%s***.
-That means the developpers can comment below every pull request or issue to trigger Bot Commands.
+That means the developers can comment below every pull request or issue to trigger Bot Commands.
 Please follow instructions at <%s> to find the details.`
 )
 

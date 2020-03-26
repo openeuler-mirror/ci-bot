@@ -23,6 +23,11 @@ func (s *Server) HandleIssueEvent(event *gitee.IssueEvent) {
 		body.AccessToken = s.Config.GiteeToken
 		body.Body = fmt.Sprintf(tipBotMessage, event.Sender.Login, s.Config.CommunityName, s.Config.CommunityName,
 			s.Config.BotName, s.Config.CommandLink)
+		//Issue could exists without belonging to any repo.
+		if event.Repository == nil {
+			glog.Warningf("Issue is not created on repo, skip posting issue comment.")
+			return
+		}
 		owner := event.Repository.Namespace
 		repo := event.Repository.Name
 		number := event.Issue.Number
