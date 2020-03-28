@@ -7,6 +7,10 @@ databaseName: "cibot"
 databaseUserName: "root"
 databasePassword: "******"
 lgtmCountsRequired: 1
+requiringLabels:
+- lgtm
+missingLabels:
+- do-not-merge
 watchProjectFiles:
   - watchProjectFileOwner: openeuler
     watchprojectFileRepo: infrastructure
