@@ -42,6 +42,7 @@ const (
 	ErrorCode_EmailError
 	ErrorCode_TelephoneError
 	ErrorCode_EmailNotTheSameError
+	ErrorCode_UnableFindCookie
 )
 
 const COOKIE_KEY string = "cla-info"
@@ -81,6 +82,12 @@ func (s *CLAHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(COOKIE_KEY)
 		if err != nil {
 			glog.Infof("Get cookie err: %v", err)
+			s.HandleResult(w, CLAResult{
+				IsSuccess:   false,
+				Description: fmt.Sprintf("unable to get cookie: %v", err),
+				ErrorCode:   ErrorCode_UnableFindCookie,
+			})
+			return
 		}
 
 		glog.Infof("cla request content: %v", clarequest)
