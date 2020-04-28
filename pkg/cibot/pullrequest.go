@@ -41,6 +41,29 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		if err != nil {
 			glog.Errorf("failed to check cla by pull request event: %v", err)
 		}
+
+		diff := s.CheckSpecialFileHasModified(event, s.Config.AccordingFile)
+		if diff == "" {
+			return
+		}
+		prjnames := ParseDiffInfoAndGetProjectName(diff)
+		if 0 == len(prjnames) {
+			glog.Infof("No project file need to add.")
+			return
+		}
+
+		newfilerepo := s.Config.NewFileRepo
+		newfilebranch := s.Config.NewFileBranch
+		newowner := s.Config.NewFileOwner
+		for _, prjn := range prjnames {
+			exist := s.CheckWetherNewItemInObsProjects(event, prjn, newfilebranch, newfilerepo, newowner)
+			if true == exist {
+				glog.Infof("Project(%v) is in obs already.", prjn)
+				continue
+			}
+			// send note
+			s.SendNote4AutomaticNewFile(event)
+		}
 	case "update":
 		glog.Info("received a pull request update event")
 
@@ -88,8 +111,6 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 				glog.Infof("Project(%v) is in obs already.", prjn)
 				continue
 			}
-			// send note
-			s.SendNote4AutomaticNewFile(event)
 			// new a project file automaticly
 			glog.Infof("Begin to create new project file, project name:%v.", prjn)
 			_servicepath, _servicecontent := s.FillServicePathAndContentWithProjectName(prjn)
@@ -211,15 +232,6 @@ func (s *Server) FillServicePathAndContentWithProjectName(prjname string) (_serv
 	str := string(filebuf)
 	_service = strings.Replace(str, "#projectname#", prjname, 1)
 	glog.Infof("service file:%v", _service)
-	/*
-		_servicepath = "obs/team_usage/obs_meta/projects/openEuler:Mainline/" + prjname + "/_service"
-		_service = "<services>\n" +
-			"    <service name=\"tar_scm_kernel_repo\">\n" +
-			"      <param name=\"scm\">repo</param>\n" +
-			"      <param name=\"url\">next/openEuler/" + prjname + "</param>\n" +
-			"    </service>\n" +
-			"</services>"
-	*/
 	return
 }
 
@@ -237,10 +249,13 @@ func (s *Server) NewFileWithPathAndContentInPullRequest(event *gitee.PullRequest
 	newfbody.Branch = branch
 	newfbody.Message = "add project according to src-openeuler.yaml in repo community."
 
-	glog.Infof("Begin to write template fil(%v) autoly.", path)
+	glog.Infof("Begin to write template file (%v) autoly.", path)
 	contentbase64 := base64.StdEncoding.EncodeToString([]byte(content))
 	newfbody.Content = contentbase64
-	s.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoContentsPath(s.Context, owner, repo, path, newfbody)
+	_, _, err := s.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoContentsPath(s.Context, owner, repo, path, newfbody)
+	if err != nil {
+		glog.Errorf("New service file failed: %v.", err)
+	}
 	return
 }
 

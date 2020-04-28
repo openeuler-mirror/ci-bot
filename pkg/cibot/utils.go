@@ -25,7 +25,7 @@ const (
 All of the projects in %s Community are maintained by ***@%s***.
 That means the developers can comment below every pull request or issue to trigger Bot Commands.
 Please follow instructions at <%s> to find the details.`
-	AutoAddPrjMsg = `Since you have added a item to the src-openeuler.yaml file, we will automatically generate a default project for you in the src-openeuler repository. 
+	AutoAddPrjMsg = `Since you have added a item to the src-openeuler.yaml file, we will automatically generate a default package in project openEuler:Factory on OBS cluster for you.
 If you need a more customized configuration, you can configure it according to the following instructions: `
 )
 
