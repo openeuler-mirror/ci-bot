@@ -1182,20 +1182,20 @@ RepositoriesApiService 获取单个分支
  * @param optional nil or *GetV5ReposOwnerRepoBranchesBranchOpts - Optional Parameters:
      * @param "AccessToken" (optional.String) -  用户授权码
 
-@return CompleteBranch
+@return Branch
 */
 
 type GetV5ReposOwnerRepoBranchesBranchOpts struct {
 	AccessToken optional.String
 }
 
-func (a *RepositoriesApiService) GetV5ReposOwnerRepoBranchesBranch(ctx context.Context, owner string, repo string, branch string, localVarOptionals *GetV5ReposOwnerRepoBranchesBranchOpts) (CompleteBranch, *http.Response, error) {
+func (a *RepositoriesApiService) GetV5ReposOwnerRepoBranchesBranch(ctx context.Context, owner string, repo string, branch string, localVarOptionals *GetV5ReposOwnerRepoBranchesBranchOpts) (Branch, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
 		localVarFileName    string
 		localVarFileBytes   []byte
-		localVarReturnValue CompleteBranch
+		localVarReturnValue Branch
 	)
 
 	// create path and map variables
@@ -1259,7 +1259,7 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoBranchesBranch(ctx context.C
 		}
 
 		if localVarHttpResponse.StatusCode == 200 {
-			var v CompleteBranch
+			var v Branch
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1284,20 +1284,20 @@ RepositoriesApiService 获取仓库的所有成员
  * @param optional nil or *GetV5ReposOwnerRepoCollaboratorsOpts - Optional Parameters:
      * @param "AccessToken" (optional.String) -  用户授权码
 
-@return ProjectMember
+@return []ProjectMember
 */
 
 type GetV5ReposOwnerRepoCollaboratorsOpts struct {
 	AccessToken optional.String
 }
 
-func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaborators(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoCollaboratorsOpts) (ProjectMember, *http.Response, error) {
+func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaborators(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoCollaboratorsOpts) ([]ProjectMember, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
 		localVarFileName    string
 		localVarFileBytes   []byte
-		localVarReturnValue ProjectMember
+		localVarReturnValue []ProjectMember
 	)
 
 	// create path and map variables
@@ -1360,7 +1360,7 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaborators(ctx context.Co
 		}
 
 		if localVarHttpResponse.StatusCode == 200 {
-			var v ProjectMember
+			var v []ProjectMember
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -4638,29 +4638,11 @@ RepositoriesApiService 新建文件
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param path 文件的路径
- * @param content 文件内容, 要用 base64 编码
- * @param message 提交信息
- * @param optional nil or *PostV5ReposOwnerRepoContentsPathOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Branch" (optional.String) -  分支名称。默认为仓库对默认分支
-     * @param "CommitterName" (optional.String) -  Committer的名字，默认为当前用户的名字
-     * @param "CommitterEmail" (optional.String) -  Committer的邮箱，默认为当前用户的邮箱
-     * @param "AuthorName" (optional.String) -  Author的名字，默认为当前用户的名字
-     * @param "AuthorEmail" (optional.String) -  Author的邮箱，默认为当前用户的邮箱
+ * @param body 描述文件信息
 
 @return CommitContent
 */
-
-type PostV5ReposOwnerRepoContentsPathOpts struct {
-	AccessToken    optional.String
-	Branch         optional.String
-	CommitterName  optional.String
-	CommitterEmail optional.String
-	AuthorName     optional.String
-	AuthorEmail    optional.String
-}
-
-func (a *RepositoriesApiService) PostV5ReposOwnerRepoContentsPath(ctx context.Context, owner string, repo string, path string, content string, message string, localVarOptionals *PostV5ReposOwnerRepoContentsPathOpts) (CommitContent, *http.Response, error) {
+func (a *RepositoriesApiService) PostV5ReposOwnerRepoContentsPath(ctx context.Context, owner string, repo string, path string, body NewFileParam) (CommitContent, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -4696,26 +4678,8 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoContentsPath(ctx context.Co
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("content", parameterToString(content, ""))
-	localVarFormParams.Add("message", parameterToString(message, ""))
-	if localVarOptionals != nil && localVarOptionals.Branch.IsSet() {
-		localVarFormParams.Add("branch", parameterToString(localVarOptionals.Branch.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.CommitterName.IsSet() {
-		localVarFormParams.Add("committer[name]", parameterToString(localVarOptionals.CommitterName.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.CommitterEmail.IsSet() {
-		localVarFormParams.Add("committer[email]", parameterToString(localVarOptionals.CommitterEmail.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.AuthorName.IsSet() {
-		localVarFormParams.Add("author[name]", parameterToString(localVarOptionals.AuthorName.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.AuthorEmail.IsSet() {
-		localVarFormParams.Add("author[email]", parameterToString(localVarOptionals.AuthorEmail.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err

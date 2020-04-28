@@ -110,6 +110,91 @@ func (a *PullRequestsApiService) DeleteV5ReposOwnerRepoPullsCommentsId(ctx conte
 }
 
 /*
+PullRequestsApiService 删除 Pull Request 标签
+删除 Pull Request 标签
+ * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+ * @param repo 仓库路径(path)
+ * @param number 第几个PR，即本仓库PR的序数
+ * @param name 标签名称
+ * @param optional nil or *DeleteV5ReposOwnerRepoPullsLabelOpts - Optional Parameters:
+     * @param "AccessToken" (optional.String) -  用户授权码
+
+
+*/
+
+type DeleteV5ReposOwnerRepoPullsLabelOpts struct {
+	AccessToken optional.String
+}
+
+func (a *PullRequestsApiService) DeleteV5ReposOwnerRepoPullsLabel(ctx context.Context, owner string, repo string, number int32, name string, localVarOptionals *DeleteV5ReposOwnerRepoPullsLabelOpts) (*http.Response, error) {
+	var (
+		localVarHttpMethod = strings.ToUpper("Delete")
+		localVarPostBody   interface{}
+		localVarFileName   string
+		localVarFileBytes  []byte
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/v5/repos/{owner}/{repo}/pulls/{number}/labels/{name}"
+	localVarPath = strings.Replace(localVarPath, "{"+"owner"+"}", fmt.Sprintf("%v", owner), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repo"+"}", fmt.Sprintf("%v", repo), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"number"+"}", fmt.Sprintf("%v", number), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"name"+"}", fmt.Sprintf("%v", name), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
+		localVarQueryParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
+	}
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{"application/json", "multipart/form-data"}
+
+	// set Content-Type header
+	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
+	if localVarHttpContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHttpContentType
+	}
+
+	// to determine the Accept header
+	localVarHttpHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
+	if localVarHttpHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHttpResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHttpResponse == nil {
+		return localVarHttpResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarHttpResponse.Body.Close()
+	if err != nil {
+		return localVarHttpResponse, err
+	}
+
+	if localVarHttpResponse.StatusCode >= 300 {
+		newErr := GenericSwaggerError{
+			body:  localVarBody,
+			error: localVarHttpResponse.Status,
+		}
+
+		return localVarHttpResponse, newErr
+	}
+
+	return localVarHttpResponse, nil
+}
+
+/*
 PullRequestsApiService 取消用户审查 Pull Request
 取消用户审查 Pull Request
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1117,6 +1202,119 @@ func (a *PullRequestsApiService) GetV5ReposOwnerRepoPullsNumberFiles(ctx context
 }
 
 /*
+PullRequestsApiService 获取某个 Pull Request 的所有标签
+获取某个 Pull Request 的所有标签
+ * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+ * @param repo 仓库路径(path)
+ * @param number 第几个PR，即本仓库PR的序数
+ * @param optional nil or *GetV5ReposOwnerRepoPullsNumberLabelsOpts - Optional Parameters:
+     * @param "AccessToken" (optional.String) -  用户授权码
+     * @param "Page" (optional.Int32) -  当前的页码
+     * @param "PerPage" (optional.Int32) -  每页的数量，最大为 100
+
+@return []Label
+*/
+
+type GetV5ReposOwnerRepoPullsNumberLabelsOpts struct {
+	AccessToken optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
+}
+
+func (a *PullRequestsApiService) GetV5ReposOwnerRepoPullsNumberLabels(ctx context.Context, owner string, repo string, number int32, localVarOptionals *GetV5ReposOwnerRepoPullsNumberLabelsOpts) ([]Label, *http.Response, error) {
+	var (
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
+		localVarReturnValue []Label
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/v5/repos/{owner}/{repo}/pulls/{number}/labels"
+	localVarPath = strings.Replace(localVarPath, "{"+"owner"+"}", fmt.Sprintf("%v", owner), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repo"+"}", fmt.Sprintf("%v", repo), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"number"+"}", fmt.Sprintf("%v", number), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
+		localVarQueryParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.PerPage.IsSet() {
+		localVarQueryParams.Add("per_page", parameterToString(localVarOptionals.PerPage.Value(), ""))
+	}
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{"application/json", "multipart/form-data"}
+
+	// set Content-Type header
+	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
+	if localVarHttpContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHttpContentType
+	}
+
+	// to determine the Accept header
+	localVarHttpHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
+	if localVarHttpHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHttpResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHttpResponse == nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarHttpResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	if localVarHttpResponse.StatusCode < 300 {
+		// If we succeed, return the data, otherwise pass on to decode error.
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
+			return localVarReturnValue, localVarHttpResponse, err
+		}
+	}
+
+	if localVarHttpResponse.StatusCode >= 300 {
+		newErr := GenericSwaggerError{
+			body:  localVarBody,
+			error: localVarHttpResponse.Status,
+		}
+
+		if localVarHttpResponse.StatusCode == 200 {
+			var v []Label
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
+		}
+
+		return localVarReturnValue, localVarHttpResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHttpResponse, nil
+}
+
+/*
 PullRequestsApiService 判断Pull Request是否已经合并
 判断Pull Request是否已经合并
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -1514,34 +1712,11 @@ PullRequestsApiService 创建Pull Request
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
- * @param title 必填。Pull Request 标题
- * @param head 必填。Pull Request 提交的源分支。格式：branch 或者：username:branch
- * @param base 必填。Pull Request 提交目标分支的名称
- * @param optional nil or *PostV5ReposOwnerRepoPullsOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Body" (optional.String) -  可选。Pull Request 内容
-     * @param "MilestoneNumber" (optional.Int32) -  可选。里程碑序号(id)
-     * @param "Labels" (optional.String) -  用逗号分开的标签，名称要求长度在 2-20 之间且非特殊字符。如: bug,performance
-     * @param "Issue" (optional.String) -  可选。Pull Request的标题和内容可以根据指定的Issue Id自动填充
-     * @param "Assignees" (optional.String) -  可选。审查人员username，可多个，半角逗号分隔，如：(username1,username2)
-     * @param "Testers" (optional.String) -  可选。测试人员username，可多个，半角逗号分隔，如：(username1,username2)
-     * @param "PruneSourceBranch" (optional.Bool) -  可选。合并PR后是否删除源分支，默认false（不删除）
+ * @param body pr的信息
 
 @return PullRequest
 */
-
-type PostV5ReposOwnerRepoPullsOpts struct {
-	AccessToken       optional.String
-	Body              optional.String
-	MilestoneNumber   optional.Int32
-	Labels            optional.String
-	Issue             optional.String
-	Assignees         optional.String
-	Testers           optional.String
-	PruneSourceBranch optional.Bool
-}
-
-func (a *PullRequestsApiService) PostV5ReposOwnerRepoPulls(ctx context.Context, owner string, repo string, title string, head string, base string, localVarOptionals *PostV5ReposOwnerRepoPullsOpts) (PullRequest, *http.Response, error) {
+func (a *PullRequestsApiService) PostV5ReposOwnerRepoPulls(ctx context.Context, owner string, repo string, body CreatePullRequestParam) (PullRequest, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -1576,33 +1751,8 @@ func (a *PullRequestsApiService) PostV5ReposOwnerRepoPulls(ctx context.Context, 
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("title", parameterToString(title, ""))
-	localVarFormParams.Add("head", parameterToString(head, ""))
-	localVarFormParams.Add("base", parameterToString(base, ""))
-	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
-		localVarFormParams.Add("body", parameterToString(localVarOptionals.Body.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.MilestoneNumber.IsSet() {
-		localVarFormParams.Add("milestone_number", parameterToString(localVarOptionals.MilestoneNumber.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Labels.IsSet() {
-		localVarFormParams.Add("labels", parameterToString(localVarOptionals.Labels.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Issue.IsSet() {
-		localVarFormParams.Add("issue", parameterToString(localVarOptionals.Issue.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Assignees.IsSet() {
-		localVarFormParams.Add("assignees", parameterToString(localVarOptionals.Assignees.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Testers.IsSet() {
-		localVarFormParams.Add("testers", parameterToString(localVarOptionals.Testers.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.PruneSourceBranch.IsSet() {
-		localVarFormParams.Add("prune_source_branch", parameterToString(localVarOptionals.PruneSourceBranch.Value(), ""))
-	}
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1657,18 +1807,11 @@ PullRequestsApiService 指派用户审查 Pull Request
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param number 第几个PR，即本仓库PR的序数
- * @param assignees 用户的个人空间地址, 以 , 分隔
- * @param optional nil or *PostV5ReposOwnerRepoPullsNumberAssigneesOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ * @param body 必选，标签的内容
 
 @return PullRequest
 */
-
-type PostV5ReposOwnerRepoPullsNumberAssigneesOpts struct {
-	AccessToken optional.String
-}
-
-func (a *PullRequestsApiService) PostV5ReposOwnerRepoPullsNumberAssignees(ctx context.Context, owner string, repo string, number int32, assignees string, localVarOptionals *PostV5ReposOwnerRepoPullsNumberAssigneesOpts) (PullRequest, *http.Response, error) {
+func (a *PullRequestsApiService) PostV5ReposOwnerRepoPullsNumberAssignees(ctx context.Context, owner string, repo string, number int32, body PullRequestAssigneePostParam) (PullRequest, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -1704,10 +1847,8 @@ func (a *PullRequestsApiService) PostV5ReposOwnerRepoPullsNumberAssignees(ctx co
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("assignees", parameterToString(assignees, ""))
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1836,6 +1977,102 @@ func (a *PullRequestsApiService) PostV5ReposOwnerRepoPullsNumberComments(ctx con
 
 		if localVarHttpResponse.StatusCode == 201 {
 			var v PullRequestComments
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
+		}
+
+		return localVarReturnValue, localVarHttpResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHttpResponse, nil
+}
+
+/*
+PullRequestsApiService 创建 Pull Request 标签
+创建 Pull Request 标签
+ * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
+ * @param repo 仓库路径(path)
+ * @param number 第几个PR，即本仓库PR的序数
+ * @param body 必选，标签的内容
+
+@return Label
+*/
+func (a *PullRequestsApiService) PostV5ReposOwnerRepoPullsNumberLabels(ctx context.Context, owner string, repo string, number int32, body PullRequestLabelPostParam) (Label, *http.Response, error) {
+	var (
+		localVarHttpMethod  = strings.ToUpper("Post")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
+		localVarReturnValue Label
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/v5/repos/{owner}/{repo}/pulls/{number}/labels"
+	localVarPath = strings.Replace(localVarPath, "{"+"owner"+"}", fmt.Sprintf("%v", owner), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repo"+"}", fmt.Sprintf("%v", repo), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"number"+"}", fmt.Sprintf("%v", number), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{"application/json", "multipart/form-data"}
+
+	// set Content-Type header
+	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
+	if localVarHttpContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHttpContentType
+	}
+
+	// to determine the Accept header
+	localVarHttpHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
+	if localVarHttpHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	}
+	// body params
+	localVarPostBody = &body.Body // This shoud be &body because the gitee api is not normalized.
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHttpResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHttpResponse == nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarHttpResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	if localVarHttpResponse.StatusCode < 300 {
+		// If we succeed, return the data, otherwise pass on to decode error.
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
+			return localVarReturnValue, localVarHttpResponse, err
+		}
+	}
+
+	if localVarHttpResponse.StatusCode >= 300 {
+		newErr := GenericSwaggerError{
+			body:  localVarBody,
+			error: localVarHttpResponse.Status,
+		}
+
+		if localVarHttpResponse.StatusCode == 201 {
+			var v Label
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

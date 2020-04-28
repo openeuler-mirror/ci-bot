@@ -12,7 +12,7 @@ package gitee
 // 编辑评论
 type PullRequestComments struct {
 	Url              string     `json:"url,omitempty"`
-	Id               string     `json:"id,omitempty"`
+	Id               int32      `json:"id,omitempty"`
 	Path             string     `json:"path,omitempty"`
 	Position         string     `json:"position,omitempty"`
 	OriginalPosition string     `json:"original_position,omitempty"`

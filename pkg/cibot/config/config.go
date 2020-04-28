@@ -21,6 +21,13 @@ type Config struct {
 	CommandLink              string             `yaml:"commandLink"`
 	ContactEmail             string             `yaml:"contactEmail"`
 	LgtmCountsRequired       int                `yaml:"lgtmCountsRequired"`
+	AccordingFile            string             `yaml:"accordingfile"`
+	NewFileOwner             string             `yaml:"newfileowner"`
+	NewFileRepo              string             `yaml:"newfilerepo"`
+	NewFileBranch            string             `yaml:"newfilebranch"`
+	ServiceFile              string             `yaml:"tmpservicefile"`
+	ServicePath              string             `yaml:"tmpservicepath"`
+	GuideURL                 string             `yaml:"guideurl"`
 }
 
 type WatchProjectFile struct {

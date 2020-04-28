@@ -11,8 +11,8 @@ package gitee
 
 // 获取所有分支
 type Branch struct {
-	Name          string `json:"name,omitempty"`
-	Commit        string `json:"commit,omitempty"`
-	Protected     string `json:"protected,omitempty"`
-	ProtectionUrl string `json:"protection_url,omitempty"`
+	Name          string        `json:"name,omitempty"`
+	Commit        *BranchCommit `json:"commit,omitempty"`
+	Protected     bool          `json:"protected,omitempty"`
+	ProtectionUrl string        `json:"protection_url,omitempty"`
 }
