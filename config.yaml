@@ -34,3 +34,10 @@ communityName: openEuler
 claLink: https://openeuler.org/en/cla.html
 commandLink: https://gitee.com/openeuler/community/blob/master/en/sig-infrastructure/command.md
 contactEmail: contact@openeuler.org
+accordingfile: "src-openeuler.yaml"
+newfileowner: "src-openeuler"
+newfilerepo: "obs_meta"
+newfilebranch: "master"
+tmpservicefile: "_service"
+tmpservicepath: "projects/openEuler:Factory/#projectname#/_service"
+guideurl: "https://gitee.com/openeuler/community/tree/master/zh/contributors"

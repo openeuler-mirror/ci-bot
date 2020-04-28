@@ -498,7 +498,7 @@ func (handler *RepoHandler) addBranchProtections(community string, r Repository,
 			}
 
 			// If branch has alreay been protected, no need for protection
-			if branchObj.Protected == "true" {
+			if branchObj.Protected == true {
 				glog.Errorf("branch %s has been protected already, no need for protection", v)
 				continue
 			}

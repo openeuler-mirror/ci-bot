@@ -82,9 +82,9 @@ type PullRequestEvent struct {
 	MergeCommitSha *string          `json:"merge_commit_sha,omitempty"`
 	URL            *string          `json:"url,omitempty"`
 	SourceBranch   *string          `json:"source_branch,omitempty"`
-	SourceRepo     *ProjectHook     `json:"source_repo,omitempty"`
+	SourceRepo     *RepoInfo        `json:"source_repo,omitempty"`
 	TargetBranch   *string          `json:"target_branch,omitempty"`
-	TargetRepo     *ProjectHook     `json:"target_repo,omitempty"`
+	TargetRepo     *RepoInfo        `json:"target_repo,omitempty"`
 	Project        *ProjectHook     `json:"project,omitempty"`
 	Repository     *ProjectHook     `json:"repository,omitempty"`
 	Author         *UserHook        `json:"author,omitempty"`
