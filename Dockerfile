@@ -11,6 +11,8 @@ RUN mkdir -p /bot
 
 WORKDIR /bot
 
+COPY ./_service /bot
+
 EXPOSE 8888
 
 ENTRYPOINT ["ci-bot"]
