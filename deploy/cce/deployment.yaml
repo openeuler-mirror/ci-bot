@@ -1,41 +1,59 @@
----
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: botinfo
-  namespace: bot
   labels:
     app: botinfo
-  annotations:
-    flux.weave.works/automated: "true"
-    flux.weave.works/tag.nginxinfod: semver:~1.0
+  name: botinfo
 spec:
-  strategy:
-    rollingUpdate:
-      maxUnavailable: 0
-    type: RollingUpdate
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: botinfo
   template:
     metadata:
-      annotations:
-        prometheus.io/scrape: "true"
       labels:
         app: botinfo
     spec:
       containers:
-      - name: botinfod
-        image: swr.cn-south-1.myhuaweicloud.com/openeuler/bot:v1.0.201911121050334277
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8888
-          name: http
-          protocol: TCP
-        volumeMounts:
-        - mountPath: /bot/
-          name: configmap-volume
+        - args:
+            - --stderrthreshold=0
+          env:
+            - name: GITEE_OAUTH2_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bot-secret
+                  key: gitee_oauth2_secret
+            - name: GITEE_OAUTH2_CLIENT_CODE
+              valueFrom:
+                secretKeyRef:
+                  name: bot-secret
+                  key: gitee_oauth2_client_code
+            - name: WEBSITE_URL
+              value: https://openeuler.org/
+          image: swr.cn-south-1.myhuaweicloud.com/openeuler/bot:v1.0.202004301112269510
+          imagePullPolicy: IfNotPresent
+          name: botpod
+          ports:
+            - containerPort: 8888
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /bot/config.yaml
+              name: configmap-volume
+              subPath: config.yaml
+            - mountPath: /bot/_service
+              name: bot-service-configmap
+              subPath: _service
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
       volumes:
-      - name: configmap-volume
-        configMap:
-          name: bot-configmap
+        - configMap:
+            defaultMode: 420
+            name: bot-configmap
+          name: configmap-volume
+        - configMap:
+            defaultMode: 420
+            name: bot-service-configmap
+          name: bot-service-configmap

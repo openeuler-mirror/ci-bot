@@ -3,14 +3,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: botservice
-  namespace: bot
-  annotations:
-    kubernetes.io/elb.class: union
-    kubernetes.io/elb.id: e053029b-1898-4665-89eb-6ab598e448d7
-    kubernetes.io/elb.lb-algorithm: ROUND_ROBIN
 spec:
   externalTrafficPolicy: Cluster
-  loadBalancerIP: 159.138.49.225
   ports:
     - name: httpport
       protocol: TCP

@@ -1,26 +1,63 @@
 ---
 apiVersion: v1
+data:
+  _service: |
+    <services>
+        <service name="tar_scm_kernel_repo">
+          <param name="scm">repo</param>
+          <param name="url">next/openEuler/#projectname#</param>
+        </service>
+    </services>
+
+kind: ConfigMap
+metadata:
+  name: bot-service-configmap
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: bot-configmap
-  namespace: bot
 data:
   config.yaml: |
-    giteeToken: "******"
+    giteeToken: "*"
     webhookSecret: "123456789"
     databaseType: "mysql"
-    databaseHost: "127.0.0.1"
+    databaseHost: "172.16.1.73"
     databasePort: 3306
-    databaseName: "cibot"
-    databaseUserName: "root"
-    databasePassword: "******"
+    databaseName: "*"
+    databaseUserName: "*"
+    databasePassword: "*"
     watchProjectFiles:
       - watchProjectFileOwner: openeuler
-        watchprojectFileRepo: infrastructure
+        watchprojectFileRepo: community
         watchprojectFilePath: repository/openeuler.yaml
         watchProjectFileRef: master
       - watchProjectFileOwner: openeuler
-        watchprojectFileRepo: infrastructure
+        watchprojectFileRepo: community
         watchprojectFilePath: repository/src-openeuler.yaml
         watchProjectFileRef: master
     watchProjectFileDuration: 60
+    watchSigFiles:
+      - watchSigFileOwner: openeuler
+        watchSigFileRepo: community
+        watchSigFilePath: sig/sigs.yaml
+        watchSigFileRef: master
+    watchSigFileDuration: 60
+    watchOwnerFiles:
+      - watchOwnerFileOwner: openeuler
+        watchOwnerFileRepo: community
+        watchOwnerFilePath: sig/*/OWNERS
+        watchOwnerFileRef: master
+    watchOwnerFileDuration: 3600
+    botName: openeuler-ci-bot
+    communityName: openEuler
+    claLink: https://openeuler.org/en/cla.html
+    commandLink: https://gitee.com/openeuler/community/blob/master/en/sig-infrastructure/command.md
+    contactEmail: contact@openeuler.org
+    accordingfile: src-openeuler.yaml
+    newfileowner: src-openeuler
+    newfilerepo: obs_meta
+    newfilebranch: master
+    tmpservicefile: _service
+    tmpservicepath: projects/openEuler:Factory/#projectname#/_service
+    guideurl: https://gitee.com/openeuler/community/tree/master/zh/contributors

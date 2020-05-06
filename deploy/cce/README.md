@@ -11,8 +11,9 @@ $ make ci-bot-image
 ```
 
 ## Usage
+The generated yaml is not for final usage. You need provide secret `bot-secret` which contains the gitee and github token as well.
 
 ```
 $ cd $GOPATH/src/gitee.com/openeuler/ci-bot/deploy/cce
-$ kubectl create -f .
+$ kustomize build .
 ```
