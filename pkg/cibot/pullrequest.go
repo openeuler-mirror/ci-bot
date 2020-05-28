@@ -19,6 +19,11 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 
 	glog.Infof("pull request sender: %v", event.Sender.Login)
 
+	//validate commit numbers
+	if err := s.ValidateCommits(event); err != nil {
+		glog.Error("failed to validate pr commits ", err)
+	}
+
 	// handle events
 	switch *event.Action {
 	case "open":
@@ -343,7 +348,7 @@ func (s *Server) legalForMerge(labels []gitee.Label) bool {
 	leastLgtm := 0
 	if s.Config.LgtmCountsRequired > 1 {
 		leastLgtm = s.Config.LgtmCountsRequired
-		lgtmPrefix =fmt.Sprintf(LabelLgtmWithCommenter, "")
+		lgtmPrefix = fmt.Sprintf(LabelLgtmWithCommenter, "")
 	} else {
 		leastLgtm = 1
 		lgtmPrefix = LabelNameLgtm

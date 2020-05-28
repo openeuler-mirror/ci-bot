@@ -28,6 +28,8 @@ type Config struct {
 	ServiceFile              string             `yaml:"tmpservicefile"`
 	ServicePath              string             `yaml:"tmpservicepath"`
 	GuideURL                 string             `yaml:"guideurl"`
+	CommitsThreshold         int                `yaml:"commitsThreshold"`
+	SquashCommitLabel        string             `yaml:"squashCommitLabel"`
 }
 
 type WatchProjectFile struct {
