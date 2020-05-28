@@ -519,7 +519,7 @@ func (s *Server) patchRepoLabels(labels []string, owner, repo string, createNew 
 	}
 	if !createNew {
 		glog.Info("'createNew' flag is false, skip creating.")
-		return existlabel,nil
+		return existlabel, nil
 	}
 	createLabelParam := gitee.LabelPostParam{
 		AccessToken: s.Config.GiteeToken,
