@@ -162,10 +162,10 @@ func ParseDiffInfoAndGetProjectName(diff string) (prjnames []string) {
 
 // Get the diff info with merge and choose projects to be added
 func (s *Server) CheckSpecialFileHasModified(event *gitee.PullRequestEvent, specialfile string) (diff string) {
-	diff = ""
-	if event == nil {
-		return
+	if len(specialfile) == 0 || event == nil {
+		return ""
 	}
+	diff = ""
 	// get pr commit file list, community repo
 	owner := event.Repository.Namespace
 	repo := event.Repository.Name
