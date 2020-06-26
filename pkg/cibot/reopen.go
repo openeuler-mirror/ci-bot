@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	reopenIssueMessage = `this issue is reopened by: ***@%s***.`
+	reopenIssueMessage = `this issue is reopened by: ***%s***.`
 )
 
 // ReOpen reopens pr or issue
