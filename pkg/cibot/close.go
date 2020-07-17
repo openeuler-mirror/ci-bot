@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	closeIssueMessage       = `this issue is closed by: ***@%s***.`
-	closePullRequestMessage = `this pull request is closed by: ***@%s***.`
+	closeIssueMessage       = `this issue is closed by: ***%s***.`
+	closePullRequestMessage = `this pull request is closed by: ***%s***.`
 )
 
 // Close closes pr or issue

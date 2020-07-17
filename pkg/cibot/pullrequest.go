@@ -60,15 +60,21 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		newfilerepo := s.Config.NewFileRepo
 		newfilebranch := s.Config.NewFileBranch
 		newowner := s.Config.NewFileOwner
+		needreport := false
 		for _, prjn := range prjnames {
 			exist := s.CheckWetherNewItemInObsProjects(event, prjn, newfilebranch, newfilerepo, newowner)
 			if true == exist {
 				glog.Infof("Project(%v) is in obs already.", prjn)
 				continue
 			}
-			// send note
+			needreport = true
+		}
+
+		// send note
+		if needreport {
 			s.SendNote4AutomaticNewFile(event)
 		}
+
 	case "update":
 		glog.Info("received a pull request update event")
 
