@@ -425,6 +425,14 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 				// merge pr
 				body := gitee.PullRequestMergePutParam{}
 				body.AccessToken = s.Config.GiteeToken
+				// generate merge body
+				description, err := s.generateMergeDescription(event)
+				if err != nil {
+					glog.Errorf("unable to get merge description.err: %v", err)
+					return err
+				}
+				body.Description = description
+
 				_, err = s.GiteeClient.PullRequestsApi.PutV5ReposOwnerRepoPullsNumberMerge(s.Context, owner, repo, prNumber, body)
 				if err != nil {
 					glog.Errorf("unable to merge pull request. err: %v", err)
@@ -458,4 +466,75 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	}
 
 	return nil
+}
+
+func (s *Server) generateMergeDescription(event *gitee.NoteEvent) (string, error) {
+	// get basic params
+	owner := event.Repository.Namespace
+	repo := event.Repository.Name
+	prNumber := event.PullRequest.Number
+	commentCount := event.PullRequest.Comments
+	user := event.PullRequest.User.Login
+	var perPage int32 = 20
+	pageCount := commentCount / perPage
+	if commentCount%perPage > 0 {
+		pageCount++
+	}
+
+	result := ""
+	localVarOptionals := &gitee.GetV5ReposOwnerRepoPullsNumberCommentsOpts{}
+	localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
+	localVarOptionals.PerPage = optional.NewInt32(perPage)
+
+	var signers = make([]string, 0)
+	var reviewers = make([]string, 0)
+	// range page and get comments
+	for page := pageCount; page > 0; page-- {
+		localVarOptionals.Page = optional.NewInt32(page)
+		comments, _, err :=
+			s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, localVarOptionals)
+		if err != nil {
+			glog.Errorf("unable to get pull request comments. err:%v", err)
+			return result, err
+		}
+
+		signers, reviewers, err = getSignersAndReviewers(user, comments)
+		if err != nil {
+			glog.Errorf("failed to get signers or reviewers. err:%v", err)
+		}
+	}
+
+	result = formatDescription(user, reviewers, signers)
+	return result, nil
+}
+
+func formatDescription(user string, reviewers, signers []string) string {
+	return fmt.Sprintf("From: @%s\nReviewed-by: %s\nSigned-off-by: %s\n",
+		user, strings.Join(reviewers, ","),
+		strings.Join(signers, ","))
+}
+
+func getSignersAndReviewers(user string, comments []gitee.PullRequestComments) ([]string, []string, error) {
+	var signers = make([]string, 0)
+	var reviewers = make([]string, 0)
+
+	if len(comments) == 0 {
+		return signers, reviewers, fmt.Errorf("comment list is empty")
+	}
+
+	for _, comment := range comments {
+		m := RegAddLgtm.FindStringSubmatch(comment.Body)
+		if m != nil && comment.UpdatedAt == comment.CreatedAt && comment.User.Login != user {
+			reviewer := fmt.Sprintf("@%s", comment.User.Login)
+			reviewers = append(reviewers, reviewer)
+		}
+
+		m = RegAddApprove.FindStringSubmatch(comment.Body)
+		if m != nil && comment.UpdatedAt == comment.CreatedAt && comment.User.Login != user {
+			signer := fmt.Sprintf("@%s", comment.User.Login)
+			signers = append(signers, signer)
+		}
+	}
+
+	return signers, reviewers, nil
 }
