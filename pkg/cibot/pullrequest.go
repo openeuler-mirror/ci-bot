@@ -11,6 +11,13 @@ import (
 	"github.com/golang/glog"
 )
 
+const (
+	cannotMergeMessage = `This pull request can not be merged, you can try it again when label requirement meets. :astonished:
+%s`
+	nonRequiringLabelsMessage = ` Labels [**%s**] need to be added.`
+	nonMissingLabelsMessage   = ` Labels [**%s**] need to be removed.`
+)
+
 // HandlePullRequestEvent handles pull request event
 func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 	if event == nil {
@@ -347,7 +354,7 @@ func (s *Server) hasLgtmLabel(labels []gitee.Label) bool {
 	return false
 }
 
-func (s *Server) legalForMerge(labels []gitee.Label) bool {
+func (s *Server) readyForMerge(labels []gitee.Label) bool {
 	aproveLabel := 0
 	lgtmLabel := 0
 	lgtmPrefix := ""
@@ -370,6 +377,14 @@ func (s *Server) legalForMerge(labels []gitee.Label) bool {
 	return aproveLabel == 1 && lgtmLabel >= leastLgtm
 }
 
+// check with the labels constraints requiring/missing to determine if mergable
+func (s *Server) legalLabelsForMerge(labels []gitee.Label) ([]string, []string) {
+	nonRequiring, _ := s.labelDiffer(s.Config.RequiringLabels, labels)
+	_, nonMissing := s.labelDiffer(s.Config.MissingLabels, labels)
+
+	return nonRequiring, nonMissing
+}
+
 // MergePullRequest with lgtm and approved label
 func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	// get basic params
@@ -390,27 +405,53 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	glog.Infof("List of pr labels: %v", listofPrLabels)
 
 	// ready to merge
-	if s.legalForMerge(listofPrLabels) {
-		// current pr can be merged
-		if event.PullRequest.Mergeable {
-			// remove assignees
-			err = s.RemoveAssigneesInPullRequest(event)
-			if err != nil {
-				glog.Errorf("unable to remove assignees. err: %v", err)
-				return err
+	if s.readyForMerge(listofPrLabels) {
+		nonRequiringLabels, nonMissingLabels := s.legalLabelsForMerge(listofPrLabels)
+		if len(nonRequiringLabels) == 0 && len(nonMissingLabels) == 0 {
+			// current pr can be merged
+			if event.PullRequest.Mergeable {
+				// remove assignees
+				err = s.RemoveAssigneesInPullRequest(event)
+				if err != nil {
+					glog.Errorf("unable to remove assignees. err: %v", err)
+					return err
+				}
+				// remove testers
+				err = s.RemoveTestersInPullRequest(event)
+				if err != nil {
+					glog.Errorf("unable to remove testers. err: %v", err)
+					return err
+				}
+				// merge pr
+				body := gitee.PullRequestMergePutParam{}
+				body.AccessToken = s.Config.GiteeToken
+				_, err = s.GiteeClient.PullRequestsApi.PutV5ReposOwnerRepoPullsNumberMerge(s.Context, owner, repo, prNumber, body)
+				if err != nil {
+					glog.Errorf("unable to merge pull request. err: %v", err)
+					return err
+				}
 			}
-			// remove testers
-			err = s.RemoveTestersInPullRequest(event)
-			if err != nil {
-				glog.Errorf("unable to remove testers. err: %v", err)
-				return err
+		} else {
+			// add comment to pr to show the labels reason of not mergable
+			nonRequiringMsg := ""
+			if len(nonRequiringLabels) > 0 {
+				nonRequiringMsg = fmt.Sprintf(nonRequiringLabelsMessage, strings.Join(nonRequiringLabels, ","))
 			}
-			// merge pr
-			body := gitee.PullRequestMergePutParam{}
+			nonMissingMsg := ""
+			if len(nonMissingLabels) > 0 {
+				nonMissingMsg = fmt.Sprintf(nonMissingLabelsMessage, strings.Join(nonMissingLabels, ","))
+			}
+
+			// add comment back to pr
+			body := gitee.PullRequestCommentPostParam{}
 			body.AccessToken = s.Config.GiteeToken
-			_, err = s.GiteeClient.PullRequestsApi.PutV5ReposOwnerRepoPullsNumberMerge(s.Context, owner, repo, prNumber, body)
+			body.Body = fmt.Sprintf(cannotMergeMessage, fmt.Sprintf("%s%s", nonRequiringMsg, nonMissingMsg))
+			owner := event.Repository.Namespace
+			repo := event.Repository.Name
+			number := event.PullRequest.Number
+			_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 			if err != nil {
-				glog.Errorf("unable to merge pull request. err: %v", err)
+				glog.Errorf("unable to add comment in pull request: %v", err)
 				return err
 			}
 		}
