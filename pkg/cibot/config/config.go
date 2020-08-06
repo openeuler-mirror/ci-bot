@@ -30,6 +30,8 @@ type Config struct {
 	GuideURL                 string             `yaml:"guideurl"`
 	CommitsThreshold         int                `yaml:"commitsThreshold"`
 	SquashCommitLabel        string             `yaml:"squashCommitLabel"`
+	RequiringLabels          []string           `yaml:"requiringLabels"`
+	MissingLabels            []string           `yaml:"missingLabels"`
 }
 
 type WatchProjectFile struct {
