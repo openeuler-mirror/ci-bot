@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	cannotMergeMessage = `This pull request can not be merged. :astonished: 
+	cannotMergeMessage = `This pull request can not be merged, you can try it again when label requirement meets. :astonished:
 %s`
-	nonRequiringLabelsMessage = ` Labels [%s] need to be added.`
-	nonMissingLabelsMessage   = ` Labels [%s] need to be removed.`
+	nonRequiringLabelsMessage = ` Labels [**%s**] need to be added.`
+	nonMissingLabelsMessage   = ` Labels [**%s**] need to be removed.`
 )
 
 // HandlePullRequestEvent handles pull request event
