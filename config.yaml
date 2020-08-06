@@ -8,7 +8,7 @@ databaseUserName: "root"
 databasePassword: "******"
 lgtmCountsRequired: 1
 requiringLabels:
-- lgtm
+- openeuler-cla/yes
 missingLabels:
 - do-not-merge
 watchProjectFiles:

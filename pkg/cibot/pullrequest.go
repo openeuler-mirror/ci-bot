@@ -377,7 +377,7 @@ func (s *Server) readyForMerge(labels []gitee.Label) bool {
 	return aproveLabel == 1 && lgtmLabel >= leastLgtm
 }
 
-// check with the labels contraints requiring/missing to determine if mergable
+// check with the labels constraints requiring/missing to determine if mergable
 func (s *Server) legalLabelsForMerge(labels []gitee.Label) ([]string, []string) {
 	nonRequiring, _ := s.labelDiffer(s.Config.RequiringLabels, labels)
 	_, nonMissing := s.labelDiffer(s.Config.MissingLabels, labels)
