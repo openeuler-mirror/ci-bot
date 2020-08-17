@@ -1,14 +1,14 @@
 package config
 
 type Config struct {
-	GiteeToken               string             `yaml:"giteeToken"`
-	WebhookSecret            string             `yaml:"webhookSecret"`
+	GiteeToken               string             `yaml:"giteeToken" envVariable:"giteeToken"`
+	WebhookSecret            string             `yaml:"webhookSecret" envVariable:"webhookSecret"`
 	DataBaseType             string             `yaml:"databaseType"`
-	DataBaseHost             string             `yaml:"databaseHost"`
-	DataBasePort             int                `yaml:"databasePort"`
+	DataBaseHost             string             `yaml:"databaseHost" envVariable:"databaseHost"`
+	DataBasePort             int                `yaml:"databasePort" envVariable:"databasePort"`
 	DataBaseName             string             `yaml:"databaseName"`
-	DataBaseUserName         string             `yaml:"databaseUserName"`
-	DataBasePassword         string             `yaml:"databasePassword"`
+	DataBaseUserName         string             `yaml:"databaseUserName" envVariable:"databaseUserName"`
+	DataBasePassword         string             `yaml:"databasePassword" envVariable:"databasePassword"`
 	WatchProjectFiles        []WatchProjectFile `yaml:"watchProjectFiles"`
 	WatchProjectFileDuration int                `yaml:"watchProjectFileDuration"`
 	WatchSigFiles            []WatchSigFile     `yaml:"watchSigFiles"`
