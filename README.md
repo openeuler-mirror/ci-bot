@@ -21,6 +21,16 @@ This is an example to create Database instance.
     ```
 The information of database instance will be used in the following Installation.
 
+## Config
+Some sensitive configurations items support reading from environment variables.
+you can set the following environment variables in your OS:
+* GITEE_TOKEN 
+* WEBHOOK_SECRET
+* DATABASE_HOST 
+* DATABASE_PORT
+* DATABASE_USERNAME
+* DATABASE_PASSWORD
+
 ## Getting Started
 
 * [Getting Started on Locally](deploy/locally/README.md)
@@ -34,3 +44,5 @@ See the [Command Help](https://gitee.com/openeuler/community/blob/master/en/sig-
 ## License
 
 See the [LICENSE](LICENSE) file for details.
+
+

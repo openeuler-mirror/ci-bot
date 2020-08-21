@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitee.com/openeuler/ci-bot/pkg/cibot/config"
+	cfg "gitee.com/openeuler/ci-bot/pkg/cibot/config"
 	"gitee.com/openeuler/ci-bot/pkg/cibot/database"
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/golang/glog"
@@ -51,10 +51,16 @@ func (s *Webhook) Run() {
 	}
 
 	// unmarshal config file
-	var config config.Config
+	var config cfg.Config
 	err = yaml.Unmarshal(configContent, &config)
 	if err != nil {
 		glog.Fatalf("fail to unmarshal: %v", err)
+	}
+
+	//parse environment variables by tag
+	err = cfg.ParseEnvConf(&config, "")
+	if err != nil {
+    	glog.Info("fail to ParseEnvConf: %v",err)
 	}
 
 	// oauth
