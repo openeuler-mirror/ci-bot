@@ -22,6 +22,7 @@ This is an example to create Database instance.
 The information of database instance will be used in the following Installation.
 
 ## Config
+### environment variables
 Some sensitive configurations items support reading from environment variables.
 you can set the following environment variables in your OS:
 * GITEE_TOKEN 
@@ -30,6 +31,14 @@ you can set the following environment variables in your OS:
 * DATABASE_PORT
 * DATABASE_USERNAME
 * DATABASE_PASSWORD
+### label config
+If you want to clear some tags when the pull request source branch changes,
+ you can configure it in the configuration file(config.yaml).
+ for example see config.yaml delLabels fields.Description:
+ * kind,sig,openeuler-cla,priority Delete labels beginning with kind,sig,openeuler-cla or priority. 
+ * lgtm Delete labels lgtm or beginning with lgtm-.
+ * Except for the above description items, other labels will be judged as equal.
+ 
 
 ## Getting Started
 

@@ -36,6 +36,54 @@ func GetLabelsMap(comment string) map[string]string {
 	return mapOfLabels
 }
 
+//GetChangeLabels return the exact list of delete and update labels
+func GetChangeLabels(confDelLabels []string, prLabels []gitee.Label) (delLabels, updateLabels []string) {
+	for _, pl := range prLabels {
+		isUpdate := true
+		for _, cdl := range confDelLabels {
+			//handle lgtm label
+			if cdl == LabelNameLgtm {
+				if strings.HasPrefix(pl.Name, fmt.Sprintf(LabelLgtmWithCommenter, "")) || pl.Name == LabelNameLgtm {
+					delLabels = append(delLabels, pl.Name)
+					isUpdate = false
+				}
+				continue
+			}
+			if cdl == "openeuler-cla" {
+				if strings.HasPrefix(pl.Name,cdl){
+					delLabels = append(delLabels, pl.Name)
+					isUpdate = false
+				}
+				continue
+			}
+			if cdl == "sig"{
+				if strings.HasPrefix(pl.Name,cdl){
+					delLabels = append(delLabels, pl.Name)
+					isUpdate = false
+				}
+				continue
+			}
+			if cdl == "kind"{
+				if strings.HasPrefix(pl.Name,cdl){
+					delLabels = append(delLabels, pl.Name)
+					isUpdate = false
+				}
+				continue
+			}
+            if cdl == pl.Name {
+				delLabels = append(delLabels, pl.Name)
+				isUpdate = false
+				continue
+			}
+
+		}
+		if isUpdate {
+			updateLabels = append(updateLabels, pl.Name)
+		}
+	}
+	return
+}
+
 // GetListOfAddLabels return the exact list of add labels
 func GetListOfAddLabels(mapOfAddLabels map[string]string, listofRepoLabels []gitee.Label, listofItemLabels []gitee.Label) []string {
 	// init
