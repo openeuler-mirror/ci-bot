@@ -6,6 +6,16 @@ databasePort: 3306
 databaseName: "cibot"
 databaseUserName: "root"
 databasePassword: "******"
+#the flag that pull request commit_id has changed
+prUpdateLabelFlag: "source_branch_changed"
+#List of labels that need to be deleted after the commit_id is changed
+delLabels:
+  - lgtm
+  - approve
+  - priority
+  - openeuler-cla
+  - sig
+  - kind
 lgtmCountsRequired: 1
 requiringLabels:
 - openeuler-cla/yes

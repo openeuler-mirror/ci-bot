@@ -9,6 +9,8 @@ type Config struct {
 	DataBaseName             string             `yaml:"databaseName"`
 	DataBaseUserName         string             `yaml:"databaseUserName" envVariable:"DATABASE_USERNAME"`
 	DataBasePassword         string             `yaml:"databasePassword" envVariable:"DATABASE_PASSWORD"`
+	PrUpdateLabelFlag        string             `yaml:"prUpdateLabelFlag"`
+	DelLabels                []string           `yaml:"delLabels"`
 	WatchProjectFiles        []WatchProjectFile `yaml:"watchProjectFiles"`
 	WatchProjectFileDuration int                `yaml:"watchProjectFileDuration"`
 	WatchSigFiles            []WatchSigFile     `yaml:"watchSigFiles"`
