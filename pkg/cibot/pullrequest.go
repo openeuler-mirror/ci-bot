@@ -19,7 +19,7 @@ const (
 )
 
 // HandlePullRequestEvent handles pull request event
-func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
+func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequestEvent) {
 	if event == nil {
 		return
 	}
@@ -98,15 +98,26 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		}
 		listofPrLabels := pr.Labels
 		glog.Infof("List of pr labels: %v", listofPrLabels)
-
+		// remove labels if action_desc is "source_branch_changed"
+		if len(pr.Labels) == 0 || actionDesc != s.Config.PrUpdateLabelFlag {
+			return
+		}
+		delLabels, updateLabels := GetChangeLabels(s.Config.DelLabels, pr.Labels)
+		if len(delLabels) == 0 {
+			return
+		}
+		err = s.UpdateLabelsBySourceBranchChange(delLabels, updateLabels, event)
+		if err != nil {
+			glog.Info(err)
+		}
 		// remove lgtm if changes happen
-		if s.hasLgtmLabel(pr.Labels) {
+		/*if s.hasLgtmLabel(pr.Labels) {
 			err = s.CheckLgtmByPullRequestUpdate(event)
 			if err != nil {
 				glog.Errorf("check lgtm by pull request update. err: %v", err)
 				return
 			}
-		}
+		}*/
 	case "merge":
 		glog.Info("Received a pull request merge event")
 
@@ -136,6 +147,42 @@ func (s *Server) HandlePullRequestEvent(event *gitee.PullRequestEvent) {
 		}
 	}
 }
+
+func (s *Server) UpdateLabelsBySourceBranchChange(delLabels,updateLabels []string,event *gitee.PullRequestEvent) error {
+	owner := event.Repository.Namespace
+	repo := event.Repository.Name
+	prNumber := event.PullRequest.Number
+	strLabel := strings.Join(updateLabels,",")
+	strDelLabel := strings.Join(delLabels,",")
+	body := gitee.PullRequestUpdateParam{}
+	body.AccessToken = s.Config.GiteeToken
+	body.Labels = strLabel
+	glog.Infof("invoke api to remove labels: %v", strLabel)
+	//update pr
+	_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, prNumber, body)
+	if err != nil {
+		if response != nil && response.StatusCode == 400 {
+			glog.Infof("remove labels successfully with status code %d: %v", response.StatusCode, strDelLabel)
+		} else {
+			glog.Errorf("unable to remove labels: %v err: %v", strDelLabel, err)
+			return err
+		}
+	} else {
+		glog.Infof("remove labels successfully: %v", strDelLabel)
+	}
+	// add comment for update labels
+	commentContent := `new changes are detected. ***%s*** is removed in this pull request by: ***%s***. :flushed: `
+	cBody := gitee.PullRequestCommentPostParam{}
+	cBody.AccessToken = s.Config.GiteeToken
+	cBody.Body = fmt.Sprintf(commentContent, strDelLabel,s.Config.BotName)
+	_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, cBody)
+	if err != nil {
+		glog.Errorf("unable to add comment in pull request: %v", err)
+		return err
+	}
+	return nil
+}
+
 func (s *Server) SendNote4AutomaticNewFile(event *gitee.PullRequestEvent) {
 	if event == nil {
 		return

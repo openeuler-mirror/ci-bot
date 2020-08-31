@@ -2,6 +2,7 @@ package cibot
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -27,7 +28,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, err.Error())
 		return
 	}
-	glog.Infof("payload: %v", string(payload))
+	pstr := string(payload)
+	glog.Infof("payload: %v", pstr)
 
 	// parse into Event
 	messagetype := gitee.WebHookType(r)
@@ -58,7 +60,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		go s.HandleIssueEvent(event.(*gitee.IssueEvent))
 	case *gitee.PullRequestEvent:
 		glog.Info("received a pull request event")
-		go s.HandlePullRequestEvent(event.(*gitee.PullRequestEvent))
+		actionDesc:= struct {
+			ActionDesc string `json:"action_desc,omitempty"`
+		}{}
+		err := json.Unmarshal(payload, &actionDesc)
+		if err != nil{
+			glog.Info(err)
+		}
+		go s.HandlePullRequestEvent(actionDesc.ActionDesc,event.(*gitee.PullRequestEvent))
 	case *gitee.TagPushEvent:
 		glog.Info("received a tag push event")
 	}
