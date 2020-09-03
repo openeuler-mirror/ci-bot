@@ -102,4 +102,12 @@ func (s *Server) HandleNoteEvent(event *gitee.NoteEvent) {
 			glog.Errorf("failed to unassign: %v", err)
 		}
 	}
+
+	//check pr
+	if RegCheckPr.MatchString(event.Comment.Body){
+		err := s.CheckPr(event)
+		if err != nil {
+			glog.Error(err)
+		}
+	}
 }
