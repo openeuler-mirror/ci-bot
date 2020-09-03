@@ -54,6 +54,8 @@ var (
 	RegAssign = regexp.MustCompile(`(?mi)^/assign(( @?[-\w]+?)*)\s*$`)
 	// RegUnAssign
 	RegUnAssign = regexp.MustCompile(`(?mi)^/unassign(( @?[-\w]+?)*)\s*$`)
+	// RegCheckPr
+	RegCheckPr = regexp.MustCompile(`(?mi)^/check-pr\s*$`)
 )
 
 // UrlEncode replcae special chars in url
