@@ -29,7 +29,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	pstr := string(payload)
-	glog.Infof("payload: %v", pstr)
+	// glog.Infof("payload: %v", pstr)
 
 	// parse into Event
 	messagetype := gitee.WebHookType(r)
