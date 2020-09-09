@@ -30,7 +30,7 @@ func GetToken(code string) (*oauth2.Token, error) {
 	ctx := context.Background()
 	config := Setup(client, redirect, secret)
 
-	glog.Infof("Token request config : %v, code:", config, code)
+	glog.Infof("Token request config : %v, code: %s", config, code)
 
 	return config.Exchange(ctx, code)
 
