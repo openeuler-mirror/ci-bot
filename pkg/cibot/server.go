@@ -28,7 +28,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, err.Error())
 		return
 	}
-	pstr := string(payload)
+	// pstr := string(payload)
 	// glog.Infof("payload: %v", pstr)
 
 	// parse into Event
