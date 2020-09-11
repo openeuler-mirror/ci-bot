@@ -15,8 +15,8 @@ const (
 	lgtmAddedMessage           = `***lgtm*** is added in this pull request by: ***%s***. :wave: 
 **NOTE:**: If you find this pull request unmerged while all conditions meets, you are encouraged use command: "/check-pr" to try it again. :smile: `
 	lgtmRemovedMessage         = `***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
-	lgtmAddNoPermissionMessage = `***%s*** has no permission to add ***lgtm*** in this pull request. :astonished:
-please contact to the collaborators in this repository.`
+	lgtmAddNoPermissionMessage = `Thanks for your review, ***%s***, your opinion is very important to us.:wave:
+The maintainers will consider your advice carefully.`
 	lgtmRemoveNoPermissionMessage = `***%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
 	lgtmRemovePullRequestChangeMessage = `new changes are detected. ***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
