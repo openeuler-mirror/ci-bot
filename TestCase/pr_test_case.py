@@ -1,8 +1,8 @@
 import os
 import requests
 import subprocess
-import sys
 import time
+import yaml
 
 
 class PullRequestOperation(object):
@@ -15,7 +15,7 @@ class PullRequestOperation(object):
 
     def git_clone(self):
         """git clone code"""
-        subprocess.call("git clone https://gitee.com/{}/{}.git".format(self.local_owner, self.repo), shell=True)
+        subprocess.call("[ -d {} ]; if [ $? -eq 0 ]; then echo 'destination repo exists, pass...'; else git clone https://gitee.com/{}/{}.git; fi".format(self.repo, self.local_owner, self.repo), shell=True)
 
     def change_file(self):
         """change file: Test whether test.txt exists.Remove test.txt if it exists, or touch test.txt"""
@@ -101,26 +101,43 @@ class PullRequestOperation(object):
             else:
                 return labels
 
+    def add_labels_2_pr(self, number, data):
+        """add labels to a pull request"""
+        params = {'access_token': self.access_token}
+        data = data
+        url = 'https://gitee.com/api/v5/repos/{}/{}/pulls/{}/labels'.format(self.owner, self.repo, number)
+        requests.post(url, data=data, params=params)
+
+    def get_pr_status(self, number):
+        """query the status of the pull request to see whether it was merged"""
+        params = {'access_token': self.access_token}
+        url = 'https://gitee.com/api/v5/repos/{}/{}/pulls/{}/merge'.format(self.owner, self.repo, number)
+        r = requests.get(url, params)
+        return r.status_code
+
 
 if __name__ == '__main__':
-    try:
-        owner = sys.argv[1]
-        repo = sys.argv[2]
-        local_owner = sys.argv[3]
+    with open('config.yaml', 'r') as f:
+        info = yaml.load(f.read())['test case']
+        owner = info[0]['owner']
+        repo = info[1]['repo']
+        local_owner = info[2]['local_owner']
         pr = PullRequestOperation(owner, repo, local_owner)
 
-        print('step 1: git clone')
+        print('Prepare:')
+        print('step 1/4: git clone')
         pr.git_clone()
-        print('\nstep 2: change file')
+        print('\nstep 2/4: change file')
         pr.change_file()
-        print('\nstep 3: git push')
+        print('\nstep 3/4: git push')
         pr.git_push()
-        print('\nstep 4: pull request')
+        print('\nstep 4/4: pull request')
         number = pr.pull_request()
         print('the number of the pull request: {}'.format(number))
         time.sleep(10)
 
-        print('\ntest case 1: without comments by contributor')
+        print('\n\nTest:')
+        print('test case 1: without comments by contributor')
         comments = pr.get_all_comments(number)
         labels = pr.get_all_labels(number)
         print('labels: {}'.format(labels))
@@ -146,7 +163,9 @@ if __name__ == '__main__':
                     print('no label "ci-bot-cla/no"')
                     errors += 1
         if errors == 0:
-            print('test case 1 succeeded.')
+            print('test case 1 succeeded')
+        else:
+            print('test case 1 failed')
 
         print('\ntest case 2: /lgtm')
         pr.comment(number, '/lgtm')
@@ -155,9 +174,9 @@ if __name__ == '__main__':
         print('labels: {}'.format(labels))
         comments = pr.get_all_comments(number)
         if 'can not be added in your self-own pull request' in comments[-1]:
-            print('test case 2 succeeded.')
+            print('test case 2 succeeded')
         else:
-            print('test case 2 failed.')
+            print('test case 2 failed')
             print(comments[-1])
 
         print('\ntest case 3: comment /lgtm by others')
@@ -172,25 +191,25 @@ if __name__ == '__main__':
             print('test case 3 failed')
             print(comments[-1])
 
-        print('\ntest case 4: /approve')
-        pr.comment(number, '/approve')
-        time.sleep(10)
-        labels = pr.get_all_labels(number)
-        print('labels: {}'.format(labels))
-        comments = pr.get_all_comments(number)
-        if '***approved*** is added in this pull request by' in comments[-1]:
-            print('test case 4 succeeded.')
-        else:
-            print('test case 4 failed.')
-            print(comments[-1])
-
-        print('\ntest case 5: comment /approve by others')
+        print('\ntest case 4: comment /approve by others')
         pr.comment_by_others(number, '/approve')
         time.sleep(10)
         labels = pr.get_all_labels(number)
         print('labels: {}'.format(labels))
         comments = pr.get_all_comments(number)
         if 'has no permission to add' in comments[-1]:
+            print('test case 4 succeeded')
+        else:
+            print('test case 4 failed')
+            print(comments[-1])
+
+        print('\ntest case 5: /approve')
+        pr.comment(number, '/approve')
+        time.sleep(10)
+        labels = pr.get_all_labels(number)
+        print('labels: {}'.format(labels))
+        comments = pr.get_all_comments(number)
+        if '***approved*** is added in this pull request by' in comments[-1]:
             print('test case 5 succeeded')
         else:
             print('test case 5 failed')
@@ -207,5 +226,23 @@ if __name__ == '__main__':
             print('test case 6 succeeded')
         else:
             print('test case 6 failed')
-    except IndexError:
-        print('\n3 arguments were needed, please check!\n')
+
+        print('\ntest case 7: add labels')
+        pr.add_labels_2_pr(number, '["lgtm"]')
+        time.sleep(10)
+        labels = pr.get_all_labels(number)
+        print('labels: {}'.format(labels))
+        if "lgtm" in labels:
+            print('test case 7 succeeded')
+        else:
+            print('test case 7 failed')
+
+        print('\ntest case 8: check-pr')
+        pr.comment(number, '/check-pr')
+        time.sleep(10)
+        code = pr.get_pr_status(number)
+        if code == 200:
+            print('test case 8 succeeded')
+        else:
+            print('failed code: {}'.format(code))
+            print('test case 8 failed')
