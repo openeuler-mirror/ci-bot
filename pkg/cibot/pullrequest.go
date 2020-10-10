@@ -459,9 +459,9 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 				body := gitee.PullRequestCommentPostParam{}
 				body.AccessToken = s.Config.GiteeToken
 				body.Body = "**Merge failed** The current pull request merge target has been frozen, and only the branch owner can merge."
-				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, body)
+				_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, body)
 				if err != nil {
-					glog.Errorf("unable to add comment in pull request: %v", err)
+					glog.Errorf("Cannot add comments to pull request: %v", err)
 				}
 			} else {
 				if event.PullRequest.Mergeable {
