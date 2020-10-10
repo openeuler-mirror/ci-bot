@@ -224,9 +224,10 @@ func (handler *InitHandler) watch() {
 									} else {
 										glog.Infof("get blob result: %v", ps)
 										result := true
+										lenRepositories := 0
 										for i := 0; i < len(ps.Repositories); i++ {
 											// get repositories length
-											lenRepositories, err := handler.getRepositoriesLength(*ps.Community.Name, *ps.Repositories[i].Name)
+											lenRepositories, err = handler.getRepositoriesLength(*ps.Community.Name, *ps.Repositories[i].Name)
 											if err != nil {
 												glog.Errorf("failed to get repositories length: %v", err)
 												result = false
