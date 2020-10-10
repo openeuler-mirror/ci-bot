@@ -17,6 +17,8 @@ type Config struct {
 	WatchSigFileDuration     int                `yaml:"watchSigFileDuration"`
 	WatchOwnerFiles          []WatchOwnerFile   `yaml:"watchOwnerFiles"`
 	WatchOwnerFileDuration   int                `yaml:"watchOwnerFileDuration"`
+	WatchFrozenFile          WatchFrozenFile    `yaml:"watchFrozenFile"`
+	WatchFrozenDuration      int                `yaml:"watchFrozenDuration"`
 	BotName                  string             `yaml:"botName"`
 	CommunityName            string             `yaml:"communityName"`
 	ClaLink                  string             `yaml:"claLink"`
@@ -55,4 +57,11 @@ type WatchOwnerFile struct {
 	WatchOwnerFileRepo  string `yaml:"watchOwnerFileRepo"`
 	WatchOwnerFilePath  string `yaml:"watchOwnerFilePath"`
 	WatchOwnerFileRef   string `yaml:"watchOwnerFileRef"`
+}
+
+type WatchFrozenFile struct {
+	FrozenFileOwner string `yaml:"frozenFileOwner"`
+	FrozenFileRepo  string `yaml:"frozenFileRepo"`
+	FrozenFilePath  string `yaml:"frozenFilePath"`
+	FrozenFileRef   string `yaml:"frozenFileRef"`
 }

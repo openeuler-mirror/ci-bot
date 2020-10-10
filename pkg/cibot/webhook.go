@@ -60,7 +60,7 @@ func (s *Webhook) Run() {
 	//parse environment variables by tag
 	err = cfg.ParseEnvConf(&config, "")
 	if err != nil {
-    	glog.Info("fail to ParseEnvConf: %v",err)
+		glog.Info("fail to ParseEnvConf: %v", err)
 	}
 
 	// oauth
@@ -81,7 +81,11 @@ func (s *Webhook) Run() {
 	if err != nil {
 		glog.Errorf("init back database error: %v", err)
 	}
-
+	frozenHandler := FrozenHandler{
+		Config:      config,
+		Context:     ctx,
+		GiteeClient: giteeClient}
+	go frozenHandler.Server()
 	/* setting init handler
 	initHandler := InitHandler{
 		Config:      config,

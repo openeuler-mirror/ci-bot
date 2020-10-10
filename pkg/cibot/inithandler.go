@@ -66,7 +66,7 @@ type Repository struct {
 // to the repository.
 // It will be true only if Commentable is explicitly sepecified as true
 func (r Repository) IsCommentable() bool {
-	return (r.Commentable != nil && *r.Commentable)
+	return r.Commentable != nil && *r.Commentable
 }
 
 // Serve
