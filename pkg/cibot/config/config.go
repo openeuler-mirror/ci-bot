@@ -17,7 +17,7 @@ type Config struct {
 	WatchSigFileDuration     int                `yaml:"watchSigFileDuration"`
 	WatchOwnerFiles          []WatchOwnerFile   `yaml:"watchOwnerFiles"`
 	WatchOwnerFileDuration   int                `yaml:"watchOwnerFileDuration"`
-	WatchFrozenFile          WatchFrozenFile    `yaml:"watchFrozenFile"`
+	WatchFrozenFile          []WatchFrozenFile  `yaml:"watchFrozenFile"`
 	WatchFrozenDuration      int                `yaml:"watchFrozenDuration"`
 	BotName                  string             `yaml:"botName"`
 	CommunityName            string             `yaml:"communityName"`

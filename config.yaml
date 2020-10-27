@@ -44,10 +44,10 @@ watchOwnerFiles:
     watchOwnerFileRef: master
 watchOwnerFileDuration: 300
 watchFrozenFile:
-  frozenFileOwner: openEuler
-  frozenFileRepo: release-management
-  frozenFilePath: release-management.yaml
-  frozenFileRef: master
+  - frozenFileOwner: openEuler
+    frozenFileRepo: release-management
+    frozenFilePath: release-management.yaml
+    frozenFileRef: master
 watchFrozenDuration: 300
 botName: openeuler-ci-bot
 communityName: openEuler

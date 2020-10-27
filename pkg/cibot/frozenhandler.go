@@ -9,6 +9,7 @@ import (
 	"github.com/antihax/optional"
 	"github.com/golang/glog"
 	"gopkg.in/yaml.v2"
+	"strings"
 	"sync"
 	"time"
 )
@@ -55,7 +56,7 @@ func (fh *FrozenHandler) Server() {
 }
 
 func (fh *FrozenHandler) initFrozenFile() error {
-	if fh.Config.WatchFrozenFile == (config.WatchFrozenFile{}) {
+	if len(fh.Config.WatchFrozenFile) == 0 {
 		return errors.New("Frozen configuration items are not initialized ")
 	}
 	fc, _, err := fh.getFrozenFileContent()
@@ -69,28 +70,33 @@ func (fh *FrozenHandler) initFrozenFile() error {
 	return err
 }
 
-func (fh *FrozenHandler) getFrozenFileContent() (content string, changed bool, err error) {
+func (fh *FrozenHandler) getFrozenFileContent() (content []string, changed bool, err error) {
 	localVarOptionals := &gitee.GetV5ReposOwnerRepoContentsPathOpts{}
 	localVarOptionals.AccessToken = optional.NewString(fh.Config.GiteeToken)
-	localVarOptionals.Ref = optional.NewString(fh.Config.WatchFrozenFile.FrozenFileRef)
-	contents, _, err := fh.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoContentsPath(
-		fh.Context, fh.Config.WatchFrozenFile.FrozenFileOwner, fh.Config.WatchFrozenFile.FrozenFileRepo,
-		fh.Config.WatchFrozenFile.FrozenFilePath, localVarOptionals)
-	if err != nil {
-		return "", changed, err
+	for _,v :=range  fh.Config.WatchFrozenFile {
+		localVarOptionals.Ref = optional.NewString(v.FrozenFileRef)
+		contents, _, err := fh.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoContentsPath(
+			fh.Context, v.FrozenFileOwner, v.FrozenFileRepo,
+			v.FrozenFilePath, localVarOptionals)
+		if err != nil {
+			glog.Error(err)
+			continue
+		}
+		if !strings.Contains(frozenFile.sha, contents.Sha) {
+			frozenFile.sha += ";"+contents.Sha
+			changed = true
+		}
+		content = append(content, contents.Content)
+
 	}
-	if frozenFile.sha != contents.Sha {
-		frozenFile.path = contents.Path
-		frozenFile.name = contents.Name
-		frozenFile.size = contents.Size
-		frozenFile.sha = contents.Sha
-		changed = true
+	if len(content) == 0 {
+	   return content,changed,errors.New("Freeze information not obtained. ")
 	}
-	return contents.Content, changed, nil
+	return content, changed, nil
 }
 
 func (fh *FrozenHandler) watch() {
-	if fh.Config.WatchFrozenFile == (config.WatchFrozenFile{}) {
+	if len(fh.Config.WatchFrozenFile) == 0 {
 		return
 	}
 	watchDuration := fh.Config.WatchFrozenDuration
@@ -112,29 +118,39 @@ func (fh *FrozenHandler) watch() {
 	}
 }
 
-func handleContent(content string) error {
-	if content == "" {
+func handleContent(content []string) error {
+	if len(content) == 0 {
 		return errors.New("The parsed content cannot be empty ")
 	}
-	decodeBytes, err := base64.StdEncoding.DecodeString(content)
-	if err != nil {
-		return err
+	var fzList []FrozenBranchYaml
+	for _,v := range content {
+		decodeBytes, err := base64.StdEncoding.DecodeString(v)
+		if err != nil {
+			glog.Error(err)
+			continue
+		}
+		var fz FrozenYaml
+		err = yaml.Unmarshal(decodeBytes, &fz)
+		if err != nil {
+			glog.Error(err)
+			continue
+		}
+		if len(fz.Release) == 0 {
+			glog.Info("unmarshal frozen branch is empty")
+		}else {
+			fzList = append(fzList, fz.Release...)
+		}
 	}
-	var fz FrozenYaml
-	err = yaml.Unmarshal(decodeBytes, &fz)
-	if err != nil {
-		return err
+
+	if len(fzList) == 0 {
+		return errors.New("all of frozen file unmarshal is empty or fail. ")
 	}
-	if len(fz.Release) == 0 {
-		glog.Info("unmarshal frozen branch is empty")
-		emptyFrozenList()
-	} else {
-		extractFrozenBranch(fz.Release)
-	}
+	extractFrozenBranch(fzList)
 	return nil
 }
 
 func extractFrozenBranch(release []FrozenBranchYaml) {
+	emptyFrozenList()
 	var fs []FrozenBranchYaml
 	for _, v := range release {
 		if v.Frozen {
@@ -151,9 +167,11 @@ func emptyFrozenList() {
 	lock.Lock()
 	if len(frozenList) > 0 {
 		frozenList = frozenList[:0]
+		frozenFile = freezeFile{}
 	}
 	lock.Unlock()
 }
+
 func writeFrozenList(fs []FrozenBranchYaml) {
 	lock.Lock()
 	defer lock.Unlock()
