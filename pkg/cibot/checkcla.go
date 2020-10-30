@@ -25,7 +25,7 @@ after that, please reply here with a new comment **/check-cla** and we'll verify
 
 // CheckCLAByNoteEvent check cla by NoteEvent
 func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
-	if *event.NoteableType == "PullRequest" {
+	if *event.NoteableType == "PullRequest" && s.Config.AutoDetectCla {
 		// PullRequest
 		email := event.PullRequest.User.Email
 		// check the email from sender
@@ -113,6 +113,9 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 
 // CheckCLAByPullRequestEvent check cla by PullRequestEvent
 func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error {
+	if !s.Config.AutoDetectCla {
+		return nil
+	}
 	// check the email from sender
 	var lenEmail int
 	err := database.DBConnection.Model(&database.CLADetails{}).

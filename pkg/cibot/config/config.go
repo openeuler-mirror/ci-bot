@@ -36,6 +36,7 @@ type Config struct {
 	SquashCommitLabel        string             `yaml:"squashCommitLabel"`
 	RequiringLabels          []string           `yaml:"requiringLabels"`
 	MissingLabels            []string           `yaml:"missingLabels"`
+	AutoDetectCla            bool               `yaml:"autoDetectCla"`
 }
 
 type WatchProjectFile struct {
