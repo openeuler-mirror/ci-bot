@@ -454,11 +454,17 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 		nonRequiringLabels, nonMissingLabels := s.legalLabelsForMerge(listofPrLabels)
 		if len(nonRequiringLabels) == 0 && len(nonMissingLabels) == 0 {
 			// current pr can be merged
-			if !checkFrozenCanMerge(event.Author.Login, pr.Base.Ref) {
+			if c,b :=checkFrozenCanMerge(event.Author.Login, pr.Base.Ref) ;!b{
 				//send comment to pr
 				body := gitee.PullRequestCommentPostParam{}
 				body.AccessToken = s.Config.GiteeToken
-				body.Body = "**Merge failed** The current pull request merge target has been frozen, and only the branch owner can merge."
+				if len(c) >0{
+					body.Body = fmt.Sprintf("**Merge failed** The current pull request merge target has been frozen, and only the branch owner( @%s ) can merge.",
+						strings.Join(c," , @"))
+				}else {
+					body.Body = "**Merge failed** The current pull request merge target has been frozen, and only the branch owner can merge."
+				}
+
 				_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, body)
 				if err != nil {
 					glog.Errorf("Cannot add comments to pull request: %v", err)
@@ -595,7 +601,7 @@ func getSignersAndReviewers(user string, comments []gitee.PullRequestComments) (
 	return signers, reviewers, nil
 }
 
-func checkFrozenCanMerge(commenter, branch string) bool {
+func checkFrozenCanMerge(commenter, branch string) ([]string,bool) {
 	frozen, isFrozen := IsBranchFrozen(branch)
 	if isFrozen {
 		canMerge := false
@@ -605,8 +611,8 @@ func checkFrozenCanMerge(commenter, branch string) bool {
 				break
 			}
 		}
-		return canMerge
+		return frozen,canMerge
 	} else {
-		return true
+		return frozen,true
 	}
 }

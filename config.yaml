@@ -44,10 +44,10 @@ watchOwnerFiles:
     watchOwnerFileRef: master
 watchOwnerFileDuration: 300
 watchFrozenFile:
-  frozenFileOwner: openEuler
-  frozenFileRepo: release-management
-  frozenFilePath: release-management.yaml
-  frozenFileRef: master
+  - frozenFileOwner: openEuler
+    frozenFileRepo: release-management
+    frozenFilePath: release-management.yaml
+    frozenFileRef: master
 watchFrozenDuration: 300
 botName: openeuler-ci-bot
 communityName: openEuler
@@ -61,3 +61,4 @@ newfilebranch: "master"
 tmpservicefile: "_service"
 tmpservicepath: "master/openEuler:Factory/#projectname#/_service"
 guideurl: "https://gitee.com/openeuler/community/tree/master/zh/contributors"
+autoDetectCla: false
