@@ -43,9 +43,15 @@ watchOwnerFiles:
     watchOwnerFilePath: sig/*/OWNERS
     watchOwnerFileRef: master
 watchOwnerFileDuration: 300
+watchFrozenFile:
+  - frozenFileOwner: openEuler
+    frozenFileRepo: release-management
+    frozenFilePath: release-management.yaml
+    frozenFileRef: master
+watchFrozenDuration: 300
 botName: openeuler-ci-bot
 communityName: openEuler
-claLink: https://openeuler.org/en/cla.html
+claLink: https://openeuler.org/en/other/cla/
 commandLink: https://gitee.com/openeuler/community/blob/master/en/sig-infrastructure/command.md
 contactEmail: contact@openeuler.org
 accordingfile: "src-openeuler.yaml"
@@ -55,3 +61,4 @@ newfilebranch: "master"
 tmpservicefile: "_service"
 tmpservicepath: "master/openEuler:Factory/#projectname#/_service"
 guideurl: "https://gitee.com/openeuler/community/tree/master/zh/contributors"
+autoDetectCla: false
