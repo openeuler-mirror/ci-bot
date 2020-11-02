@@ -49,9 +49,11 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 			glog.Errorf("unable to add comment in pull request: %v", err)
 		}
 
-		err = s.CheckCLAByPullRequestEvent(event)
-		if err != nil {
-			glog.Errorf("failed to check cla by pull request event: %v", err)
+		if s.Config.AutoDetectCla {
+			err = s.CheckCLAByPullRequestEvent(event)
+			if err != nil {
+				glog.Errorf("failed to check cla by pull request event: %v", err)
+			}
 		}
 
 		diff := s.CheckSpecialFileHasModified(event, s.Config.AccordingFile)
