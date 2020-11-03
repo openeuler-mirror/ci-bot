@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	lgtmSelfOwnMessage         = `***lgtm*** can not be added in your self-own pull request. :astonished: `
-	lgtmAddedMessage           = `***lgtm*** is added in this pull request by: ***%s***. :wave: 
+	lgtmSelfOwnMessage = `***lgtm*** can not be added in your self-own pull request. :astonished: `
+	lgtmAddedMessage   = `***lgtm*** is added in this pull request by: ***%s***. :wave: 
 **NOTE:**: If you find this pull request unmerged while all conditions meets, you are encouraged use command: "/check-pr" to try it again. :smile: `
 	lgtmRemovedMessage         = `***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
 	lgtmAddNoPermissionMessage = `Thanks for your review, ***%s***, your opinion is very important to us.:wave:
@@ -20,6 +20,8 @@ The maintainers will consider your advice carefully.`
 	lgtmRemoveNoPermissionMessage = `***%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
 	lgtmRemovePullRequestChangeMessage = `new changes are detected. ***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
+	lgtmRepo                           = "repo"
+	lgtmOrg                            = "org"
 )
 
 // AddLgtm adds lgtm label
@@ -84,7 +86,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				addlabel.PullRequest = event.PullRequest
 				addlabel.Repository = event.Repository
 				addlabel.Comment = &gitee.NoteHook{}
-				err = s.AddSpecifyLabelsInPulRequest(addlabel, []string{s.getLgtmLable(commentAuthor)}, true)
+				err = s.AddSpecifyLabelsInPulRequest(addlabel, []string{s.getLgtmLable(commentAuthor, owner, repo)}, true)
 				if err != nil {
 					return err
 				}
@@ -124,11 +126,42 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 	return nil
 }
 
-func (s *Server) getLgtmLable(commenter string) string {
-	if s.Config.LgtmCountsRequired > 1 {
+func (s *Server) getLgtmLable(commenter, owner, repo string) string {
+	if s.calculateLgtmLabel(owner, repo) > 1 {
 		return fmt.Sprintf(LabelLgtmWithCommenter, strings.ToLower(commenter))
 	}
 	return LabelNameLgtm
+}
+
+func (s *Server) calculateLgtmLabel(owner, repo string) int {
+	if len(s.Config.ExtraLgtmCountRequired) > 0 {
+		repoNum := 0
+		orgNum := 0
+		for _, v := range s.Config.ExtraLgtmCountRequired {
+			if v.LcrType == lgtmRepo  {
+				if strings.Contains(v.LcrName,"/"){
+					or := strings.Split(v.LcrName, "/")
+					if len(or)==2 && strings.ToLower(or[0])==owner && strings.ToLower(or[1]) == repo {
+						repoNum = v.LcrCount
+					}
+				}else if strings.ToLower(v.LcrName) == repo {
+					repoNum = v.LcrCount
+				}
+			}
+			if v.LcrType == lgtmOrg && v.LcrName == owner {
+				orgNum = v.LcrCount
+			}
+		}
+		if repoNum > 0 {
+			return repoNum
+		}
+		if orgNum > 0 {
+			return orgNum
+		}
+		return s.Config.LgtmCountsRequired
+	} else {
+		return s.Config.LgtmCountsRequired
+	}
 }
 
 // RemoveLgtm removes lgtm label
@@ -195,7 +228,7 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 			removelabel.Repository = event.Repository
 			removelabel.Comment = &gitee.NoteHook{}
 			mapOfRemoveLabels := map[string]string{}
-			lgtmLable := s.getLgtmLable(commentAuthor)
+			lgtmLable := s.getLgtmLable(commentAuthor, owner, repo)
 			mapOfRemoveLabels[lgtmLable] = lgtmLable
 			err := s.RemoveSpecifyLabelsInPulRequest(removelabel, mapOfRemoveLabels)
 			if err != nil {
@@ -219,7 +252,7 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 
 func (s *Server) collectExistingLgtmLabel(owner, repo string, number int32) (map[string]string, error) {
 	labels := make(map[string]string)
-	if s.Config.LgtmCountsRequired > 1 {
+	if s.calculateLgtmLabel(owner, repo) > 1 {
 		lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{
 			AccessToken: optional.NewString(s.Config.GiteeToken),
 		}

@@ -403,13 +403,14 @@ func (s *Server) hasLgtmLabel(labels []gitee.Label) bool {
 	return false
 }
 
-func (s *Server) readyForMerge(labels []gitee.Label) bool {
+func (s *Server) readyForMerge(labels []gitee.Label,owner,repo string) bool {
 	aproveLabel := 0
 	lgtmLabel := 0
 	lgtmPrefix := ""
 	leastLgtm := 0
-	if s.Config.LgtmCountsRequired > 1 {
-		leastLgtm = s.Config.LgtmCountsRequired
+	count := s.calculateLgtmLabel(owner,repo)
+	if count > 1 {
+		leastLgtm = count
 		lgtmPrefix = fmt.Sprintf(LabelLgtmWithCommenter, "")
 	} else {
 		leastLgtm = 1
@@ -452,7 +453,7 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	listofPrLabels := pr.Labels
 	glog.Infof("List of pr labels: %v", listofPrLabels)
 	// ready to merge
-	if s.readyForMerge(listofPrLabels) {
+	if s.readyForMerge(listofPrLabels,owner,repo) {
 		nonRequiringLabels, nonMissingLabels := s.legalLabelsForMerge(listofPrLabels)
 		if len(nonRequiringLabels) == 0 && len(nonMissingLabels) == 0 {
 			// current pr can be merged
