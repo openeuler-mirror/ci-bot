@@ -38,7 +38,15 @@ If you want to clear some tags when the pull request source branch changes,
  * kind,sig,openeuler-cla,priority Delete labels beginning with kind,sig,openeuler-cla or priority. 
  * lgtm Delete labels lgtm or beginning with lgtm-.
  * Except for the above description items, other labels will be judged as equal.
+### extraLgtmCountRequired config
+ If you want to set the number of lgtm tags for a separate repository or organization, 
+ you can configure this configuration item.The configuration item is a list, and the 
+ list element contains the following configuration items:
+ * lcrType Indicates whether the configuration is for the repository or the organization
+ * lcrName Configure the spatial address of the repository or organization 
+ * lcrCount Number of lgtm tags
  
+**If your configuration is for a specific repository, you should configure the full path instead of just the repository space address. For example: lcrName:openEuler/ci-bot**
 
 ## Getting Started
 

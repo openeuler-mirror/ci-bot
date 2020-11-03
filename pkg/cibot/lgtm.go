@@ -138,13 +138,13 @@ func (s *Server) calculateLgtmLabel(owner, repo string) int {
 		repoNum := 0
 		orgNum := 0
 		for _, v := range s.Config.ExtraLgtmCountRequired {
-			if v.LcrType == lgtmRepo  {
-				if strings.Contains(v.LcrName,"/"){
+			if v.LcrType == lgtmRepo {
+				if strings.Contains(v.LcrName, "/") {
 					or := strings.Split(v.LcrName, "/")
-					if len(or)==2 && strings.ToLower(or[0])==owner && strings.ToLower(or[1]) == repo {
+					if len(or) == 2 && strings.ToLower(or[0]) == owner && strings.ToLower(or[1]) == repo {
 						repoNum = v.LcrCount
 					}
-				}else if strings.ToLower(v.LcrName) == repo {
+				} else if strings.ToLower(v.LcrName) == repo {
 					repoNum = v.LcrCount
 				}
 			}
@@ -159,9 +159,9 @@ func (s *Server) calculateLgtmLabel(owner, repo string) int {
 			return orgNum
 		}
 		return s.Config.LgtmCountsRequired
-	} else {
-		return s.Config.LgtmCountsRequired
 	}
+	return s.Config.LgtmCountsRequired
+
 }
 
 // RemoveLgtm removes lgtm label
