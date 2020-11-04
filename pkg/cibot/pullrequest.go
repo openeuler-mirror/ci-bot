@@ -49,6 +49,16 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 			glog.Errorf("unable to add comment in pull request: %v", err)
 		}
 
+		if s.Config.CheckPrReviewer {
+			if !checkPrHasSetReviewer(event.PullRequest) {
+				body.Body = fmt.Sprintf(" ***@%s*** %s",event.Sender.Login,s.Config.SetReviewerTip)
+				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
+				}
+			}
+		}
+
 		if s.Config.AutoDetectCla {
 			err = s.CheckCLAByPullRequestEvent(event)
 			if err != nil {
@@ -618,4 +628,11 @@ func checkFrozenCanMerge(commenter, branch string) ([]string,bool) {
 	} else {
 		return frozen,true
 	}
+}
+
+func checkPrHasSetReviewer(pr *gitee.PullRequestHook) bool {
+	if pr != nil && len(pr.Assignees)>0 {
+		return true
+	}
+	return false
 }
