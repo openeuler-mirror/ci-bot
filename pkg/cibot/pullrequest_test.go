@@ -2,9 +2,6 @@ package cibot
 
 import "testing"
 
-import (
-	"testing"
-)
 
 func Test_formatDescription(t *testing.T) {
 	type args struct {

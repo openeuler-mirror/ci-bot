@@ -17,6 +17,16 @@ delLabels:
   - sig
   - kind
 lgtmCountsRequired: 1
+#Add additional lgtm label quantity limit settings to the organization or repositories
+#the member variables lcrType  indicates whether the setting is for an organization or a repositories,
+#optional configuration items: org or repo .
+extraLgtmCountRequired:
+  - lcrType: repo
+    lcrName: xwzQmxx/test
+    lcrCount: 2
+  - lcrType: org
+    lcrName: cve-test
+    lcrCount: 4
 requiringLabels:
 - openeuler-cla/yes
 missingLabels:
