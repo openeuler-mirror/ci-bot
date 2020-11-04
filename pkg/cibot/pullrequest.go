@@ -52,7 +52,7 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 		if s.Config.CheckPrReviewer {
 			if !checkPrHasSetReviewer(event.PullRequest) {
 				body.Body = fmt.Sprintf(" ***@%s*** %s",event.Sender.Login,s.Config.SetReviewerTip)
-				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 				if err != nil {
 					glog.Errorf("unable to add comment in pull request: %v", err)
 				}
