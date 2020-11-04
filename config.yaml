@@ -72,3 +72,6 @@ tmpservicefile: "_service"
 tmpservicepath: "master/openEuler:Factory/#projectname#/_service"
 guideurl: "https://gitee.com/openeuler/community/tree/master/zh/contributors"
 autoDetectCla: false
+checkPrReviewer: true
+#Tips for setting reviewers
+setReviewerTip: "Thank you for submitting a PullRequest, but it is detected that you have not set a reviewer, please set a reviewer. "

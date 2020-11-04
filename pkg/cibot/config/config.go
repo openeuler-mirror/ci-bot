@@ -38,6 +38,8 @@ type Config struct {
 	RequiringLabels          []string                `yaml:"requiringLabels"`
 	MissingLabels            []string                `yaml:"missingLabels"`
 	AutoDetectCla            bool                    `yaml:"autoDetectCla"`
+	CheckPrReviewer          bool                    `yaml:"checkPrReviewer"`
+	SetReviewerTip           string                  `yaml:"setReviewerTip"`
 }
 
 type WatchProjectFile struct {
