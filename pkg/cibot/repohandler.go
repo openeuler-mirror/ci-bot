@@ -185,9 +185,9 @@ func (handler *RepoHandler) watch() {
 										result := true
 										for i := 0; i < len(ps.Repositories); i++ {
 											// get repositories length
-											lenRepositories, err := handler.getRepositoriesLength(ps.Community, *ps.Repositories[i].Name)
-											if err != nil {
-												glog.Errorf("failed to get repositories length: %v", err)
+											lenRepositories, errex := handler.getRepositoriesLength(ps.Community, *ps.Repositories[i].Name)
+											if errex != nil {
+												glog.Errorf("failed to get repositories length: %v", errex)
 												result = false
 												continue
 											}
@@ -382,6 +382,19 @@ func (handler *RepoHandler) addRepositoriesinGitee(owner string, repo Repository
 		return err
 	}
 	glog.Infof("end to create repository: %s", *repo.Name)
+
+	// create branch
+	getOpts := &gitee.PostV5ReposOwnerRepoBranchesOpts{}
+	getOpts.AccessToken = optional.NewString(handler.Config.GiteeToken)
+	for _, br := range repo.ProtectedBranches {
+		_, _, err := handler.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoBranches(handler.Context,
+			owner, *repo.Name, "master", br, getOpts)
+		if err != nil {
+			glog.Errorf("fail to add branch (%s) for repository (%s): %v", br, *repo.Name, err)
+			return err
+		}
+		glog.Infof("Add branch (%s) for repository (%s)", br, *repo.Name)
+	}
 	return nil
 }
 
