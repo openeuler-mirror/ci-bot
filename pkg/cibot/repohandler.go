@@ -389,6 +389,9 @@ func (handler *RepoHandler) addRepositoriesinGitee(owner string, repo Repository
 	for _, br := range repo.ProtectedBranches {
 		_, _, err := handler.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoBranches(handler.Context,
 			owner, *repo.Name, "master", br, getOpts)
+		if br == "master" {
+			continue
+		}
 		if err != nil {
 			glog.Errorf("fail to add branch (%s) for repository (%s): %v", br, *repo.Name, err)
 			return err
