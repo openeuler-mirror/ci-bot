@@ -1513,17 +1513,10 @@ PullRequestsApiService 编辑评论
  * @param repo 仓库路径(path)
  * @param id 评论的ID
  * @param body 必填。评论内容
- * @param optional nil or *PatchV5ReposOwnerRepoPullsCommentsIdOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
 
 @return PullRequestComments
 */
-
-type PatchV5ReposOwnerRepoPullsCommentsIdOpts struct {
-	AccessToken optional.String
-}
-
-func (a *PullRequestsApiService) PatchV5ReposOwnerRepoPullsCommentsId(ctx context.Context, owner string, repo string, id int32, body string, localVarOptionals *PatchV5ReposOwnerRepoPullsCommentsIdOpts) (PullRequestComments, *http.Response, error) {
+func (a *PullRequestsApiService) PatchV5ReposOwnerRepoPullsCommentsId(ctx context.Context, owner string, repo string, id int32, body PullRequestCommentPatchParam) (PullRequestComments, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Patch")
 		localVarPostBody    interface{}
@@ -1559,10 +1552,8 @@ func (a *PullRequestsApiService) PatchV5ReposOwnerRepoPullsCommentsId(ctx contex
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("body", parameterToString(body, ""))
+	// body params
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err

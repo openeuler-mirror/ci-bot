@@ -158,6 +158,7 @@ type PullRequestHook struct {
 	PatchUrl           string         `json:"patch_url,omitempty"`
 	Title              string         `json:"title,omitempty"`
 	Body               string         `json:"body,omitempty"`
+	Labels             []LabelHook    `json:"labels,omitempty"`
 	CreatedAt          string         `json:"created_at,omitempty"`
 	UpdatedAt          string         `json:"updated_at,omitempty"`
 	ClosedAt           string         `json:"closed_at,omitempty"`
@@ -170,13 +171,13 @@ type PullRequestHook struct {
 	Tester             []UserHook     `json:"tester,omitempty"`
 	Testers            []UserHook     `json:"testers,omitempty"`
 	NeedTest           bool           `json:"need_test,omitempty"`
-	need_review        bool           `json:"need_review,omitempty"`
+	NeedReview         bool           `json:"need_review,omitempty"`
 	Milestone          *MilestoneHook `json:"milestone,omitempty"`
 	Head               *BranchHook    `json:"head,omitempty"`
 	Base               *BranchHook    `json:"base,omitempty"`
 	Merged             bool           `json:"merged,omitempty"`
 	Mergeable          bool           `json:"mergeable,omitempty"`
-	merge_status       string         `json:"merge_status,omitempty"`
+	MergeStatus        string         `json:"merge_status,omitempty"`
 	UpdatedBy          *UserHook      `json:"updated_by,omitempty"`
 	Comments           int32          `json:"comments,omitempty"`
 	Commits            int32          `json:"commits,omitempty"`
