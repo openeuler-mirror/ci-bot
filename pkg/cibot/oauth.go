@@ -3,10 +3,10 @@ package cibot
 import (
 	"context"
 	"fmt"
+	"github.com/golang/glog"
 	"os"
 	"strings"
 
-	"github.com/golang/glog"
 	"golang.org/x/oauth2"
 )
 
@@ -30,7 +30,7 @@ func GetToken(code string) (*oauth2.Token, error) {
 	ctx := context.Background()
 	config := Setup(client, redirect, secret)
 
-	glog.Infof("Token request config : %v, code: %s", config, code)
+	glog.Infof("Token request config, code: %s", code)
 
 	return config.Exchange(ctx, code)
 
