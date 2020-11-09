@@ -4417,19 +4417,11 @@ RepositoriesApiService 创建分支
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
- * @param refs 起点名称, 默认：master
- * @param branchName 新创建的分支名称
- * @param optional nil or *PostV5ReposOwnerRepoBranchesOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
+ * @param body 新建分支内容
 
 @return CompleteBranch
 */
-
-type PostV5ReposOwnerRepoBranchesOpts struct {
-	AccessToken optional.String
-}
-
-func (a *RepositoriesApiService) PostV5ReposOwnerRepoBranches(ctx context.Context, owner string, repo string, refs string, branchName string, localVarOptionals *PostV5ReposOwnerRepoBranchesOpts) (CompleteBranch, *http.Response, error) {
+func (a *RepositoriesApiService) PostV5ReposOwnerRepoBranches(ctx context.Context, owner string, repo string, body CreateBranchParam) (CompleteBranch, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -4464,11 +4456,7 @@ func (a *RepositoriesApiService) PostV5ReposOwnerRepoBranches(ctx context.Contex
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	localVarFormParams.Add("refs", parameterToString(refs, ""))
-	localVarFormParams.Add("branch_name", parameterToString(branchName, ""))
+	localVarPostBody = &body
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err

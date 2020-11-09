@@ -72,6 +72,7 @@ type RepoInfo struct {
 
 type PullRequestEvent struct {
 	Action         *string          `json:"action,omitempty"`
+	ActionDesc     *string          `json:"action_desc,omitempty"`
 	PullRequest    *PullRequestHook `json:"pull_request,omitempty"`
 	Number         int64            `json:"number,omitempty"`
 	IID            int64            `json:"iid,omitempty"`

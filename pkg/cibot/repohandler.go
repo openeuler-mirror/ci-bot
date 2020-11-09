@@ -384,11 +384,12 @@ func (handler *RepoHandler) addRepositoriesinGitee(owner string, repo Repository
 	glog.Infof("end to create repository: %s", *repo.Name)
 
 	// create branch
-	getOpts := &gitee.PostV5ReposOwnerRepoBranchesOpts{}
-	getOpts.AccessToken = optional.NewString(handler.Config.GiteeToken)
+	repobranchbody := gitee.CreateBranchParam{}
+	repobranchbody.AccessToken = handler.Config.GiteeToken
+	repobranchbody.Refs = "master"
 	for _, br := range repo.ProtectedBranches {
-		_, _, err := handler.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoBranches(handler.Context,
-			owner, *repo.Name, "master", br, getOpts)
+		repobranchbody.BranchName = br
+		_, _, err := handler.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoBranches(handler.Context, owner, *repo.Name, repobranchbody)
 		if br == "master" {
 			continue
 		}
