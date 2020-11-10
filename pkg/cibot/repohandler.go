@@ -638,9 +638,9 @@ func (handler *RepoHandler) handleRepositorySetting(community string, r Reposito
 	// set none reviewer but not ci-bot(default)
 	reviewerBody := gitee.SetRepoReviewer{}
 	reviewerBody.AccessToken = handler.Config.GiteeToken
-	reviewerBody.Assigneers = " "
+	reviewerBody.Assignees = " "
 	reviewerBody.Testers = " "
-	reviewerBody.AssigneersNumber = 0
+	reviewerBody.AssigneesNumber = 0
 	reviewerBody.TestersNumber = 0
 	_, err = handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoReviewer(handler.Context, community, *r.Name, reviewerBody)
 	if err != nil {
