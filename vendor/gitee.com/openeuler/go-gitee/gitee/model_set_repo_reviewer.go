@@ -13,11 +13,11 @@ type SetRepoReviewer struct {
 	// 用户授权码
 	AccessToken string `json:"access_token,omitempty"`
 	// 审查人员
-	Assigneers string `json:"assigneers,omitempty"`
+	Assignees string `json:"assignees,omitempty"`
 	// 测试人员
 	Testers string `json:"testers,omitempty"`
 	// 最少审查人数
-	AssigneersNumber int32 `json:"assigneers_number,omitempty"`
+	AssigneesNumber int32 `json:"assignees_number,omitempty"`
 	// 最少测试人员
 	TestersNumber int32 `json:"testers_number,omitempty"`
 }
