@@ -548,6 +548,7 @@ func (handler *RepoHandler) addBranchProtections(community string, r Repository,
 // handleRepositorySetting handles that the repo settings, including:
 //   1. type is private or public
 //   2. commentable is true or false
+//   3. set none reviewer but not ci-bot(default)
 func (handler *RepoHandler) handleRepositorySetting(community string, r Repository) error {
 	// get repos from DB
 	var rs database.Repositories
@@ -632,6 +633,19 @@ func (handler *RepoHandler) handleRepositorySetting(community string, r Reposito
 		if err != nil {
 			glog.Errorf("unable to update repository settings: %v", err)
 		}
+	}
+
+	// set none reviewer but not ci-bot(default)
+	reviewerBody := gitee.SetRepoReviewer{}
+	reviewerBody.AccessToken = handler.Config.GiteeToken
+	reviewerBody.Assigneers = " "
+	reviewerBody.Testers = " "
+	reviewerBody.AssigneersNumber = 0
+	reviewerBody.TestersNumber = 0
+	_, err = handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoReviewer(handler.Context, community, *r.Name, reviewerBody)
+	if err != nil {
+		glog.Errorf("Set repository reviewer info failed: %v", err)
+		return err
 	}
 
 	return nil
