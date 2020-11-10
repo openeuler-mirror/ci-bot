@@ -292,7 +292,7 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest, ac
 	}
 
 	// tostring
-	data, err := cds.ToString()
+	_, err = cds.ToString()
 	if err != nil {
 		s.HandleResult(w, CLAResult{
 			IsSuccess:   false,
@@ -301,7 +301,7 @@ func (s *CLAHandler) HandleRequest(w http.ResponseWriter, request CLARequest, ac
 		})
 		return
 	}
-	glog.Infof("add cla details data: %s", data)
+
 
 	// Check email in database
 	var lenEmail int
