@@ -642,10 +642,10 @@ func (handler *RepoHandler) handleRepositorySetting(community string, r Reposito
 	reviewerBody.Testers = " "
 	reviewerBody.AssigneesNumber = 0
 	reviewerBody.TestersNumber = 0
-	_, err = handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoReviewer(handler.Context, community, *r.Name, reviewerBody)
-	if err != nil {
-		glog.Errorf("Set repository reviewer info failed: %v", err)
-		return err
+	response, errex := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoReviewer(handler.Context, community, *r.Name, reviewerBody)
+	if errex != nil {
+		glog.Errorf("Set repository reviewer info failed: %v, %s", errex, response.Status)
+		return errex
 	}
 
 	return nil
