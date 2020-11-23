@@ -25,6 +25,7 @@ const (
 	PermissionPull  = "pull"
 
 	BranchProtected = "protected"
+	BranchNormal    = "normal"
 	// not supported yet
 	BranchReadonly = "readonly"
 )
@@ -60,6 +61,7 @@ type Repository struct {
 	Developers        []string `yaml:"developers"`
 	Viewers           []string `yaml:"viewers"`
 	Reporters         []string `yaml:"reporters"`
+	Branches          []Branch `yaml:"branches"`
 }
 
 // IsCommentable returns if contributors are able to comment
@@ -172,7 +174,7 @@ func (handler *InitHandler) watch() {
 			watchPath := wf.WatchprojectFilePath
 			watchRef := wf.WatchProjectFileRef
 
-			glog.Infof("begin to serve. watchOwner: %s watchRepo: %s watchPath: %s watchRef: %s watchDuration: %d",
+			glog.Infof("Init handler begin to serve. watchOwner: %s watchRepo: %s watchPath: %s watchRef: %s watchDuration: %d",
 				watchOwner, watchRepo, watchPath, watchRef, watchDuration)
 
 			// get project file
@@ -858,145 +860,112 @@ func (handler *InitHandler) removeReporters(c Community, r Repository, mapReport
 func (handler *InitHandler) handleBranches(c Community, r Repository) error {
 	// if the branches are defined in the repositories, it means that
 	// all the branches defined in the community will not inherited by repositories
-	mapBranches := make(map[string]string)
 
-	if len(r.ProtectedBranches) > 0 {
+	if len(r.Branches) > 0 {
 		// using repository branches
-		glog.Infof("using repository branches: %s", *r.Name)
-		for _, b := range r.ProtectedBranches {
-			mapBranches[b] = b
+		glog.Infof("Setting repository branches: %s", r.Name)
+		for _, b := range r.Branches {
+			//check yaml branches is in db
+			var bs []database.Branches
+			err := database.DBConnection.Model(&database.Branches{}).
+				Where("owner = ? and repo = ? and name = ?", c.Name, r.Name, b.Name).Find(&bs).Error
+			if err != nil {
+				glog.Infof("Do not have branches (%s), need to create. %v, ", b.Name, err)
+				err = handler.addBranchInGiteeAndDb(c, r, b)
+				if err != nil {
+					glog.Errorf("Add branch(%s) of repor(%s) failed: %v", b.Name, r.Name, err)
+				}
+				continue
+			}
+			//branch exist already, need to change some feature only.
+			err = handler.changeBranchInGiteeAndDb(c, r, b, bs[0])
+			if err != nil {
+				glog.Errorf("Change branch(%s) of repor(%s) failed: %v", b.Name, r.Name, err)
+			}
+			continue
 		}
-	} else {
-		// using community branches
-		glog.Infof("using community branches: %s", *r.Name)
-		for _, b := range c.ProtectedBranches {
-			mapBranches[b] = b
-		}
 	}
-
-	// get branches from DB
-	var bs []database.Branches
-	err := database.DBConnection.Model(&database.Branches{}).
-		Where("owner = ? and repo = ?", c.Name, r.Name).Find(&bs).Error
-	if err != nil {
-		glog.Errorf("unable to get branches: %v", err)
-		return err
-	}
-	mapBranchesInDB := make(map[string]string)
-	for _, b := range bs {
-		mapBranchesInDB[b.Name] = strconv.Itoa(int(b.ID))
-	}
-
-	// un-protected branches
-	err = handler.removeBranchProtections(c, r, mapBranches, mapBranchesInDB)
-	if err != nil {
-		glog.Errorf("unable to un-protected branches: %v", err)
-	}
-
-	// protected branches
-	err = handler.addBranchProtections(c, r, mapBranches, mapBranchesInDB)
-	if err != nil {
-		glog.Errorf("unable to protected branches: %v", err)
-	}
-
 	return nil
 }
 
 // unprotectedBranches unprotect branches
-func (handler *InitHandler) removeBranchProtections(c Community, r Repository, mapBranches, mapBranchesInDB map[string]string) error {
-	// remove branch protections
-	listOfUnprotectedBranches := make([]string, 0)
-
-	for k := range mapBranchesInDB {
-		if _, exists := mapBranches[k]; !exists {
-			listOfUnprotectedBranches = append(listOfUnprotectedBranches, k)
-		}
+func (handler *InitHandler) changeBranchInGiteeAndDb(c Community, r Repository, br Branch, bs database.Branches) error {
+	// if branch features are same as ones in db, do nothing.
+	if *r.Name == bs.Repo && *br.Name == bs.Name && *br.Type == bs.Type {
+		return nil
 	}
-	glog.Infof("list of un-protected branches: %v", listOfUnprotectedBranches)
 
-	if len(listOfUnprotectedBranches) > 0 {
+	// change branch protected freature in Gitee
+	var brType string
+	brType = BranchNormal
+	if *br.Type == BranchProtected {
+		protectBody := gitee.BranchProtectionPutParam{}
+		protectBody.AccessToken = handler.Config.GiteeToken
+		_, _, err := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoBranchesBranchProtection(
+			handler.Context, *c.Name, *r.Name, *br.Name, protectBody)
+		if err != nil {
+			glog.Errorf("failed to add branch protection: %v", err)
+		}
+		brType = BranchProtected
+	} else {
 		opts := &gitee.DeleteV5ReposOwnerRepoBranchesBranchProtectionOpts{}
 		opts.AccessToken = optional.NewString(handler.Config.GiteeToken)
-
-		glog.Infof("begin to remove branch protections for %s", *r.Name)
-		for _, v := range listOfUnprotectedBranches {
-			// remove branch protection from gitee
-			_, err := handler.GiteeClient.RepositoriesApi.DeleteV5ReposOwnerRepoBranchesBranchProtection(
-				handler.Context, *c.Name, *r.Name, v, opts)
-			if err != nil {
-				glog.Errorf("failed to remove branch protection: %v", err)
-				continue
-			}
-			// remove branch protection from DB
-			id, _ := strconv.Atoi(mapBranchesInDB[v])
-			bs := database.Branches{}
-			bs.ID = uint(id)
-			err = database.DBConnection.Delete(&bs).Error
-			if err != nil {
-				glog.Errorf("failed to remove branch protection in database: %v", err)
-			}
+		_, err := handler.GiteeClient.RepositoriesApi.DeleteV5ReposOwnerRepoBranchesBranchProtection(
+			handler.Context, *c.Name, *r.Name, *br.Name, opts)
+		if err != nil {
+			glog.Errorf("failed to remove branch protection: %v", err)
 		}
-		glog.Infof("end to remove branch protections for %s", *r.Name)
+	}
+
+	// change branch protected freature in DB
+	updatebranch := &database.Branches{}
+	updatebranch.ID = bs.ID
+	err := database.DBConnection.Model(updatebranch).Update("Type", brType).Error
+	if err != nil {
+		glog.Errorf("unable to update type: %v", err)
 	}
 
 	return nil
 }
 
 // addBranchProtections protects branches
-func (handler *InitHandler) addBranchProtections(c Community, r Repository, mapBranches, mapBranchesInDB map[string]string) error {
-	// add branch protections
-	listOfProtectedBranches := make([]string, 0)
-
-	for k := range mapBranches {
-		if _, exits := mapBranchesInDB[k]; !exits {
-			listOfProtectedBranches = append(listOfProtectedBranches, k)
-		}
+func (handler *InitHandler) addBranchInGiteeAndDb(c Community, r Repository, br Branch) error {
+	// create branch in gitee
+	repobranchbody := gitee.CreateBranchParam{}
+	repobranchbody.AccessToken = handler.Config.GiteeToken
+	repobranchbody.BranchName = *br.Name
+	repobranchbody.Refs = *br.CreateFrom
+	_, _, err := handler.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoBranches(handler.Context, *c.Name, *r.Name, repobranchbody)
+	if err != nil {
+		glog.Errorf("fail to add branch (%s) for repository (%s): %v", *br.Name, *r.Name, err)
+		return nil
 	}
-	glog.Infof("list of protected branches: %v", listOfProtectedBranches)
+	glog.Infof("Add branch (%s) for repository (%s) in gitee.", *br.Name, *r.Name)
 
-	if len(listOfProtectedBranches) > 0 {
-		getOpts := &gitee.GetV5ReposOwnerRepoBranchesBranchOpts{}
-		getOpts.AccessToken = optional.NewString(handler.Config.GiteeToken)
-
+	// add branch protection to gitee
+	var brType string
+	brType = BranchNormal
+	if *br.Type == BranchProtected {
 		protectBody := gitee.BranchProtectionPutParam{}
 		protectBody.AccessToken = handler.Config.GiteeToken
-
-		glog.Errorf("begin to add branch protections for %s", *r.Name)
-		for _, v := range listOfProtectedBranches {
-			// check if protected branch exists
-			branchObj, response, _ := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoBranchesBranch(
-				handler.Context, *c.Name, *r.Name, v, getOpts)
-			if response.StatusCode == 404 {
-				glog.Errorf("branch %s not exists, no need for protection", v)
-				continue
-			}
-
-			// If branch has alreay been protected, no need for protection
-			if branchObj.Protected == true {
-				glog.Errorf("branch %s has been protected already, no need for protection", v)
-				continue
-			}
-
-			// add branch protection to gitee
-			_, response, err := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoBranchesBranchProtection(
-				handler.Context, *c.Name, *r.Name, v, protectBody)
-			if err != nil {
-				glog.Errorf("failed to add branch protection: %v", err)
-				continue
-			}
-			// add branch protection to database
-			bs := database.Branches{
-				Owner: *c.Name,
-				Repo:  *r.Name,
-				Name:  v,
-				Type:  BranchProtected,
-			}
-			err = database.DBConnection.Create(&bs).Error
-			if err != nil {
-				glog.Errorf("failed to add branch protection in database: %v", err)
-			}
+		_, _, err := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoBranchesBranchProtection(
+			handler.Context, *c.Name, *r.Name, *br.Name, protectBody)
+		if err != nil {
+			glog.Errorf("failed to add branch protection: %v", err)
 		}
-		glog.Infof("end to add branch protections for %s", *r.Name)
+		brType = BranchProtected
+	}
+	// add branch to database
+	bs := database.Branches{
+		Owner:          *c.Name,
+		Repo:           *r.Name,
+		Name:           *br.Name,
+		Type:           brType,
+		AdditionalInfo: *br.CreateFrom,
+	}
+	err = database.DBConnection.Create(&bs).Error
+	if err != nil {
+		glog.Errorf("failed to add branch protection in database: %v", err)
 	}
 
 	return nil
