@@ -404,10 +404,10 @@ func (handler *RepoHandler) addRepositoriesinGitee(owner string, repo Repository
 		repobranchbody.Refs = *br.CreateFrom
 		_, _, err := handler.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoBranches(handler.Context, owner, *repo.Name, repobranchbody)
 		if err != nil {
-			glog.Errorf("fail to add branch (%s) for repository (%s): %v", br, *repo.Name, err)
+			glog.Errorf("fail to add branch (%s) for repository (%s): %v", *br.Name, *repo.Name, err)
 			return err
 		}
-		glog.Infof("Add branch (%s) for repository (%s)", br, *repo.Name)
+		glog.Infof("Add branch (%s) for repository (%s)", *br.Name, *repo.Name)
 	}
 	return nil
 }
@@ -505,9 +505,9 @@ func (handler *RepoHandler) addBranchGiteeAndDb(community string, r Repository, 
 	_, _, err := handler.GiteeClient.RepositoriesApi.PostV5ReposOwnerRepoBranches(handler.Context, community, *r.Name, repobranchbody)
 	if err != nil {
 		glog.Errorf("fail to add branch (%s) for repository (%s): %v", *br.Name, *r.Name, err)
-		return nil
+	} else {
+                glog.Infof("Add branch (%s) for repository (%s) in gitee.", *br.Name, *r.Name)
 	}
-	glog.Infof("Add branch (%s) for repository (%s) in gitee.", *br.Name, *r.Name)
 
 	// add branch protection to gitee
 	var brType string
@@ -528,7 +528,7 @@ func (handler *RepoHandler) addBranchGiteeAndDb(community string, r Repository, 
 		Repo:           *r.Name,
 		Name:           *br.Name,
 		Type:           brType,
-		AdditionalInfo: *br.CreateFrom,
+		AdditionalInfo: repobranchbody.Refs,
 	}
 	err = database.DBConnection.Create(&bs).Error
 	if err != nil {
