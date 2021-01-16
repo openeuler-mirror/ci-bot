@@ -49,6 +49,16 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 			glog.Errorf("unable to add comment in pull request: %v", err)
 		}
 
+		if s.Config.CheckPrReviewer {
+			if !s.checkPrHasSetReviewer(event) {
+				body.Body = fmt.Sprintf(" ***@%s*** %s", event.Sender.Login, s.Config.SetReviewerTip)
+				_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+				if err != nil {
+					glog.Errorf("unable to add comment in pull request: %v", err)
+				}
+			}
+		}
+
 		if s.Config.AutoDetectCla {
 			err = s.CheckCLAByPullRequestEvent(event)
 			if err != nil {
@@ -403,13 +413,14 @@ func (s *Server) hasLgtmLabel(labels []gitee.Label) bool {
 	return false
 }
 
-func (s *Server) readyForMerge(labels []gitee.Label) bool {
+func (s *Server) readyForMerge(labels []gitee.Label, owner, repo string) error {
 	aproveLabel := 0
 	lgtmLabel := 0
 	lgtmPrefix := ""
 	leastLgtm := 0
-	if s.Config.LgtmCountsRequired > 1 {
-		leastLgtm = s.Config.LgtmCountsRequired
+	count := s.calculateLgtmLabel(owner, repo)
+	if count > 1 {
+		leastLgtm = count
 		lgtmPrefix = fmt.Sprintf(LabelLgtmWithCommenter, "")
 	} else {
 		leastLgtm = 1
@@ -423,7 +434,12 @@ func (s *Server) readyForMerge(labels []gitee.Label) bool {
 		}
 	}
 	glog.Infof("Pr labels have approved: %d lgtm: %d, required (%d)", aproveLabel, lgtmLabel, leastLgtm)
-	return aproveLabel == 1 && lgtmLabel >= leastLgtm
+	if aproveLabel == 1 && lgtmLabel >= leastLgtm {
+		return nil
+	} else {
+		return fmt.Errorf("This pull request can not be merged, please check that the number of **lgtm** labels >= %d "+
+			"and there are an **approve** labels. ", leastLgtm)
+	}
 }
 
 // check with the labels constraints requiring/missing to determine if mergable
@@ -452,83 +468,76 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	listofPrLabels := pr.Labels
 	glog.Infof("List of pr labels: %v", listofPrLabels)
 	// ready to merge
-	if s.readyForMerge(listofPrLabels) {
-		nonRequiringLabels, nonMissingLabels := s.legalLabelsForMerge(listofPrLabels)
-		if len(nonRequiringLabels) == 0 && len(nonMissingLabels) == 0 {
-			// current pr can be merged
-			if c,b :=checkFrozenCanMerge(event.Author.Login, pr.Base.Ref) ;!b{
-				//send comment to pr
-				body := gitee.PullRequestCommentPostParam{}
-				body.AccessToken = s.Config.GiteeToken
-				if len(c) >0{
-					body.Body = fmt.Sprintf("**Merge failed** The current pull request merge target has been frozen, and only the branch owner( @%s ) can merge.",
-						strings.Join(c," , @"))
-				}else {
-					body.Body = "**Merge failed** The current pull request merge target has been frozen, and only the branch owner can merge."
-				}
-
-				_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, body)
-				if err != nil {
-					glog.Errorf("Cannot add comments to pull request: %v", err)
-				}
+	err = s.readyForMerge(listofPrLabels, owner, repo)
+	if err != nil {
+		return err
+	}
+	nonRequiringLabels, nonMissingLabels := s.legalLabelsForMerge(listofPrLabels)
+	if len(nonRequiringLabels) == 0 && len(nonMissingLabels) == 0 {
+		// current pr can be merged
+		if c, b := checkFrozenCanMerge(event.Author.Login, pr.Base.Ref); !b {
+			//send comment to pr
+			comment := ""
+			if len(c) > 0 {
+				comment = fmt.Sprintf("**Merge failed** The current pull request merge target has been frozen, and only the branch owner( @%s ) can merge.",
+					strings.Join(c, " , @"))
 			} else {
-				if event.PullRequest.Mergeable {
-					// remove assignees
-					err = s.RemoveAssigneesInPullRequest(event)
-					if err != nil {
-						glog.Errorf("unable to remove assignees. err: %v", err)
-						return err
-					}
-					// remove testers
-					err = s.RemoveTestersInPullRequest(event)
-					if err != nil {
-						glog.Errorf("unable to remove testers. err: %v", err)
-						return err
-					}
-					// merge pr
-					body := gitee.PullRequestMergePutParam{}
-					body.AccessToken = s.Config.GiteeToken
-					// generate merge body
-					description, err := s.generateMergeDescription(event)
-					if err != nil {
-						glog.Errorf("unable to get merge description.err: %v", err)
-						return err
-					}
-					body.Description = description
-
-					_, err = s.GiteeClient.PullRequestsApi.PutV5ReposOwnerRepoPullsNumberMerge(s.Context, owner, repo, prNumber, body)
-					if err != nil {
-						glog.Errorf("unable to merge pull request. err: %v", err)
-						return err
-					}
-				}
+				comment = "**Merge failed** The current pull request merge target has been frozen, and only the branch owner can merge."
+			}
+			err = s.addCommentToPullRequest(owner, repo, comment, prNumber)
+			if err != nil {
+				glog.Errorf("Cannot add comments to pull request: %v", err)
 			}
 		} else {
-			// add comment to pr to show the labels reason of not mergable
-			nonRequiringMsg := ""
-			if len(nonRequiringLabels) > 0 {
-				nonRequiringMsg = fmt.Sprintf(nonRequiringLabelsMessage, strings.Join(nonRequiringLabels, ","))
-			}
-			nonMissingMsg := ""
-			if len(nonMissingLabels) > 0 {
-				nonMissingMsg = fmt.Sprintf(nonMissingLabelsMessage, strings.Join(nonMissingLabels, ","))
-			}
+			if event.PullRequest.Mergeable {
+				// remove assignees
+				err = s.RemoveAssigneesInPullRequest(event)
+				if err != nil {
+					glog.Errorf("unable to remove assignees. err: %v", err)
+				}
+				// remove testers
+				err = s.RemoveTestersInPullRequest(event)
+				if err != nil {
+					glog.Errorf("unable to remove testers. err: %v", err)
+				}
+				// merge pr
+				body := gitee.PullRequestMergePutParam{}
+				body.AccessToken = s.Config.GiteeToken
+				// generate merge body
+				description, err := s.generateMergeDescription(event)
+				if err != nil {
+					glog.Errorf("unable to get merge description.err: %v", err)
+					return fmt.Errorf(`The pull request merge failed, please use command "/check-pr" to try again. `)
+				}
+				body.Description = description
 
-			// add comment back to pr
-			body := gitee.PullRequestCommentPostParam{}
-			body.AccessToken = s.Config.GiteeToken
-			body.Body = fmt.Sprintf(cannotMergeMessage, fmt.Sprintf("%s%s", nonRequiringMsg, nonMissingMsg))
-			owner := event.Repository.Namespace
-			repo := event.Repository.Name
-			number := event.PullRequest.Number
-			_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
-			if err != nil {
-				glog.Errorf("unable to add comment in pull request: %v", err)
-				return err
+				_, err = s.GiteeClient.PullRequestsApi.PutV5ReposOwnerRepoPullsNumberMerge(s.Context, owner, repo, prNumber, body)
+				if err != nil {
+					glog.Errorf("unable to merge pull request. err: %v", err)
+					return fmt.Errorf(`The pull request merge failed, please use command "/check-pr" to try again. `)
+				}
 			}
 		}
+	} else {
+		// add comment to pr to show the labels reason of not mergable
+		nonRequiringMsg := ""
+		if len(nonRequiringLabels) > 0 {
+			nonRequiringMsg = fmt.Sprintf(nonRequiringLabelsMessage, strings.Join(nonRequiringLabels, ","))
+		}
+		nonMissingMsg := ""
+		if len(nonMissingLabels) > 0 {
+			nonMissingMsg = fmt.Sprintf(nonMissingLabelsMessage, strings.Join(nonMissingLabels, ","))
+		}
+		// add comment back to pr
+		comment := fmt.Sprintf(cannotMergeMessage, fmt.Sprintf("%s%s", nonRequiringMsg, nonMissingMsg))
+		owner := event.Repository.Namespace
+		repo := event.Repository.Name
+		number := event.PullRequest.Number
+		err = s.addCommentToPullRequest(owner, repo, comment, number)
+		if err != nil {
+			glog.Errorf("unable to add comment in pull request: %v", err)
+		}
 	}
-
 	return nil
 }
 
@@ -603,7 +612,7 @@ func getSignersAndReviewers(user string, comments []gitee.PullRequestComments) (
 	return signers, reviewers, nil
 }
 
-func checkFrozenCanMerge(commenter, branch string) ([]string,bool) {
+func checkFrozenCanMerge(commenter, branch string) ([]string, bool) {
 	frozen, isFrozen := IsBranchFrozen(branch)
 	if isFrozen {
 		canMerge := false
@@ -613,8 +622,30 @@ func checkFrozenCanMerge(commenter, branch string) ([]string,bool) {
 				break
 			}
 		}
-		return frozen,canMerge
+		return frozen, canMerge
 	} else {
-		return frozen,true
+		return frozen, true
 	}
+}
+
+func (s *Server) checkPrHasSetReviewer(pre *gitee.PullRequestEvent) bool {
+	if pre.PullRequest != nil && len(pre.PullRequest.Assignees) > 0 {
+		return true
+	} else {
+		//get pr info
+		owner := pre.Repository.Namespace
+		repo := pre.Repository.Name
+		number := pre.PullRequest.Number
+		lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
+		lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
+		pr, _, err := s.GiteeClient.PullRequestsApi.GetV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, lvos)
+		if err != nil {
+			glog.Errorf("unable to get pull request. err: %v", err)
+			return false
+		}
+		if len(pr.Assignees) > 0 {
+			return true
+		}
+	}
+	return false
 }
