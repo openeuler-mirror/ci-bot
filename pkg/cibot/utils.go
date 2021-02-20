@@ -133,3 +133,15 @@ func canCommentPrIncludingSigDirectory(server *Server, owner string, repo string
 	}
 	return 1, nil
 }
+
+//truncateLabel on gitee the length of the label cannot exceed 20 characters.
+//If it exceeds, the label will be truncated and replaced.
+func truncateLabel(labels []string) []string {
+	for i := range labels {
+		rs := []rune(labels[i])
+		if len(rs) > 20 {
+			labels[i] = string(rs[:20])
+		}
+	}
+	return labels
+}
