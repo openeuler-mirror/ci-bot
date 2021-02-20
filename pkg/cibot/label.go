@@ -50,27 +50,27 @@ func GetChangeLabels(confDelLabels []string, prLabels []gitee.Label) (delLabels,
 				continue
 			}
 			if cdl == "openeuler-cla" {
-				if strings.HasPrefix(pl.Name,cdl){
+				if strings.HasPrefix(pl.Name, cdl) {
 					delLabels = append(delLabels, pl.Name)
 					isUpdate = false
 				}
 				continue
 			}
-			if cdl == "sig"{
-				if strings.HasPrefix(pl.Name,cdl){
+			if cdl == "sig" {
+				if strings.HasPrefix(pl.Name, cdl) {
 					delLabels = append(delLabels, pl.Name)
 					isUpdate = false
 				}
 				continue
 			}
-			if cdl == "kind"{
-				if strings.HasPrefix(pl.Name,cdl){
+			if cdl == "kind" {
+				if strings.HasPrefix(pl.Name, cdl) {
 					delLabels = append(delLabels, pl.Name)
 					isUpdate = false
 				}
 				continue
 			}
-            if cdl == pl.Name {
+			if cdl == pl.Name {
 				delLabels = append(delLabels, pl.Name)
 				isUpdate = false
 				continue
@@ -587,6 +587,7 @@ func (s *Server) patchRepoLabels(labels []string, owner, repo string, createNew 
 
 // AddSpecifyLabelInPulRequest adds specify labels in pull request
 func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, newLabels []string, createNew bool) error {
+	newLabels = truncateLabel(newLabels)
 	// get basic information
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
