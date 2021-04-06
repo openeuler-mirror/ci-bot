@@ -58,6 +58,19 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 				}
 			}
 		}
+		// add a tag to describe the sig name of the repo.
+		sigName := s.getSigNameFromRepo(event.Repository.FullName)
+		if len(sigName) > 0{
+			addlabel := &gitee.NoteEvent{}
+			addlabel.PullRequest = event.PullRequest
+			addlabel.Repository = event.Repository
+			addlabel.Comment = &gitee.NoteHook{}
+			err = s.AddSpecifyLabelsInPulRequest(addlabel, []string{fmt.Sprintf("sig/%s", sigName)}, true)
+			if err != nil {
+				glog.Errorf("Add special label sig info failed: %v", err)
+				return
+			}
+		}
 
 		if s.Config.AutoDetectCla {
 			err = s.CheckCLAByPullRequestEvent(event)
