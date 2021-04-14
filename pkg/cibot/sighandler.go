@@ -439,3 +439,25 @@ func (handler *SigHandler) addSigRepos(sig Sig, mapSigRepos, mapSigReposInDB map
 
 	return nil
 }
+
+// get Sig name by Repo name
+func (s *Server) getSigNameFromRepo(repoName string) (sigName string) {
+	sigName = ""
+	if len(repoName) == 0 || len(repoName) > 128 {
+		glog.Errorf("Repo name is invalid.")
+		return
+	}
+	// get sig repos from DB
+	glog.Infof("Repo name is:%s .", repoName)
+	var srs database.SigRepositories
+	err := database.DBConnection.Model(&database.SigRepositories{}).
+		Where("repo_name = ?", repoName).Find(&srs).Error
+	if err != nil {
+		glog.Errorf("unable to get sig repos: %v", err)
+		return
+	}
+	sigName = srs.Name
+	glog.Infof("end to add sig repos for %s", sigName)
+	return
+}
+
