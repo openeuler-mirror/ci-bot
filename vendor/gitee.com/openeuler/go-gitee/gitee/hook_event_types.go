@@ -58,7 +58,7 @@ type IssueEvent struct {
 	Title       *string         `json:"title,omitempty"`
 	Description *string         `json:"description,omitempty"`
 	State       *string         `json:"state,omitempty"`
-	Milestone   *MilestoneHook  `json:"milestone,omitempty"`
+	Milestone   *string         `json:"milestone,omitempty"`
 	URL         *string         `json:"url,omitempty"`
 	Enterprise  *EnterpriseHook `json:"enterprise,omitempty"`
 	HookName    *string         `json:"hook_name,omitempty"`

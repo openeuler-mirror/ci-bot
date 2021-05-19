@@ -22,6 +22,8 @@ type PullRequest struct {
 	ReviewCommentUrl  string      `json:"review_comment_url,omitempty"`
 	CommentsUrl       string      `json:"comments_url,omitempty"`
 	StatusesUrl       string      `json:"statuses_url,omitempty"`
+	AssigneesNumber   int32       `json:"assignees_number,omitempty"`
+	TestersNumber     int32       `json:"testers_number,omitempty"`
 	Number            int32       `json:"number,omitempty"`
 	State             string      `json:"state,omitempty"`
 	Title             string      `json:"title,omitempty"`
