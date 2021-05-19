@@ -905,25 +905,17 @@ LabelsApiService 创建Issue标签
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param number Issue 编号(区分大小写，无需添加 # 号)
- * @param optional nil or *PostV5ReposOwnerRepoIssuesNumberLabelsOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Body" (optional.Interface of []string) -  标签名数组，如: [\&quot;feat\&quot;, \&quot;bug\&quot;]
+ * @param body 必选，标签的内容
 
-@return Label
+@return []Label
 */
-
-type PostV5ReposOwnerRepoIssuesNumberLabelsOpts struct {
-	AccessToken optional.String
-	Body        optional.Interface
-}
-
-func (a *LabelsApiService) PostV5ReposOwnerRepoIssuesNumberLabels(ctx context.Context, owner string, repo string, number string, localVarOptionals *PostV5ReposOwnerRepoIssuesNumberLabelsOpts) (Label, *http.Response, error) {
+func (a *LabelsApiService) PostV5ReposOwnerRepoIssuesNumberLabels(ctx context.Context, owner string, repo string, number string, body PullRequestLabelPostParam) ([]Label, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
 		localVarFileName    string
 		localVarFileBytes   []byte
-		localVarReturnValue Label
+		localVarReturnValue []Label
 	)
 
 	// create path and map variables
@@ -953,12 +945,8 @@ func (a *LabelsApiService) PostV5ReposOwnerRepoIssuesNumberLabels(ctx context.Co
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
-		localVarFormParams.Add("body", parameterToString(localVarOptionals.Body.Value(), "multi"))
-	}
+	// body params
+	localVarPostBody = &body.Body // This should not be &body because the gitee api is not normalized.
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -990,7 +978,7 @@ func (a *LabelsApiService) PostV5ReposOwnerRepoIssuesNumberLabels(ctx context.Co
 		}
 
 		if localVarHttpResponse.StatusCode == 201 {
-			var v Label
+			var v []Label
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1107,25 +1095,17 @@ LabelsApiService 替换Issue所有标签
  * @param owner 仓库所属空间地址(企业、组织或个人的地址path)
  * @param repo 仓库路径(path)
  * @param number Issue 编号(区分大小写，无需添加 # 号)
- * @param optional nil or *PutV5ReposOwnerRepoIssuesNumberLabelsOpts - Optional Parameters:
-     * @param "AccessToken" (optional.String) -  用户授权码
-     * @param "Body" (optional.Interface of []string) -  标签名数组，如: [\&quot;feat\&quot;, \&quot;bug\&quot;]
+ * @param body 必选，标签的内容
 
-@return Label
+@return []Label
 */
-
-type PutV5ReposOwnerRepoIssuesNumberLabelsOpts struct {
-	AccessToken optional.String
-	Body        optional.Interface
-}
-
-func (a *LabelsApiService) PutV5ReposOwnerRepoIssuesNumberLabels(ctx context.Context, owner string, repo string, number string, localVarOptionals *PutV5ReposOwnerRepoIssuesNumberLabelsOpts) (Label, *http.Response, error) {
+func (a *LabelsApiService) PutV5ReposOwnerRepoIssuesNumberLabels(ctx context.Context, owner string, repo string, number string, body PullRequestLabelPostParam) ([]Label, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Put")
 		localVarPostBody    interface{}
 		localVarFileName    string
 		localVarFileBytes   []byte
-		localVarReturnValue Label
+		localVarReturnValue []Label
 	)
 
 	// create path and map variables
@@ -1155,12 +1135,8 @@ func (a *LabelsApiService) PutV5ReposOwnerRepoIssuesNumberLabels(ctx context.Con
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
-		localVarFormParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
-		localVarFormParams.Add("body", parameterToString(localVarOptionals.Body.Value(), "multi"))
-	}
+	// body params
+	localVarPostBody = &body.Body // This should not be &body because the gitee api is not normalized.
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1191,8 +1167,8 @@ func (a *LabelsApiService) PutV5ReposOwnerRepoIssuesNumberLabels(ctx context.Con
 			error: localVarHttpResponse.Status,
 		}
 
-		if localVarHttpResponse.StatusCode == 200 {
-			var v Label
+		if localVarHttpResponse.StatusCode == 202 {
+			var v []Label
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

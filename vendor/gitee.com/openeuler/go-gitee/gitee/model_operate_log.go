@@ -13,7 +13,7 @@ package gitee
 type OperateLog struct {
 	Id        string `json:"id,omitempty"`
 	Icon      string `json:"icon,omitempty"`
-	User      string `json:"user,omitempty"`
+	User      *User  `json:"user,omitempty"`
 	Content   string `json:"content,omitempty"`
 	CreatedAt string `json:"created_at,omitempty"`
 }

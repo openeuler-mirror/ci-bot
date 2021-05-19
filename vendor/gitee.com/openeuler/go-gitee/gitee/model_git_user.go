@@ -9,8 +9,12 @@
 
 package gitee
 
-type SingleCommit struct {
-	Author *GitUser `json:"author,omitempty"`
-	Committer *GitUser `json:"committer,omitempty"`
-	Tree *CommitTree `json:"tree,omitempty"`
+import (
+	"time"
+)
+
+type GitUser struct {
+	Name  string    `json:"name,omitempty"`
+	Email string    `json:"email,omitempty"`
+	Date  time.Time `json:"date,omitempty"`
 }

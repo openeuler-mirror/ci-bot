@@ -23,4 +23,10 @@ type PullRequestUpdateParam struct {
 	MilestoneNumber int32 `json:"milestone_number,omitempty"`
 	// 用逗号分开的标签，名称要求长度在 2-20 之间且非特殊字符。如: bug,performance
 	Labels string `json:"labels,omitempty"`
+	// 最少审查人数
+	// change the int32 to *int32 manually, in order to pass 0
+	AssigneesNumber *int32 `json:"assignees_number,omitempty"`
+	// 最少测试人员
+	// change the int32 to *int32 manually, in order to pass 0
+	TestersNumber *int32 `json:"testers_number,omitempty"`
 }
