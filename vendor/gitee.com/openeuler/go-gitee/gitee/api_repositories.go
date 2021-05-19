@@ -12,11 +12,12 @@ package gitee
 import (
 	"context"
 	"fmt"
-	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -5772,7 +5773,6 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoReviewer(ctx context.Context
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-
 	)
 
 	// create path and map variables
@@ -5819,10 +5819,9 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoReviewer(ctx context.Context
 		return localVarHttpResponse, err
 	}
 
-
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
 
@@ -5831,4 +5830,3 @@ func (a *RepositoriesApiService) PutV5ReposOwnerRepoReviewer(ctx context.Context
 
 	return localVarHttpResponse, nil
 }
-

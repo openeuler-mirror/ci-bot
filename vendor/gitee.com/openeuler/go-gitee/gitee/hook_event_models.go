@@ -65,7 +65,7 @@ type CommitHook struct {
 
 // MilestoneHook : 里程碑信息
 type MilestoneHook struct {
-	Id           string    `json:"id,omitempty"`
+	Id           int32    `json:"id,omitempty"`
 	HtmlUrl      string    `json:"html_url,omitempty"`
 	Number       int32     `json:"number,omitempty"`
 	Title        string    `json:"title,omitempty"`
