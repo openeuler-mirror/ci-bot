@@ -35,9 +35,10 @@ func (s *Server) HandleIssueEvent(event *gitee.IssueEvent) {
 		if err != nil {
 			glog.Errorf("unable to add comment in issue: %v", err)
 		}
-                sigName := s.getSigNameFromRepo(event.Repository.FullName)
-                if len(sigName) > 0 {
-			label := []string{fmt.Sprintf("sig/%s", sigName)}
+
+		sigName := s.getSigNameFromRepo(event.Repository.FullName)
+		if len(sigName) > 0 {
+			label := []string{fmt.Sprintf("sig/%s", sigName[0:16])}
 			labelops := gitee.PullRequestLabelPostParam{s.Config.GiteeToken, label}
 			_, _, err = s.GiteeClient.LabelsApi.PostV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, labelops)
 			if err != nil {
