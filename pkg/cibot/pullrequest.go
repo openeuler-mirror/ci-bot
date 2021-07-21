@@ -42,7 +42,7 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 		body.Body = fmt.Sprintf(tipBotMessage, event.Sender.Login, s.Config.CommunityName, s.Config.CommunityName,
 			s.Config.BotName, s.Config.CommandLink)
 		owner := event.Repository.Namespace
-		repo := event.Repository.Name
+		repo := event.Repository.Path
 		number := event.PullRequest.Number
 		_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 		if err != nil {
@@ -112,7 +112,7 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 
 		// get pr info
 		owner := event.Repository.Namespace
-		repo := event.Repository.Name
+		repo := event.Repository.Path
 		number := event.PullRequest.Number
 		lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
 		lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
@@ -175,7 +175,7 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 
 func (s *Server) UpdateLabelsBySourceBranchChange(delLabels, updateLabels []string, event *gitee.PullRequestEvent) error {
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	prNumber := event.PullRequest.Number
 	strLabel := strings.Join(updateLabels, ",")
 	strDelLabel := strings.Join(delLabels, ",")
@@ -214,7 +214,7 @@ func (s *Server) SendNote4AutomaticNewFile(event *gitee.PullRequestEvent) {
 	}
 
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	number := event.PullRequest.Number
 	body := gitee.PullRequestCommentPostParam{}
 	body.AccessToken = s.Config.GiteeToken
@@ -253,7 +253,7 @@ func (s *Server) CheckSpecialFileHasModified(event *gitee.PullRequestEvent, spec
 	diff = ""
 	// get pr commit file list, community repo
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	number := event.PullRequest.Number
 	lvos := &gitee.GetV5ReposOwnerRepoPullsNumberFilesOpts{}
 	lvos.AccessToken = optional.NewString(s.Config.GiteeToken)
@@ -365,7 +365,7 @@ func (s *Server) RemoveAssigneesInPullRequest(event *gitee.NoteEvent) error {
 
 				// get basic params
 				owner := event.Repository.Namespace
-				repo := event.Repository.Name
+				repo := event.Repository.Path
 				prNumber := event.PullRequest.Number
 				localVarOptionals := &gitee.DeleteV5ReposOwnerRepoPullsNumberAssigneesOpts{}
 				localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
@@ -399,7 +399,7 @@ func (s *Server) RemoveTestersInPullRequest(event *gitee.NoteEvent) error {
 
 				// get basic params
 				owner := event.Repository.Namespace
-				repo := event.Repository.Name
+				repo := event.Repository.Path
 				prNumber := event.PullRequest.Number
 				localVarOptionals := &gitee.DeleteV5ReposOwnerRepoPullsNumberTestersOpts{}
 				localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
@@ -467,7 +467,7 @@ func (s *Server) legalLabelsForMerge(labels []gitee.Label) ([]string, []string) 
 func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	// get basic params
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	prNumber := event.PullRequest.Number
 	glog.Infof("merge pull request started. owner: %s repo: %s number: %d", owner, repo, prNumber)
 	// list labels in current pull request
@@ -544,7 +544,7 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 		// add comment back to pr
 		comment := fmt.Sprintf(cannotMergeMessage, fmt.Sprintf("%s%s", nonRequiringMsg, nonMissingMsg))
 		owner := event.Repository.Namespace
-		repo := event.Repository.Name
+		repo := event.Repository.Path
 		number := event.PullRequest.Number
 		err = s.addCommentToPullRequest(owner, repo, comment, number)
 		if err != nil {
@@ -557,7 +557,7 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 func (s *Server) generateMergeDescription(event *gitee.NoteEvent) (string, error) {
 	// get basic params
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	prNumber := event.PullRequest.Number
 	commentCount := event.PullRequest.Comments
 	user := event.PullRequest.User.Login
@@ -647,7 +647,7 @@ func (s *Server) checkPrHasSetReviewer(pre *gitee.PullRequestEvent) bool {
 	} else {
 		//get pr info
 		owner := pre.Repository.Namespace
-		repo := pre.Repository.Name
+		repo := pre.Repository.Path
 		number := pre.PullRequest.Number
 		lvos := &gitee.GetV5ReposOwnerRepoPullsNumberOpts{}
 		lvos.AccessToken = optional.NewString(s.Config.GiteeToken)

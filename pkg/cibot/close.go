@@ -24,7 +24,7 @@ func (s *Server) Close(event *gitee.NoteEvent) error {
 			// get basic params
 			comment := event.Comment.Body
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
@@ -80,7 +80,7 @@ func (s *Server) Close(event *gitee.NoteEvent) error {
 			// get basic informations
 			comment := event.Comment.Body
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			issueNumber := event.Issue.Number
 			issueAuthor := event.Issue.User.Login
 			commentAuthor := event.Comment.User.Login
