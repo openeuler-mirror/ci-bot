@@ -29,7 +29,7 @@ func (s *Server) HandleIssueEvent(event *gitee.IssueEvent) {
 			return
 		}
 		owner := event.Repository.Namespace
-		repo := event.Repository.Name
+		repo := event.Repository.Path
 		number := event.Issue.Number
 		_, _, err := s.GiteeClient.IssuesApi.PostV5ReposOwnerRepoIssuesNumberComments(s.Context, owner, repo, number, body)
 		if err != nil {

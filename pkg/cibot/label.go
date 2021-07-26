@@ -168,7 +168,7 @@ func (s *Server) AddLabelInPulRequest(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	var number int32
 	if event.PullRequest != nil {
 		number = event.PullRequest.Number
@@ -268,7 +268,7 @@ func (s *Server) AddLabelInIssue(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	var number string
 	if event.Issue != nil {
 		number = event.Issue.Number
@@ -360,7 +360,7 @@ func (s *Server) RemoveLabelInPullRequest(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	var number int32
 	if event.PullRequest != nil {
 		number = event.PullRequest.Number
@@ -438,7 +438,7 @@ func (s *Server) RemoveLabelInIssue(event *gitee.NoteEvent) error {
 	// get basic informations
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	var number string
 	if event.Issue != nil {
 		number = event.Issue.Number
@@ -591,7 +591,7 @@ func (s *Server) AddSpecifyLabelsInPulRequest(event *gitee.NoteEvent, newLabels 
 	// get basic information
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	var number int32
 	if event.PullRequest != nil {
 		number = event.PullRequest.Number
@@ -617,7 +617,7 @@ func (s *Server) RemoveSpecifyLabelsInPulRequest(event *gitee.NoteEvent, mapOfRe
 	// get basic information
 	comment := event.Comment.Body
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	var number int32
 	if event.PullRequest != nil {
 		number = event.PullRequest.Number

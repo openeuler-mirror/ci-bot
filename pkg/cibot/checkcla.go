@@ -64,7 +64,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			body.AccessToken = s.Config.GiteeToken
 			body.Body = fmt.Sprintf(claFoundMessage, s.Config.CommunityName)
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			number := event.PullRequest.Number
 			_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 			if err != nil {
@@ -99,7 +99,7 @@ func (s *Server) CheckCLAByNoteEvent(event *gitee.NoteEvent) error {
 			body.AccessToken = s.Config.GiteeToken
 			body.Body = fmt.Sprintf(claNotFoundMessage, s.Config.ClaLink, s.Config.ContactEmail)
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			number := event.PullRequest.Number
 			_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 			if err != nil {
@@ -152,7 +152,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		body.AccessToken = s.Config.GiteeToken
 		body.Body = fmt.Sprintf(claFoundMessage, s.Config.CommunityName)
 		owner := event.Repository.Namespace
-		repo := event.Repository.Name
+		repo := event.Repository.Path
 		number := event.PullRequest.Number
 		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 		if err != nil {
@@ -187,7 +187,7 @@ func (s *Server) CheckCLAByPullRequestEvent(event *gitee.PullRequestEvent) error
 		body.AccessToken = s.Config.GiteeToken
 		body.Body = fmt.Sprintf(claNotFoundMessage, s.Config.ClaLink, s.Config.ContactEmail)
 		owner := event.Repository.Namespace
-		repo := event.Repository.Name
+		repo := event.Repository.Path
 		number := event.PullRequest.Number
 		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 		if err != nil {

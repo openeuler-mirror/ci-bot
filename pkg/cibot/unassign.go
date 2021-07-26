@@ -22,7 +22,7 @@ func (s *Server) UnAssign(event *gitee.NoteEvent) error {
 			// get basic informations
 			comment := event.Comment.Body
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			issueNumber := event.Issue.Number
 			issueAuthor := event.Issue.User.Login
 			commentAuthor := event.Comment.User.Login
