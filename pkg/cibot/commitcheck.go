@@ -22,7 +22,7 @@ func (s *Server) ValidateCommits(event *gitee.PullRequestEvent) error {
 	}
 	// Get Pull Request Commits detail
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	prNumber := event.PullRequest.Number
 	commitPullRequestOpts := &gitee.GetV5ReposOwnerRepoPullsNumberCommitsOpts{}
 	commitPullRequestOpts.AccessToken = optional.NewString(s.Config.GiteeToken)

@@ -41,7 +41,7 @@ func (s *Server) CheckIsOwner(event *gitee.NoteEvent, author string) bool {
 func (s *Server) GetOwners(event *gitee.NoteEvent) []string {
 	// get basic params
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	branch := event.PullRequest.Base.Ref
 	glog.Infof("get owners started. owner: %s repo: %s branch: %s", owner, repo, branch)
 

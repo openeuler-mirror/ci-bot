@@ -33,7 +33,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 			// get basic params
 			comment := event.Comment.Body
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
@@ -48,7 +48,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				body.AccessToken = s.Config.GiteeToken
 				body.Body = lgtmSelfOwnMessage
 				owner := event.Repository.Namespace
-				repo := event.Repository.Name
+				repo := event.Repository.Path
 				number := event.PullRequest.Number
 				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 				if err != nil {
@@ -95,7 +95,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				body.AccessToken = s.Config.GiteeToken
 				body.Body = fmt.Sprintf(lgtmAddedMessage, commentAuthor) + fmt.Sprintf(LabelHiddenValue, event.PullRequest.Head.Sha)
 				owner := event.Repository.Namespace
-				repo := event.Repository.Name
+				repo := event.Repository.Path
 				number := event.PullRequest.Number
 				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 				if err != nil {
@@ -113,7 +113,7 @@ func (s *Server) AddLgtm(event *gitee.NoteEvent) error {
 				body.AccessToken = s.Config.GiteeToken
 				body.Body = fmt.Sprintf(lgtmAddNoPermissionMessage, commentAuthor)
 				owner := event.Repository.Namespace
-				repo := event.Repository.Name
+				repo := event.Repository.Path
 				number := event.PullRequest.Number
 				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 				if err != nil {
@@ -173,7 +173,7 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 			// get basic params
 			comment := event.Comment.Body
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
@@ -211,7 +211,7 @@ func (s *Server) RemoveLgtm(event *gitee.NoteEvent) error {
 					body.AccessToken = s.Config.GiteeToken
 					body.Body = fmt.Sprintf(lgtmRemoveNoPermissionMessage, commentAuthor)
 					owner := event.Repository.Namespace
-					repo := event.Repository.Name
+					repo := event.Repository.Path
 					number := event.PullRequest.Number
 					_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 					if err != nil {
@@ -276,7 +276,7 @@ func (s *Server) collectExistingLgtmLabel(owner, repo string, number int32) (map
 // CheckLgtmByPullRequestUpdate checks lgtm when received the pull request update event
 func (s *Server) CheckLgtmByPullRequestUpdate(event *gitee.PullRequestEvent) error {
 	owner := event.Repository.Namespace
-	repo := event.Repository.Name
+	repo := event.Repository.Path
 	prNumber := event.PullRequest.Number
 	commentCount := event.PullRequest.Comments
 	var perPage int32 = 20

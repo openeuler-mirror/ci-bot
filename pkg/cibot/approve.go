@@ -27,7 +27,7 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 			// get basic params
 			comment := event.Comment.Body
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
@@ -89,7 +89,7 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 				body.AccessToken = s.Config.GiteeToken
 				body.Body = fmt.Sprintf(approvedAddNoPermissionMessage, commentAuthor)
 				owner := event.Repository.Namespace
-				repo := event.Repository.Name
+				repo := event.Repository.Path
 				number := event.PullRequest.Number
 				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 				if err != nil {
@@ -111,7 +111,7 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 			// get basic params
 			comment := event.Comment.Body
 			owner := event.Repository.Namespace
-			repo := event.Repository.Name
+			repo := event.Repository.Path
 			prAuthor := event.PullRequest.User.Login
 			prNumber := event.PullRequest.Number
 			commentAuthor := event.Comment.User.Login
@@ -157,7 +157,7 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 				body.AccessToken = s.Config.GiteeToken
 				body.Body = fmt.Sprintf(approvedRemovedMessage, commentAuthor)
 				owner := event.Repository.Namespace
-				repo := event.Repository.Name
+				repo := event.Repository.Path
 				number := event.PullRequest.Number
 				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 				if err != nil {
@@ -170,7 +170,7 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 				body.AccessToken = s.Config.GiteeToken
 				body.Body = fmt.Sprintf(approvedRemoveNoPermissionMessage, commentAuthor)
 				owner := event.Repository.Namespace
-				repo := event.Repository.Name
+				repo := event.Repository.Path
 				number := event.PullRequest.Number
 				_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 				if err != nil {

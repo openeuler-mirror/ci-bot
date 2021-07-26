@@ -23,7 +23,7 @@ func (s *Server) HandleWatchProjectFiles(event *gitee.PushEvent) {
 	if len(s.Config.WatchProjectFiles) > 0 {
 		for _, wf := range s.Config.WatchProjectFiles {
 			// handle events
-			if (event.Repository.Namespace == wf.WatchProjectFileOwner) && (event.Repository.Name == wf.WatchprojectFileRepo) {
+			if (event.Repository.Namespace == wf.WatchProjectFileOwner) && (event.Repository.Path == wf.WatchprojectFileRepo) {
 				// owner and repo are matched
 				if event.Ref != nil {
 					ref := *event.Ref
@@ -34,7 +34,7 @@ func (s *Server) HandleWatchProjectFiles(event *gitee.PushEvent) {
 					// refs/heads/master
 					if strings.Index(ref, configRef) >= 0 {
 						// the branch is matched
-						glog.Infof("push event is triggered. owner: %s repo: %s ref: %s", event.Repository.Namespace, event.Repository.Name, ref)
+						glog.Infof("push event is triggered. owner: %s repo: %s ref: %s", event.Repository.Namespace, event.Repository.Path, ref)
 						// invoke api to get file contents
 						localVarOptionals := &gitee.GetV5ReposOwnerRepoContentsPathOpts{}
 						localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
@@ -52,7 +52,7 @@ func (s *Server) HandleWatchProjectFiles(event *gitee.PushEvent) {
 						var lenProjectFiles int
 						err = database.DBConnection.Model(&database.ProjectFiles{}).
 							Where("owner = ? and repo = ? and path = ? and ref = ?",
-								event.Repository.Namespace, event.Repository.Name, wf.WatchprojectFilePath, configRef).
+								event.Repository.Namespace, event.Repository.Path, wf.WatchprojectFilePath, configRef).
 							Count(&lenProjectFiles).Error
 						if err != nil {
 							glog.Errorf("unable to get project files in database: %v", err)
@@ -64,7 +64,7 @@ func (s *Server) HandleWatchProjectFiles(event *gitee.PushEvent) {
 							updatepf := database.ProjectFiles{}
 							err = database.DBConnection.
 								Where("owner = ? and repo = ? and path = ? and ref = ?",
-									event.Repository.Namespace, event.Repository.Name, wf.WatchprojectFilePath, configRef).
+									event.Repository.Namespace, event.Repository.Path, wf.WatchprojectFilePath, configRef).
 								First(&updatepf).Error
 							if err != nil {
 								glog.Errorf("unable to get project files in database: %v", err)
@@ -92,7 +92,7 @@ func (s *Server) HandleWatchProjectFiles(event *gitee.PushEvent) {
 							// add project file
 							addpf := database.ProjectFiles{
 								Owner:      event.Repository.Namespace,
-								Repo:       event.Repository.Name,
+								Repo:       event.Repository.Path,
 								Path:       wf.WatchprojectFilePath,
 								Ref:        configRef,
 								WaitingSha: contents.Sha,
@@ -118,7 +118,7 @@ func (s *Server) HandleWatchSigFiles(event *gitee.PushEvent) {
 	if len(s.Config.WatchSigFiles) > 0 {
 		for _, wf := range s.Config.WatchSigFiles {
 			// handle events
-			if (event.Repository.Namespace == wf.WatchSigFileOwner) && (event.Repository.Name == wf.WatchSigFileRepo) {
+			if (event.Repository.Namespace == wf.WatchSigFileOwner) && (event.Repository.Path == wf.WatchSigFileRepo) {
 				// owner and repo are matched
 				if event.Ref != nil {
 					ref := *event.Ref
@@ -129,14 +129,14 @@ func (s *Server) HandleWatchSigFiles(event *gitee.PushEvent) {
 					// refs/heads/master
 					if strings.Index(ref, configRef) >= 0 {
 						// the branch is matched
-						glog.Infof("push event is triggered. owner: %s repo: %s ref: %s", event.Repository.Namespace, event.Repository.Name, ref)
+						glog.Infof("push event is triggered. owner: %s repo: %s ref: %s", event.Repository.Namespace, event.Repository.Path, ref)
 						// invoke api to get file contents
 						localVarOptionals := &gitee.GetV5ReposOwnerRepoContentsPathOpts{}
 						localVarOptionals.AccessToken = optional.NewString(s.Config.GiteeToken)
 						localVarOptionals.Ref = optional.NewString(configRef)
 						// get contents
 						contents, _, err := s.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoContentsPath(
-							s.Context, event.Repository.Namespace, event.Repository.Name, wf.WatchSigFilePath, localVarOptionals)
+							s.Context, event.Repository.Namespace, event.Repository.Path, wf.WatchSigFilePath, localVarOptionals)
 						if err != nil {
 							glog.Errorf("unable to get repository content by path: %v", err)
 							return
@@ -147,7 +147,7 @@ func (s *Server) HandleWatchSigFiles(event *gitee.PushEvent) {
 						var lenSigFiles int
 						err = database.DBConnection.Model(&database.SigFiles{}).
 							Where("owner = ? and repo = ? and path = ? and ref = ?",
-								event.Repository.Namespace, event.Repository.Name, wf.WatchSigFilePath, configRef).
+								event.Repository.Namespace, event.Repository.Path, wf.WatchSigFilePath, configRef).
 							Count(&lenSigFiles).Error
 						if err != nil {
 							glog.Errorf("unable to get sig files in database: %v", err)
@@ -159,7 +159,7 @@ func (s *Server) HandleWatchSigFiles(event *gitee.PushEvent) {
 							updatesf := database.SigFiles{}
 							err = database.DBConnection.
 								Where("owner = ? and repo = ? and path = ? and ref = ?",
-									event.Repository.Namespace, event.Repository.Name, wf.WatchSigFilePath, configRef).
+									event.Repository.Namespace, event.Repository.Path, wf.WatchSigFilePath, configRef).
 								First(&updatesf).Error
 							if err != nil {
 								glog.Errorf("unable to get sig files in database: %v", err)
@@ -180,7 +180,7 @@ func (s *Server) HandleWatchSigFiles(event *gitee.PushEvent) {
 							// add sig file
 							addsf := database.SigFiles{
 								Owner:      event.Repository.Namespace,
-								Repo:       event.Repository.Name,
+								Repo:       event.Repository.Path,
 								Path:       wf.WatchSigFilePath,
 								Ref:        configRef,
 								WaitingSha: contents.Sha,
