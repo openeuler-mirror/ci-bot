@@ -630,18 +630,17 @@ func (handler *RepoHandler) handleRepositorySetting(community string, r Reposito
 
 	// set none reviewer but not ci-bot(default)
 
-	//	reviewerBody := gitee.SetRepoReviewer{}
-	//	reviewerBody.AccessToken = handler.Config.GiteeToken
-	//	reviewerBody.Assignees = " "
-	//	reviewerBody.Testers = " "
-	//	reviewerBody.AssigneesNumber = 0
-	//	reviewerBody.TestersNumber = 0
-	//	response, errex := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoReviewer(handler.Context, community, *r.Name, reviewerBody)
-	//	if errex != nil {
-	//		glog.Errorf("Set repository reviewer info failed: %v, %s", errex, response.Status)
-	//		glog.Errorf("requestURL:%s, %s", response.Request.RequestURI, response.Request.Host)
-	//		return errex
-	//	}
+	reviewerBody := gitee.SetRepoReviewer{}
+	reviewerBody.AccessToken = handler.Config.GiteeToken
+	reviewerBody.Assignees = " "
+	reviewerBody.Testers = " "
+	reviewerBody.AssigneesNumber = 0
+	reviewerBody.TestersNumber = 0
+	response, errex := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoReviewer(handler.Context, community, *r.Name, reviewerBody)
+	if errex != nil {
+		glog.Errorf("Set repository reviewer info failed: %v, %s", errex, response.Status)
+		return errex
+	}
 
 	return nil
 }

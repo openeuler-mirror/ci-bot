@@ -17,7 +17,7 @@ type SetRepoReviewer struct {
 	// 测试人员
 	Testers string `json:"testers,omitempty"`
 	// 最少审查人数
-	AssigneesNumber int32 `json:"assignees_number,omitempty"`
+	AssigneesNumber int32 `json:"assignees_number"`
 	// 最少测试人员
-	TestersNumber int32 `json:"testers_number,omitempty"`
+	TestersNumber int32 `json:"testers_number"`
 }
