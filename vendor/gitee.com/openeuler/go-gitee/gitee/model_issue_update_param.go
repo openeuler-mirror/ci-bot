@@ -29,4 +29,6 @@ type IssueUpdateParam struct {
 	Labels string `json:"labels,omitempty"`
 	// 项目ID
 	Program string `json:"program,omitempty"`
+	// Issue协助者的个人空间地址, 以 , 分隔
+	Collaborators string `json:"collaborators,omitempty"`
 }

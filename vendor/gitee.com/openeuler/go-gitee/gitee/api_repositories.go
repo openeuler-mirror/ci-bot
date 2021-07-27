@@ -1284,12 +1284,16 @@ RepositoriesApiService 获取仓库的所有成员
  * @param repo 仓库路径(path)
  * @param optional nil or *GetV5ReposOwnerRepoCollaboratorsOpts - Optional Parameters:
      * @param "AccessToken" (optional.String) -  用户授权码
+     * @param "Page" (optional.Int32) -  当前的页码
+     * @param "PerPage" (optional.Int32) -  每页的数量，最大为 100
 
 @return []ProjectMember
 */
 
 type GetV5ReposOwnerRepoCollaboratorsOpts struct {
 	AccessToken optional.String
+	Page        optional.Int32
+	PerPage     optional.Int32
 }
 
 func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaborators(ctx context.Context, owner string, repo string, localVarOptionals *GetV5ReposOwnerRepoCollaboratorsOpts) ([]ProjectMember, *http.Response, error) {
@@ -1312,6 +1316,12 @@ func (a *RepositoriesApiService) GetV5ReposOwnerRepoCollaborators(ctx context.Co
 
 	if localVarOptionals != nil && localVarOptionals.AccessToken.IsSet() {
 		localVarQueryParams.Add("access_token", parameterToString(localVarOptionals.AccessToken.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.PerPage.IsSet() {
+		localVarQueryParams.Add("per_page", parameterToString(localVarOptionals.PerPage.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHttpContentTypes := []string{"application/json", "multipart/form-data"}
