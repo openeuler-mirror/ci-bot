@@ -38,7 +38,7 @@ func (s *Server) HandleIssueEvent(event *gitee.IssueEvent) {
 
 		sigName := s.getSigNameFromRepo(event.Repository.FullName)
 		if len(sigName) > 0 {
-			label := []string{fmt.Sprintf("sig/%s", sigName[0:16])}
+			label := []string{fmt.Sprintf("sig/%s", sigName)}
 			labelops := gitee.PullRequestLabelPostParam{s.Config.GiteeToken, label}
 			_, _, err = s.GiteeClient.LabelsApi.PostV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, labelops)
 			if err != nil {
