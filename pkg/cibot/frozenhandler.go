@@ -35,9 +35,10 @@ type FrozenYaml struct {
 
 //FrozenBranchYaml Branch freeze configuration
 type FrozenBranchYaml struct {
-	Branch string   `yaml:"branch"`
-	Frozen bool     `yaml:"frozen"`
-	Owner  []string `yaml:"owner"`
+	Branch          string   `yaml:"branch"`
+	Frozen          bool     `yaml:"frozen"`
+	Owner           []string `yaml:"owner"`
+	Communtiy       []string `yaml:"community"`
 }
 
 var
@@ -170,6 +171,7 @@ func emptyFrozenList() {
 		frozenFile = freezeFile{}
 	}
 	lock.Unlock()
+	glog.Info("FrozenList after empty: %v", frozenList)
 }
 
 func writeFrozenList(fs []FrozenBranchYaml) {
@@ -179,17 +181,25 @@ func writeFrozenList(fs []FrozenBranchYaml) {
 		frozenList = frozenList[:0]
 	}
 	frozenList = append(frozenList, fs...)
+	glog.Info("FrozenList after write: %v", frozenList)
 }
 
 //IsBranchFrozen Check if the branch is frozen
-func IsBranchFrozen(branch string) (owner []string, isFrozen bool) {
+func IsBranchFrozen(branch string, community string) (owner []string, isFrozen bool) {
 	lock.RLock()
 	defer lock.RUnlock()
 	if len(frozenList) == 0 {
 		return nil, isFrozen
 	}
 	for _, v := range frozenList {
-		if v.Branch == branch {
+		var isCommunityFrozen = false
+		for _, c := range v.Communtiy {
+			if c == community {
+				isCommunityFrozen = true
+				break
+			}
+		}
+		if v.Branch == branch && isCommunityFrozen{
 			isFrozen = true
 			owner = append(owner, v.Owner...)
 			break
