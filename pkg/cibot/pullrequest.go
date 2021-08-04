@@ -488,7 +488,7 @@ func (s *Server) MergePullRequest(event *gitee.NoteEvent) error {
 	nonRequiringLabels, nonMissingLabels := s.legalLabelsForMerge(listofPrLabels)
 	if len(nonRequiringLabels) == 0 && len(nonMissingLabels) == 0 {
 		// current pr can be merged
-		if c, b := checkFrozenCanMerge(event.Author.Login, pr.Base.Ref); !b {
+		if c, b := checkFrozenCanMerge(event.Author.Login, pr.Base.Ref, owner); !b {
 			//send comment to pr
 			comment := ""
 			if len(c) > 0 {
@@ -625,8 +625,8 @@ func getSignersAndReviewers(user string, comments []gitee.PullRequestComments) (
 	return signers, reviewers, nil
 }
 
-func checkFrozenCanMerge(commenter, branch string) ([]string, bool) {
-	frozen, isFrozen := IsBranchFrozen(branch)
+func checkFrozenCanMerge(commenter, branch string, community string) ([]string, bool) {
+	frozen, isFrozen := IsBranchFrozen(branch, community)
 	if isFrozen {
 		canMerge := false
 		for _, v := range frozen {
