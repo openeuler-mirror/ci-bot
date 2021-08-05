@@ -389,6 +389,19 @@ func (handler *RepoHandler) addRepositoriesinGitee(owner string, repo Repository
 		return err
 	}
 	glog.Infof("end to create repository: %s", *repo.Name)
+	// set none reviewer but not ci-bot(default)
+	glog.Infof("==Begin to set repo reviewer. repository: %s.", *repo.Name)
+	reviewerBody := gitee.SetRepoReviewer{}
+	reviewerBody.AccessToken = handler.Config.GiteeToken
+	reviewerBody.Assignees = " "
+	reviewerBody.Testers = " "
+	reviewerBody.AssigneesNumber = 0
+	reviewerBody.TestersNumber = 0
+	response, errex := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoReviewer(handler.Context, owner, *repo.Name, reviewerBody)
+	if errex != nil {
+		glog.Errorf("Set repository reviewer info failed: %v, %s, continue.", errex, response.Status)
+	}
+	glog.Infof("==End to set repo reviewer. repository: %s.", *repo.Name)
 
 	// create branch
 	repobranchbody := gitee.CreateBranchParam{}
@@ -420,7 +433,6 @@ func (handler *RepoHandler) handleBranches(community string, r Repository) error
 
 	if len(r.Branches) > 0 {
 		// using repository branches
-		glog.Infof("Setting repository branches: %s", *r.Name)
 		for _, b := range r.Branches {
 			//check yaml branches is in db
 			var bs []database.Branches
@@ -435,7 +447,6 @@ func (handler *RepoHandler) handleBranches(community string, r Repository) error
 				continue
 			}
 
-			glog.Infof("Branch exist, branch(%s) of repo(%s).", *b.Name, *r.Name)
 			err = handler.changeBranchGiteeAndDb(community, r, b, bs[0])
 			if err != nil {
 				glog.Errorf("Change branch(%s) of repor(%s) failed: %v", *b.Name, *r.Name, err)
@@ -626,20 +637,6 @@ func (handler *RepoHandler) handleRepositorySetting(community string, r Reposito
 		if err != nil {
 			glog.Errorf("unable to update repository settings: %v", err)
 		}
-	}
-
-	// set none reviewer but not ci-bot(default)
-
-	reviewerBody := gitee.SetRepoReviewer{}
-	reviewerBody.AccessToken = handler.Config.GiteeToken
-	reviewerBody.Assignees = " "
-	reviewerBody.Testers = " "
-	reviewerBody.AssigneesNumber = 0
-	reviewerBody.TestersNumber = 0
-	response, errex := handler.GiteeClient.RepositoriesApi.PutV5ReposOwnerRepoReviewer(handler.Context, community, *r.Name, reviewerBody)
-	if errex != nil {
-		glog.Errorf("Set repository reviewer info failed: %v, %s", errex, response.Status)
-		return errex
 	}
 
 	return nil

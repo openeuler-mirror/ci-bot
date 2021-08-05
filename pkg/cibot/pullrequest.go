@@ -626,10 +626,7 @@ func getSignersAndReviewers(user string, comments []gitee.PullRequestComments) (
 }
 
 func checkFrozenCanMerge(commenter, branch string, community string) ([]string, bool) {
-	if community == "openeuler" {
-		return nil, true
-	}
-	frozen, isFrozen := IsBranchFrozen(branch)
+	frozen, isFrozen := IsBranchFrozen(branch, community)
 	if isFrozen {
 		canMerge := false
 		for _, v := range frozen {
