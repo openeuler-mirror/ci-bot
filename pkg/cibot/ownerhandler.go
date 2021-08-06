@@ -188,9 +188,9 @@ func (handler *OwnerHandler) removeOwners(repo database.Repositories, expectedMe
 			listOfRemove = append(listOfRemove, k)
 		}
 	}
-	glog.Infof("list of remove privileges: %v", listOfRemove)
 
 	if len(listOfRemove) > 0 {
+		glog.Infof("list of remove privileges: %v", listOfRemove)
 		memberbody := &gitee.DeleteV5ReposOwnerRepoCollaboratorsUsernameOpts{}
 		memberbody.AccessToken = optional.NewString(handler.Config.GiteeToken)
 
@@ -227,9 +227,9 @@ func (handler *OwnerHandler) addOwners(repo database.Repositories, expectedMembe
 			listOfAdd = append(listOfAdd, k)
 		}
 	}
-	glog.Infof("list of add privileges: %v", listOfAdd)
 
 	if len(listOfAdd) > 0 {
+		glog.Infof("list of add privileges: %v", listOfAdd)
 		memberbody := gitee.ProjectMemberPutParam{}
 		memberbody.AccessToken = handler.Config.GiteeToken
 		memberbody.Permission = PermissionPush
