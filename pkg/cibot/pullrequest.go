@@ -135,6 +135,15 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 		if err != nil {
 			glog.Info(err)
 		}
+		// Add retest comment for update push.
+		retest_comment := "/retest"
+		cBody := gitee.PullRequestCommentPostParam{}
+		cBody.AccessToken = s.Config.GiteeToken
+		cBody.Body = fmt.Sprintf(retest_comment)
+		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, cBody)
+		if err != nil{
+			glog.Info("Add retest comment failed. err: %v", err)
+		}
 		// remove lgtm if changes happen
 		/*if s.hasLgtmLabel(pr.Labels) {
 			err = s.CheckLgtmByPullRequestUpdate(event)
