@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"gitee.com/openeuler/ci-bot/pkg/cibot/database"
 	"gitee.com/openeuler/go-gitee/gitee"
 	"github.com/antihax/optional"
 	"github.com/golang/glog"
@@ -36,15 +37,50 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 	case "open":
 		glog.Info("received a pull request open event")
 
+		// add a tag to describe the sig name of the repo.
+		sigName := s.getSigNameFromRepo(event.Repository.FullName)
+		if len(sigName) > 0 {
+                        addlabel := &gitee.NoteEvent{}
+			addlabel.PullRequest = event.PullRequest
+			addlabel.Repository = event.Repository
+			addlabel.Comment = &gitee.NoteHook{}
+			errors := s.AddSpecifyLabelsInPulRequest(addlabel, []string{fmt.Sprintf("sig/%s", sigName)}, true)
+                        if errors != nil {
+                                glog.Errorf("Add special label sig info failed: %v", errors)
+                        }
+		}
+
+
+		//get committor list:
+		var ps []database.Privileges
+		err := database.DBConnection.Model(&database.Privileges{}).
+			Where("owner = ? and repo = ? and type = ?", event.Repository.Namespace, event.Repository.Path, PrivilegeDeveloper).Find(&ps).Error
+		if err != nil {
+			glog.Errorf("unable to get members: %v", err)
+		}
+		var committors []string
+		if len(ps) > 0 {
+			for _, p := range ps {
+				if len(committors) < 10 {
+					committors = append(committors, fmt.Sprintf("***@%s***", p.User))
+				}
+			}
+		}
+		committor_list := strings.Join(committors, ", ")
+		if len(committor_list) > 0 {
+			sigPath := fmt.Sprintf(SigPath, sigName)
+			proInfo := fmt.Sprintf(DisplayCommittors, sigName, sigPath)
+			committor_list = proInfo + committor_list + "."
+		}
+
 		// add comment
 		body := gitee.PullRequestCommentPostParam{}
 		body.AccessToken = s.Config.GiteeToken
-		body.Body = fmt.Sprintf(tipBotMessage, event.Sender.Login, s.Config.CommunityName, s.Config.CommunityName,
-			s.Config.BotName, s.Config.CommandLink)
+		body.Body = fmt.Sprintf(tipBotMessage, event.Sender.Login, s.Config.CommunityName, s.Config.CommandLink, committor_list)
 		owner := event.Repository.Namespace
 		repo := event.Repository.Path
 		number := event.PullRequest.Number
-		_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
+		_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, body)
 		if err != nil {
 			glog.Errorf("unable to add comment in pull request: %v", err)
 		}
@@ -56,19 +92,6 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 				if err != nil {
 					glog.Errorf("unable to add comment in pull request: %v", err)
 				}
-			}
-		}
-		// add a tag to describe the sig name of the repo.
-		sigName := s.getSigNameFromRepo(event.Repository.FullName)
-		if len(sigName) > 0{
-			addlabel := &gitee.NoteEvent{}
-			addlabel.PullRequest = event.PullRequest
-			addlabel.Repository = event.Repository
-			addlabel.Comment = &gitee.NoteHook{}
-			err = s.AddSpecifyLabelsInPulRequest(addlabel, []string{fmt.Sprintf("sig/%s", sigName)}, true)
-			if err != nil {
-				glog.Errorf("Add special label sig info failed: %v", err)
-				return
 			}
 		}
 
