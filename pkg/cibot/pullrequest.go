@@ -152,6 +152,15 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 		}
 		delLabels, updateLabels := GetChangeLabels(s.Config.DelLabels, pr.Labels)
 		if len(delLabels) == 0 {
+			// Add retest comment for update push.
+			retest_comment := "/retest"
+			cBody := gitee.PullRequestCommentPostParam{}
+			cBody.AccessToken = s.Config.GiteeToken
+			cBody.Body = fmt.Sprintf(retest_comment)
+			_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, number, cBody)
+			if err != nil{
+				glog.Info("Add retest comment failed. err: %v", err)
+			}
 			return
 		}
 		err = s.UpdateLabelsBySourceBranchChange(delLabels, updateLabels, event)
