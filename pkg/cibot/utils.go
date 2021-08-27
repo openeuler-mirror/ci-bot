@@ -21,10 +21,11 @@ const (
 	LabelLgtmWithCommenter = "lgtm-%s"
 	LabelNameApproved      = "approved"
 	LabelHiddenValue       = "<input type=hidden value=%s />"
-	tipBotMessage          = `Hey ***%s***, Welcome to %s Community.
-You can follow the instructions at <%s> to interact with the Bot.
+	tipBotMessage          = `Hey ***%s***, welcome to the %s Community.
+I'm the Bot here serving you. You can find the instructions on how to interact with me at
+<%s>.
 %s`
-	DisplayCommittors = `If you have any questions, you could contact SIG: [%s](%s), and maintainers: `
+	DisplayCommittors = `If you have any questions, please contact the SIG: [%s](%s), and any of the maintainers: `
 	SigPath           = `https://gitee.com/openeuler/community/tree/master/sig/%s`
 	AutoAddPrjMsg = `Since you have added a item to the src-openeuler.yaml file, we will automatically generate a default package in project openEuler:Factory on OBS cluster for you.
 If you need a more customized configuration, you can configure it according to the following instructions: `

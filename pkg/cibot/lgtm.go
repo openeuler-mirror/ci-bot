@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	lgtmSelfOwnMessage = `***lgtm*** can not be added in your self-own pull request. :astonished: `
-	lgtmAddedMessage   = `***lgtm*** is added in this pull request by: ***%s***. :wave: 
-**NOTE:**: If you find this pull request unmerged while all conditions meets, you are encouraged use command: "/check-pr" to try it again. :smile: `
+	lgtmSelfOwnMessage = `Sorry, you cannot add ***lgtm*** to the pull request you created. :astonished:`
+	lgtmAddedMessage   = `***lgtm*** was added to this pull request by: ***%s***. :wave:
+**NOTE:**: If this pull request is not merged while all conditions are met, comment "/check-pr" to try again. :smile: `
 	lgtmRemovedMessage         = `***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
 	lgtmAddNoPermissionMessage = `Thanks for your review, ***%s***, your opinion is very important to us.:wave:
 The maintainers will consider your advice carefully.`
