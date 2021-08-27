@@ -237,7 +237,7 @@ func (s *Server) UpdateLabelsBySourceBranchChange(delLabels, updateLabels []stri
 		glog.Infof("remove labels successfully: %v", strDelLabel)
 	}
 	// add comment for update labels
-	commentContent := `new changes are detected. ***%s*** is removed in this pull request by: ***%s***. :flushed: `
+	commentContent := `Changes detected. ***%s*** was removed from this pull request by: ***%s***. :flushed: `
 	cBody := gitee.PullRequestCommentPostParam{}
 	cBody.AccessToken = s.Config.GiteeToken
 	cBody.Body = fmt.Sprintf(commentContent, strDelLabel, s.Config.BotName)
