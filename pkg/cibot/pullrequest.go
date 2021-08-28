@@ -220,21 +220,22 @@ func (s *Server) UpdateLabelsBySourceBranchChange(delLabels, updateLabels []stri
 	prNumber := event.PullRequest.Number
 	strLabel := strings.Join(updateLabels, ",")
 	strDelLabel := strings.Join(delLabels, ",")
-	body := gitee.PullRequestUpdateParam{}
-	body.AccessToken = s.Config.GiteeToken
-	body.Labels = strLabel
+	body := gitee.DeleteV5ReposOwnerRepoPullsLabelOpts{}
+	body.AccessToken = optional.NewString(s.Config.GiteeToken)
 	glog.Infof("invoke api to remove labels: %v", strLabel)
 	//update pr
-	_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, prNumber, body)
-	if err != nil {
-		if response != nil && response.StatusCode == 400 {
-			glog.Infof("remove labels successfully with status code %d: %v", response.StatusCode, strDelLabel)
+	for _, dellalbe := range strDelLabel {
+		response, err := s.GiteeClient.PullRequestsApi.DeleteV5ReposOwnerRepoPullsLabel(s.Context, owner, repo, prNumber, dellalbe, &body)
+		if err != nil {
+			if response != nil && response.StatusCode == 400 {
+				glog.Infof("remove labels successfully with status code %d: %v", response.StatusCode, strDelLabel)
+			} else {
+				glog.Errorf("unable to remove labels: %v err: %v", strDelLabel, err)
+				return err
+			}
 		} else {
-			glog.Errorf("unable to remove labels: %v err: %v", strDelLabel, err)
-			return err
+			glog.Infof("remove labels successfully: %v", strDelLabel)
 		}
-	} else {
-		glog.Infof("remove labels successfully: %v", strDelLabel)
 	}
 	// add comment for update labels
 	commentContent := `Changes detected. ***%s*** was removed from this pull request by: ***%s***. :flushed: `
