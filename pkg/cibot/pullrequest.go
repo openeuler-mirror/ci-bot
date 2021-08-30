@@ -242,7 +242,7 @@ func (s *Server) UpdateLabelsBySourceBranchChange(delLabels, updateLabels []stri
 	cBody := gitee.PullRequestCommentPostParam{}
 	cBody.AccessToken = s.Config.GiteeToken
 	cBody.Body = fmt.Sprintf(commentContent, strDelLabel, s.Config.BotName)
-	_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, cBody)
+	_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, cBody)
 	if err != nil {
 		glog.Errorf("unable to add comment in pull request: %v", err)
 		return err
