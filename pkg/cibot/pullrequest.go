@@ -224,7 +224,7 @@ func (s *Server) UpdateLabelsBySourceBranchChange(delLabels, updateLabels []stri
 	body.AccessToken = optional.NewString(s.Config.GiteeToken)
 	glog.Infof("invoke api to remove labels: %v", strLabel)
 	//update pr
-	for _, dellalbe := range strDelLabel {
+	for _, dellalbe := range delLabels {
 		response, err := s.GiteeClient.PullRequestsApi.DeleteV5ReposOwnerRepoPullsLabel(s.Context, owner, repo, prNumber, dellalbe, &body)
 		if err != nil {
 			if response != nil && response.StatusCode == 400 {
