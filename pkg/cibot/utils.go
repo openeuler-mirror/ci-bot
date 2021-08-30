@@ -21,7 +21,7 @@ const (
 	LabelLgtmWithCommenter = "lgtm-%s"
 	LabelNameApproved      = "approved"
 	LabelHiddenValue       = "<input type=hidden value=%s />"
-	tipBotMessage          = `Hey ***%s***, welcome to the %s Community.
+	tipBotMessage          = `Hi ***%s***, welcome to the %s Community.
 I'm the Bot here serving you. You can find the instructions on how to interact with me at
 <%s>.
 %s`

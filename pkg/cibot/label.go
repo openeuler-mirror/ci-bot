@@ -521,18 +521,13 @@ func (s *Server) patchPRLabels(labels []string, owner, repo string, number int32
 	// invoke gitee api to add labels
 	if len(newLabels) > 0 {
 		// build label string
-		var labelSlice []string
-		for _, l := range pr.Labels {
-			labelSlice = append(labelSlice, l.Name)
-		}
-		labelSlice = append(labelSlice, newLabels...)
-		body := gitee.PullRequestUpdateParam{}
+		body := gitee.PullRequestLabelPostParam{}
 		body.AccessToken = s.Config.GiteeToken
-		body.Labels = strings.Join(labelSlice, ",")
-		glog.Infof("invoke api to add labels: %v", labelSlice)
+		body.Body = newLabels
+		glog.Infof("invoke api to add labels: %v", newLabels)
 
 		// patch labels
-		_, response, err := s.GiteeClient.PullRequestsApi.PatchV5ReposOwnerRepoPullsNumber(s.Context, owner, repo, number, body)
+		_, response, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberLabels(s.Context, owner, repo, number, body)
 		if err != nil {
 			if response.StatusCode == 400 {
 				glog.Infof("add labels successfully with status code %d: %v", response.StatusCode, newLabels)
