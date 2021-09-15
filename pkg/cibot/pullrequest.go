@@ -61,7 +61,7 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 		var committors []string
 		if len(ps) > 0 {
 			for _, p := range ps {
-				if len(committors) < 10 {
+				if len(committors) < 20 {
 					committors = append(committors, fmt.Sprintf("***@%s***", p.User))
 				}
 			}
