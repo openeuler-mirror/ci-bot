@@ -38,6 +38,7 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 		glog.Info("received a pull request open event")
 
 		// add a tag to describe the sig name of the repo.
+		limitNotice := false
 		sigName := s.getSigNameFromRepo(event.Repository.FullName)
 		if len(sigName) > 0 {
                         addlabel := &gitee.NoteEvent{}
@@ -48,6 +49,11 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
                         if errors != nil {
                                 glog.Errorf("Add special label sig info failed: %v", errors)
                         }
+			for _, limitSig := range s.Config.LimitMemberSigs {
+				if sigName == limitSig {
+					limitNotice = true
+				}
+			}
 		}
 
 
@@ -61,8 +67,9 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 		var committors []string
 		if len(ps) > 0 {
 			for _, p := range ps {
-				if len(committors) < 20 {
-					committors = append(committors, fmt.Sprintf("***@%s***", p.User))
+				committors = append(committors, fmt.Sprintf("***@%s***", p.User))
+				if limitNotice && (len(committors) >= s.Config.LimitMemberCnt) {
+					break
 				}
 			}
 		}
