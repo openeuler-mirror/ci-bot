@@ -61,7 +61,7 @@ func (s *Server) HandlePullRequestEvent(actionDesc string, event *gitee.PullRequ
 		var committors []string
 		if len(ps) > 0 {
 			for _, p := range ps {
-				if len(committors) < 10 {
+				if len(committors) < 20 {
 					committors = append(committors, fmt.Sprintf("***@%s***", p.User))
 				}
 			}
@@ -224,7 +224,7 @@ func (s *Server) UpdateLabelsBySourceBranchChange(delLabels, updateLabels []stri
 	body.AccessToken = optional.NewString(s.Config.GiteeToken)
 	glog.Infof("invoke api to remove labels: %v", strLabel)
 	//update pr
-	for _, dellalbe := range strDelLabel {
+	for _, dellalbe := range delLabels {
 		response, err := s.GiteeClient.PullRequestsApi.DeleteV5ReposOwnerRepoPullsLabel(s.Context, owner, repo, prNumber, dellalbe, &body)
 		if err != nil {
 			if response != nil && response.StatusCode == 400 {
@@ -242,7 +242,7 @@ func (s *Server) UpdateLabelsBySourceBranchChange(delLabels, updateLabels []stri
 	cBody := gitee.PullRequestCommentPostParam{}
 	cBody.AccessToken = s.Config.GiteeToken
 	cBody.Body = fmt.Sprintf(commentContent, strDelLabel, s.Config.BotName)
-	_, _, err = s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, cBody)
+	_, _, err := s.GiteeClient.PullRequestsApi.PostV5ReposOwnerRepoPullsNumberComments(s.Context, owner, repo, prNumber, cBody)
 	if err != nil {
 		glog.Errorf("unable to add comment in pull request: %v", err)
 		return err
