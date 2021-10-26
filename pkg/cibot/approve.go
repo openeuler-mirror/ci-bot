@@ -56,7 +56,7 @@ func (s *Server) AddApprove(event *gitee.NoteEvent) error {
 			}
 
 			// permission: admin, write, read, none
-			if permission.Permission == "admin" || permission.Permission == "write" || isOwner || r == 1 {
+			if permission.Permission == "admin" || permission.Permission == "write" || isOwner {
 				// add approved label
 				addlabel := &gitee.NoteEvent{}
 				addlabel.PullRequest = event.PullRequest
@@ -140,7 +140,7 @@ func (s *Server) RemoveApprove(event *gitee.NoteEvent) error {
 			}
 
 			// permission: admin, write, read, none
-			if permission.Permission == "admin" || permission.Permission == "write" || isOwner || r == 1 {
+			if permission.Permission == "admin" || permission.Permission == "write" || isOwner {
 				// remove approved label
 				removelabel := &gitee.NoteEvent{}
 				removelabel.PullRequest = event.PullRequest
