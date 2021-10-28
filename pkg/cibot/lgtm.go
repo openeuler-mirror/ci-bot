@@ -14,7 +14,7 @@ const (
 	lgtmSelfOwnMessage = `Sorry, you cannot add ***lgtm*** to the pull request you created. :astonished:`
 	lgtmAddedMessage   = `***lgtm*** was added to this pull request by: ***%s***. :wave:
 **NOTE:** If this pull request is not merged while all conditions are met, comment "/check-pr" to try again. :smile: `
-	lgtmRemovedMessage         = `***lgtm*** is removed in this pull request by: ***%s***. :flushed: `
+	lgtmRemovedMessage         = `***lgtm*** was removed in this pull request by: ***%s***. :flushed: `
 	lgtmAddNoPermissionMessage = `Thanks for your review, ***%s***, your opinion is very important to us.:wave:
 The maintainers will consider your advice carefully.`
 	lgtmRemoveNoPermissionMessage = `***%s*** has no permission to remove ***lgtm*** in this pull request. :astonished:
