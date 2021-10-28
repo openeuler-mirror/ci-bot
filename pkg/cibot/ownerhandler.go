@@ -193,21 +193,14 @@ func (handler *OwnerHandler) removeOwners(repo database.Repositories, expectedMe
 		glog.Infof("list of remove privileges: %v", listOfRemove)
 		memberbody := &gitee.DeleteV5ReposOwnerRepoCollaboratorsUsernameOpts{}
 		memberbody.AccessToken = optional.NewString(handler.Config.GiteeToken)
-		checkBody := &gitee.GetV5ReposOwnerRepoCollaboratorsUsernameOpts{}
-		checkBody.AccessToken = optional.NewString(handler.Config.GiteeToken)
 
 		glog.Infof("begin to remove privileges for %s/%s", repo.Owner, repo.Repo)
 		for _, v := range listOfRemove {
-			_,err := handler.GiteeClient.RepositoriesApi.GetV5ReposOwnerRepoCollaboratorsUsername(handler.Context, repo.Owner, repo.Repo, v, checkBody)
+			_, err := handler.GiteeClient.RepositoriesApi.DeleteV5ReposOwnerRepoCollaboratorsUsername(
+				handler.Context, repo.Owner, repo.Repo, v, memberbody)
 			if err != nil {
-				glog.Infof("%s is not in %s/%s", v, repo.Owner, repo.Repo)
-			}else{
-				_, err = handler.GiteeClient.RepositoriesApi.DeleteV5ReposOwnerRepoCollaboratorsUsername(
-					handler.Context, repo.Owner, repo.Repo, v, memberbody)
-				if err != nil {
-					glog.Errorf("fail to remove privileges: %v", err)
-					continue
-				}
+				glog.Errorf("fail to remove privileges: %v", err)
+				continue
 			}
 
 			// remove from DB
