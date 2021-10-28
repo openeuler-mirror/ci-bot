@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	approvedAddedMessage           = `***approved*** is added in this pull request by: ***%s***. :wave: 
+	approvedAddedMessage           = `***approved*** was added to this pull request by: ***%s***. :wave: 
 **NOTE:**: If you find this pull request unmerged while all conditions meets, you are encouraged use command: "/check-pr" to try it again. :smile: `
-	approvedRemovedMessage         = `***approved*** is removed in this pull request by: ***%s***. :flushed: `
+	approvedRemovedMessage         = `***approved*** was removed in this pull request by: ***%s***. :flushed: `
 	approvedAddNoPermissionMessage = `***%s*** has no permission to add ***approved*** in this pull request. :astonished:
 please contact to the collaborators in this repository.`
 	approvedRemoveNoPermissionMessage = `***%s*** has no permission to remove ***approved*** in this pull request. :astonished:
