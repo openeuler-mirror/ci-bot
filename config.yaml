@@ -16,6 +16,9 @@ delLabels:
   - openeuler-cla
   - sig
   - kind
+limitMemberSigs:
+  - Private
+limitMemberCnt: 20
 lgtmCountsRequired: 1
 #Add additional lgtm label quantity limit settings to the organization or repositories
 #the member variables lcrType  indicates whether the setting is for an organization or a repositories,

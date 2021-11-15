@@ -11,6 +11,8 @@ type Config struct {
 	DataBasePassword         string                  `yaml:"databasePassword" envVariable:"DATABASE_PASSWORD"`
 	PrUpdateLabelFlag        string                  `yaml:"prUpdateLabelFlag"`
 	DelLabels                []string                `yaml:"delLabels"`
+	LimitMemberSigs          []string                `yaml:"limitMemberSigs"`
+	LimitMemberCnt           int                     `yaml:"limitMemberCnt"`
 	WatchProjectFiles        []WatchProjectFile      `yaml:"watchProjectFiles"`
 	WatchProjectFileDuration int                     `yaml:"watchProjectFileDuration"`
 	WatchSigFiles            []WatchSigFile          `yaml:"watchSigFiles"`
