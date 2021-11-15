@@ -23,6 +23,7 @@ func (s *Server) HandleIssueEvent(event *gitee.IssueEvent) {
 		repo := event.Repository.Path
 		number := event.Issue.Number
 		// get sig name add a tag to describe the sig name of the repo.
+		limitNotice := false
 		sigName := s.getSigNameFromRepo(event.Repository.FullName)
 		if len(sigName) > 0 {
 			label := []string{fmt.Sprintf("sig/%s", sigName)}
@@ -30,6 +31,11 @@ func (s *Server) HandleIssueEvent(event *gitee.IssueEvent) {
 			_, _, error := s.GiteeClient.LabelsApi.PostV5ReposOwnerRepoIssuesNumberLabels(s.Context, owner, repo, number, labelops)
 			if error != nil {
 				glog.Errorf("unable to add label in issue: %v", error)
+			}
+			for _, limitSig := range s.Config.LimitMemberSigs {
+				if sigName == limitSig {
+					limitNotice = true
+				}
 			}
 		}
 
@@ -43,9 +49,9 @@ func (s *Server) HandleIssueEvent(event *gitee.IssueEvent) {
 		var committors []string
 		if len(ps) > 0 {
 			for _, p := range ps {
-				if len(committors) < 10 {
-					committor := fmt.Sprintf("***@%s***", p.User)
-					committors = append(committors, committor)
+				committors = append(committors, fmt.Sprintf("***@%s***", p.User))
+				if limitNotice && (len(committors) >= s.Config.LimitMemberCnt) {
+					break
 				}
 			}
 		}
