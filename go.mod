@@ -10,7 +10,7 @@ require (
 	github.com/jinzhu/gorm v1.9.11
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/spf13/pflag v1.0.5
-	golang.org/x/net v0.0.0-20190923162816-aa69164e4478 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
 	google.golang.org/appengine v1.6.3 // indirect
 	gopkg.in/yaml.v2 v2.2.2
